@@ -1,0 +1,11 @@
+{
+  "function": "date:duration",
+  "namespace": "http://exslt.org/dates-and-times",
+  "tier": 2,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/date/duration.1"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; the input 3599.99999999999 was re-goldened from libxslt's binary-float rounding (PT1H) to this library's decimal-exact result (PT59M59.99999999999S) — recorded in docs/COMPATIBILITY.md and tests/ATTRIBUTION.md"
+}

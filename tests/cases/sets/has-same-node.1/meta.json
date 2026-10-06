@@ -1,0 +1,11 @@
+{
+  "function": "set:has-same-node",
+  "namespace": "http://exslt.org/sets",
+  "tier": 1,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/sets/has-same-node.1"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include"
+}

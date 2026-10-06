@@ -1,0 +1,8 @@
+# Fytala Docs Kit files are SHA-256-pinned in docs-kit/manifest.json and verified
+# by tools/check-docs.ps1. Disable EOL conversion so integrity checks survive
+# Windows checkouts (autocrlf must not rewrite LF kit files).
+assets/**        -text
+.crossnote/**    -text
+docs-kit/**      -text
+docs/DOCUMENTATION_STYLE_GUIDE.md -text
+docs/DOCUMENTATION_RENDERER_TEST.md -text

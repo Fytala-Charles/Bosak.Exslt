@@ -1,0 +1,11 @@
+{
+  "function": "exsl:object-type",
+  "namespace": "http://exslt.org/common",
+  "tier": 2,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/common/object-type.1"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; the XSLT 1.0 RTF check (reports \"node-set\" under XSLT 3.0, see docs/COMPATIBILITY.md) and the Saxon-only \"external\" check were dropped, with the golden file adjusted accordingly"
+}

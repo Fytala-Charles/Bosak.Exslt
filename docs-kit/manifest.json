@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "kitVersion": "1.2.0",
+  "name": "FYTALA Documentation Kit",
+  "styleGuide": "docs/DOCUMENTATION_STYLE_GUIDE.md",
+  "rendererTest": "docs/DOCUMENTATION_RENDERER_TEST.md",
+  "files": [
+    {
+      "source": "assets/css/fytala-brand.css",
+      "destination": "assets/css/fytala-brand.css",
+      "sha256": "65ef92579c42cbece31dcea5e35caa5e4e237d3e1caee24ebde89eb1d06cf18c",
+      "role": "brand-tokens"
+    },
+    {
+      "source": "assets/css/fytala-markdown.css",
+      "destination": "assets/css/fytala-markdown.css",
+      "sha256": "d4d503a0315003cdd261e5a94347e7df85e95a8fe35e8d7268b7aca5ecd55f91",
+      "role": "markdown-styles"
+    },
+    {
+      "source": "assets/css/mermaid-theme-config.js",
+      "destination": "assets/css/mermaid-theme-config.js",
+      "sha256": "b209181dbb5dca978ed1f890df358555e1cc7f1188b4b8d2c300abcd4dd4403d",
+      "role": "mermaid-theme"
+    },
+    {
+      "source": "assets/logos/fytala-logo-color-dark.svg",
+      "destination": "assets/logos/fytala-logo-color-dark.svg",
+      "sha256": "bf4e98458e254058de62f90df6dc5c3476af94fd70dff805889c51b771e69699",
+      "role": "logo-dark"
+    },
+    {
+      "source": "assets/logos/fytala-logo-color-light.svg",
+      "destination": "assets/logos/fytala-logo-color-light.svg",
+      "sha256": "999ec0e818a9e8117aa4291f36ea6c26b6fc34109b42ee8b60467bea938262d1",
+      "role": "logo-light"
+    },
+    {
+      "source": "assets/images/brand-swatches/dark-olive-green.svg",
+      "destination": "assets/images/brand-swatches/dark-olive-green.svg",
+      "sha256": "0c4ea5e908e084c1f14a0280b25f48345ce66b47b76c06e7ef5aa032734e32e6",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/dark-slate-gray.svg",
+      "destination": "assets/images/brand-swatches/dark-slate-gray.svg",
+      "sha256": "c83e519934a6c7e70303ec4fe386eb6bef3c5350f29e355c44e69298e54038e0",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/honeydew.svg",
+      "destination": "assets/images/brand-swatches/honeydew.svg",
+      "sha256": "1c35ed2700c5cb6790cec1035254612ea000d4f44a43edd1a75fc649bf12e8fb",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/light-cream.svg",
+      "destination": "assets/images/brand-swatches/light-cream.svg",
+      "sha256": "82a3814a94a40f355a1e9f2aec3384a20e418bc5120ea3d1ec76c417d4bc73de",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/light-green.svg",
+      "destination": "assets/images/brand-swatches/light-green.svg",
+      "sha256": "f637564df50c7f4e72c2244f8ccd7a05f2a26c33b69f19bb40e58fbdb4664f25",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/mint-cream.svg",
+      "destination": "assets/images/brand-swatches/mint-cream.svg",
+      "sha256": "3cc15505deb7a9e045e652641593f0fb5b775c306ce7c0420a2fc15ce561e3f0",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/steel-blue.svg",
+      "destination": "assets/images/brand-swatches/steel-blue.svg",
+      "sha256": "fc5e937dd0e08c53e0a66e9e1b7f4eeb95b428c63272838f9db05c2b2d84588a",
+      "role": "brand-swatch"
+    },
+    {
+      "source": "assets/images/brand-swatches/teal.svg",
+      "destination": "assets/images/brand-swatches/teal.svg",
+      "sha256": "b9b5965c9b82908eef198b0c82018351b73e9f7738195bc9ce0addf4cb7d7dea",
+      "role": "brand-swatch"
+    },
+    {
+      "source": ".crossnote/config.js",
+      "destination": ".crossnote/config.js",
+      "sha256": "5ae66ad030ee87df45e3bc40fe0044092d7cba52d6cfe52f7f065bcff029d1f1",
+      "role": "enhanced-preview-theme"
+    },
+    {
+      "source": ".crossnote/head.html",
+      "destination": ".crossnote/head.html",
+      "sha256": "45a8938ba68af8eece214dc99dea354e7f7737ddad232fe9de5e3db2e678c0f1",
+      "role": "enhanced-preview-head"
+    },
+    {
+      "source": ".crossnote/parser.js",
+      "destination": ".crossnote/parser.js",
+      "sha256": "f43b4fb9bc9029bc2f012f0db416af229d97ad6b580ef0b953505f59ac323f17",
+      "role": "enhanced-preview-parser"
+    },
+    {
+      "source": ".crossnote/style.less",
+      "destination": ".crossnote/style.less",
+      "sha256": "9351db804aa628b965488db27023b5d56552953c2a11df3207d4888ab6bc4c51",
+      "role": "enhanced-preview-styles"
+    },
+    {
+      "source": "docs/DOCUMENTATION_STYLE_GUIDE.md",
+      "destination": "docs/DOCUMENTATION_STYLE_GUIDE.md",
+      "sha256": "c4d2504e43ca7a6107b7fcd39abb3388f9ef09a6c955eae899fa0623a3ae160c",
+      "role": "style-guide"
+    },
+    {
+      "source": "docs/DOCUMENTATION_RENDERER_TEST.md",
+      "destination": "docs/DOCUMENTATION_RENDERER_TEST.md",
+      "sha256": "0a2efb183f520148c644d7f407176c179f0978a5f3845f9b0cee5679461071bb",
+      "role": "renderer-test"
+    }
+  ],
+  "workspaceSettings": {
+    "markdown.styles": [
+      "assets/css/fytala-markdown.css"
+    ],
+    "markdown-pdf.styles": [
+      "assets/css/fytala-markdown.css"
+    ],
+    "markdown-pdf.stylesRelativePathFile": false
+  }
+}
