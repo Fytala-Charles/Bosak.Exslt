@@ -5,8 +5,8 @@
   <p>Release stages, milestones, and known limitations</p>
 </div>
 
-> Pre-release planning document. Versions are produced from git tags by MinVer once
-> the repository owner initializes git (REQ-006 in `docs/FEATURE_REQUESTS.md`).
+> Versions are produced from git tags by MinVer (git initialized 2026-10-06;
+> REQ-006 in `docs/FEATURE_REQUESTS.md`).
 
 ---
 
@@ -105,8 +105,8 @@ Limitations hit while building the library, and how the modules work around them
   (Stage 3) lands.
 - Several date functions have no golden coverage yet; their semantics are
   implemented but not pinned by executable evidence (see §1 Stage 1 checklist).
-- No git repository yet — files on disk only; the owner bootstraps git and CI
-  (REQ-006).
+- Git initialized 2026-10-06 (REQ-006 git part done); CI workflow and first tag
+  still pending.
 
 ## 4. Relation to REQ-121
 

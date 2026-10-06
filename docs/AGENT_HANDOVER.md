@@ -9,9 +9,9 @@
 
 - **What:** A pure-XSLT 3.0 implementation of EXSLT for the [Bosak](https://github.com/Fytala) XPath 3.1 / XSLT 3.0 engine — Apache-2.0, copyright Fytala (Charles Korthout). Three roles at once: **legacy-migration aid** (XSLT 1.0 + EXSLT stylesheets keep working via import/include), **training/showcase codebase** (genuine, readable XSLT 3.0), and **golden-file test corpus** ("TDD for XSLT").
 - **Spine:** the **three-tier compatibility model** ([ADR-001](./ADR-001-three-tier-compatibility-model.md)) — tier 1 = thin wrappers over native XPath 3.1; tier 2 = genuine pure-XSLT implementations; tier 3 = documented-only (`dyn:evaluate`), slot terminates with `xsl:message`. Never a fake implementation.
-- **Repo:** not yet initialized (files on disk only; owner bootstraps git — REQ-006). Location: `D:/Development/Bosak.Exslt`.
+- **Repo:** initialized 2026-10-06 on explicit owner request — branch `main`, remote `git@github.com:Fytala-Charles/Bosak.Exslt.git` (public), initial commit + docs-bootstrap commit pushed. Location: `D:/Development/Bosak.Exslt`. Note: this machine's SSH key authenticates as collaborator account `poco-irrilevante` (same setup as the Bosak core repo) — until that invite is accepted, pushes go over HTTPS via the `gh` token.
 - **Language:** XSLT 3.0 stylesheets (the product) + one xUnit test harness (net10.0).
-- **Status:** **Pre-release skeleton, fully green.** 7 library modules; golden-file harness **15/15** against published `Bosak.Xslt` **0.12.3-beta**; full house documentation set (`ARCHITECTURE.md`, `FEATURE_REQUESTS.md`, `AGENT_HANDOVER.md`, kit style guide, ADR-000/001, root `ROADMAP.md`) landed 2026-10-06; **Fytala Docs Kit v1.2.0 branding adopted** (assets, banners, About FYTALA, footers, checker section 6) same day; `tools/check-docs.ps1` ALL CHECKS PASSED.
+- **Status:** **Pre-release skeleton, fully green.** 7 library modules; golden-file harness **15/15** against published `Bosak.Xslt` **0.12.3-beta**; full house documentation set (`ARCHITECTURE.md`, `FEATURE_REQUESTS.md`, `AGENT_HANDOVER.md`, kit style guide, ADR-000/001, root `ROADMAP.md`) landed 2026-10-06; **Fytala Docs Kit v1.2.0 branding adopted** (assets, banners, About FYTALA, footers, checker section 6) same day; **repository bootstrapped same day** (`main` live at `Fytala-Charles/Bosak.Exslt`, initial commit pushed); `tools/check-docs.ps1` ALL CHECKS PASSED.
 - **Relation to the core roadmap:** tracked against **core REQ-121** (EXSLT / legacy migration) — the core engine stays standards-only; EXSLT compatibility lives here. The host-backed tier question (`dyn:evaluate`, `math:random`, `func:function` commercial option) is REQ-004 in `docs/FEATURE_REQUESTS.md`.
 
 ---
@@ -51,7 +51,7 @@ Hard rules — violated work is rejected regardless of test color:
 3. **Golden-file TDD.** Every function change needs a golden case; a golden case may only be *changed* (never deleted) when the implementation diverges from EXSLT/libxslt deliberately, and the divergence must be recorded in the case's `meta.json`, `tests/ATTRIBUTION.md`, and `docs/COMPATIBILITY.md` in the same step.
 4. **Attribution is mandatory for imported tests.** Project, license, upstream path in `meta.json` **and** `tests/ATTRIBUTION.md`. Never fabricate provenance; hand-written cases from the spec are attributed as such.
 5. **`docs/COMPATIBILITY.md` is the per-function authority.** Any function added, re-tiered, or re-statused updates the matrix in the same step.
-6. **Git discipline.** Never run `git init`/commit/push/reset/rebase — the owner bootstraps and owns history (REQ-006).
+6. **Git discipline.** Never run `git init`/commit/push/reset/rebase or create remotes unless the owner explicitly asks (AGENTS.md §8). History was bootstrapped by the owner on 2026-10-06; the owner owns history.
 
 ---
 
@@ -83,7 +83,7 @@ All four must be green before any task is considered complete:
 ## 6. Immediate Next Steps (in order)
 
 1. **REQ-001** — import the remaining deterministic libxslt EXSLT corpus (see `docs/FEATURE_REQUESTS.md` for the acceptance criteria and skip rules).
-2. **REQ-006** — owner bootstraps git + CI (agent-blocked by house rules).
+2. **REQ-006 (remainder)** — add the CI workflow (`.github/workflows/build.yml`: build + `dotnet test` + `check-docs.ps1 -Strict`); the git bootstrap itself is done (2026-10-06).
 3. **REQ-004** — decide the `dyn:evaluate` host-backed tier against core REQ-121; update ADR-001 status.
 4. Hand-written edge-case goldens for functions without upstream coverage (`set:trailing`, `math:lowest`, `math:constant`, `str:decode-uri`, `date:seconds`, `date:sum`, `date:difference`) — list maintained in `ROADMAP.md` Stage 1.
 5. **REQ-002 / REQ-003 / REQ-005** — Xalan-J corpus, `xsl:package` packaging, sample gallery (post-v0.1.0 candidates).

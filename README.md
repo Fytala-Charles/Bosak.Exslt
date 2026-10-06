@@ -40,7 +40,7 @@ Above all, FYTALA is about keeping the desire to discover alive—and passing th
 
 ---
 
-> **Status: pre-release.** The repository skeleton, library modules, and golden-file test corpus are being built out. Semantics may shift until the first tagged release.
+> **Status: pre-release.** The repository skeleton, library modules, and golden-file test corpus are being built out. Semantics may shift until the first tagged release. Repository: [`Fytala-Charles/Bosak.Exslt`](https://github.com/Fytala-Charles/Bosak.Exslt) (git initialized 2026-10-06).
 
 ---
 
