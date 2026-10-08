@@ -10,10 +10,12 @@
          AUTHOR / PURPOSE / LICENSE header markers.
       3. Date freshness ("Last updated: YYYY-MM-DD") on the living documents.
       4. Cross-references in Markdown files resolve to real files.
-      5. Every golden case has its required artifacts and a valid meta.json.
+      5. Every golden case has its required artifacts and a valid meta.json,
+         and every training session has its lesson, starter, solution, and case.
       6. Fytala Docs Kit branding: .fytala-docs.json present, kit asset integrity
          (SHA-256 against docs-kit/manifest.json), branded banner + (c) Fytala
-         footer on canonical documents, and the About FYTALA statement in README.md.
+         footer on canonical documents (including the training documents), and
+         the About FYTALA statement in README.md.
 
 .PARAMETER ProjectPath
     Repository root to check. Defaults to the current directory.
@@ -287,6 +289,68 @@ else {
     Write-Result Info "$($caseDirs.Count) golden cases under tests/cases/"
 }
 
+# Training sessions are discovered by the TrainingTests harnesses via
+# case/meta.json; the same marker anchors this integrity check. Both tracks are
+# checked: the XSLT curriculum (training/NN-*/) and the XPath foundations track
+# (training/xpath/NN-*/, exercise files instead of transforms).
+$trackRoots = @(
+    @{ Path = Join-Path $root 'training';       Relative = 'training';       Exercise = 'transform.xsl' },
+    @{ Path = Join-Path $root 'training\xpath'; Relative = 'training/xpath'; Exercise = 'exercise.xpath' }
+)
+
+foreach ($track in $trackRoots) {
+    if (-not (Test-Path $track.Path)) {
+        Write-Result Warn "no $($track.Relative)/ directory found"
+        continue
+    }
+
+    # NOTE: -Filter does not support [0-9] character classes; match the NN- prefix
+    # in a Where clause instead.
+    $sessionDirs = @(Get-ChildItem -Path $track.Path -Directory |
+        Where-Object { $_.Name -match '^\d{2}-' -and (Test-Path (Join-Path $_.FullName 'case\meta.json')) })
+
+    if ($sessionDirs.Count -eq 0) {
+        Write-Result Warn "no training sessions found under $($track.Relative)/"
+    }
+
+    foreach ($session in $sessionDirs) {
+        $relative = "$($track.Relative)/$($session.Name)"
+
+        foreach ($artifact in @('README.md', "starter\$($track.Exercise)", "solution\$($track.Exercise)")) {
+            if (Test-Path (Join-Path $session.FullName $artifact)) {
+                Write-Result Pass "has $artifact : $relative"
+            }
+            else {
+                Write-Result Fail "missing $artifact : $relative"
+            }
+        }
+
+        if ((Test-Path (Join-Path $session.FullName 'case\expected.xml')) -or
+            (Test-Path (Join-Path $session.FullName 'case\expected.txt'))) {
+            Write-Result Pass "has case/expected.xml|expected.txt: $relative"
+        }
+        else {
+            Write-Result Fail "missing case/expected.xml and case/expected.txt: $relative"
+        }
+
+        $trainingMetaPath = Join-Path $session.FullName 'case\meta.json'
+        try {
+            $trainingMeta = Get-Content -Path $trainingMetaPath -Raw | ConvertFrom-Json
+            if ($trainingMeta.PSObject.Properties['source']) {
+                Write-Result Pass "case/meta.json parses with source field: $relative"
+            }
+            else {
+                Write-Result Fail "case/meta.json lacks 'source' field: $relative"
+            }
+        }
+        catch {
+            Write-Result Fail "case/meta.json does not parse: $relative — $($_.Exception.Message)"
+        }
+    }
+
+    Write-Result Info "$($sessionDirs.Count) training sessions under $($track.Relative)/"
+}
+
 # ---------------------------------------------------------------------------
 Write-Host ""
 Write-Host "6. Fytala Docs Kit branding" -ForegroundColor Cyan
@@ -350,6 +414,28 @@ $brandedDocs = @(
     @{ Path = 'docs/FEATURE_REQUESTS.md';          Logo = '../assets/logos/fytala-logo-color-dark.svg'; Name = 'Bosak.Exslt Feature Requests';   KitManaged = $false },
     @{ Path = 'docs/DOCUMENTATION_STYLE_GUIDE.md'; Logo = '../assets/logos/fytala-logo-color-dark.svg'; Name = 'Fytala Documentation Style Guide'; KitManaged = $true }
 )
+
+# Training documents are public-facing and carry the same branding contract.
+# Both tracks are covered: the curriculum index and session READMEs of each
+# track. The banner logo path is depth-derived (one '../' per path segment of
+# the document's directory).
+function Add-TrackBrandedDocs([string]$trackPath, [string]$trackRelative, [string]$trackName) {
+    if (-not (Test-Path (Join-Path $trackPath 'README.md'))) {
+        return
+    }
+
+    $depth = ($trackRelative -split '/').Count
+    $script:brandedDocs += @{ Path = "$trackRelative/README.md"; Logo = ('../' * $depth) + 'assets/logos/fytala-logo-color-dark.svg'; Name = "$trackName"; KitManaged = $false }
+
+    @(Get-ChildItem -Path $trackPath -Directory |
+        Where-Object { $_.Name -match '^\d{2}-' -and (Test-Path (Join-Path $_.FullName 'README.md')) }) |
+        ForEach-Object {
+            $script:brandedDocs += @{ Path = "$trackRelative/$($_.Name)/README.md"; Logo = ('../' * ($depth + 1)) + 'assets/logos/fytala-logo-color-dark.svg'; Name = "$trackName Session $($_.Name)"; KitManaged = $false }
+        }
+}
+
+Add-TrackBrandedDocs (Join-Path $root 'training') 'training' 'Bosak.Exslt Training'
+Add-TrackBrandedDocs (Join-Path $root 'training\xpath') 'training/xpath' 'Bosak.Exslt XPath Training'
 
 foreach ($doc in $brandedDocs) {
     $path = Join-Path $root $doc.Path

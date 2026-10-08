@@ -22,12 +22,25 @@ test corpus. Apache-2.0, copyright Fytala (Charles Korthout).
 ```bash
 # Golden-file corpus against the published Bosak XSLT packages
 dotnet test tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj
+
+# Training curriculum harness (sessions under training/)
+dotnet test training/TrainingTests/TrainingTests.csproj
+
+# XPath foundations harness (sessions under training/xpath/)
+dotnet test training/xpath/XPathTrainingTests/XPathTrainingTests.csproj
 ```
+
+XPath training expressions (`training/xpath/*/starter|solution/exercise.xpath`)
+must be **pure XPath 3.1** — no XSLT instructions, no extension functions.
 
 **Rule:** all tests must pass before a task is considered complete. A golden case may
 only be *changed* (not deleted) when the implementation diverges from EXSLT/libxslt
 deliberately and the divergence is recorded in `tests/ATTRIBUTION.md` and
-`docs/COMPATIBILITY.md`.
+`docs/COMPATIBILITY.md`. Training cases are not golden cases: they live under
+`training/` and are exercised only by the TrainingTests harness, never by
+`tests/cases/` — and training stylesheets must stay self-contained (no
+`xsl:include`/`xsl:import` of `src/`) so the training sandbox can never break the
+library artifact.
 
 ## 3. File Headers
 
@@ -85,7 +98,10 @@ and `.crossnote/`).
   header with meaningful `alt` text, and repo-owned ones close with the
   `© Fytala` footer. `README.md` additionally carries the verbatim About FYTALA
   statement. Internal notes (`docs/AGENT_HANDOVER.md`, `docs/ADR-*.md`,
-  `tests/ATTRIBUTION.md`) may use a compact heading.
+  `tests/ATTRIBUTION.md`) may use a compact heading. The training curriculum
+  (`training/README.md` and every `training/NN-*/README.md`) is public-facing
+  material: same banner and footer contract, and the curriculum index carries
+  the About FYTALA statement.
 - Do not hand-edit kit-managed files (`docs/DOCUMENTATION_STYLE_GUIDE.md`,
   `docs/DOCUMENTATION_RENDERER_TEST.md`, `docs-kit/manifest.json`, `assets/**`,
   `.crossnote/**`, `.vscode/settings.json`); sync them from the Prime docs-kit
@@ -110,6 +126,7 @@ After **every** successful implementation step, update the following canonical d
 | `docs/XSLT_STYLE_GUIDE.md` | XSLT file, function-doc, and test-fixture style rules | Any XSLT/fixture style-rule change |
 | `docs/ADR-*.md` | Architecture decision records | Any significant decision (one new file per decision) |
 | `tests/ATTRIBUTION.md` | Fixture provenance and divergence log | Any fixture import or divergence note |
+| `training/README.md` + `training/NN-*/README.md` | Self-paced curriculum index and session lessons | New session, curriculum structure change |
 
 **Rule:** if a file was modified during the step, its documentation counterpart must be updated in the same step. No exceptions.
 
@@ -122,6 +139,7 @@ After **every** successful implementation step, update the following canonical d
 - [ ] `docs/FEATURE_REQUESTS.md` — registry and detail sections accurate; "Last updated" date is today.
 - [ ] `docs/AGENT_HANDOVER.md` — "What Exists Today" includes every feature/bugfix from the session.
 - [ ] `tests/ATTRIBUTION.md` — every imported fixture listed; divergences recorded.
+- [ ] `training/` — index and session READMEs branded and current; sessions intact (starter RED, solution GREEN).
 - [ ] `pwsh tools/check-docs.ps1 -ProjectPath .` — ALL CHECKS PASSED.
 
 ## 8. Git Rules

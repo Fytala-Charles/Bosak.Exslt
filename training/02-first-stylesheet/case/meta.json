@@ -1,0 +1,8 @@
+{
+  "function": "math:highest",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 02 exercise; input adapted from tests/cases/math/min.1 (libxslt, MIT) with a tie added at 11 to exercise the all-winners semantics",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

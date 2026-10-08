@@ -104,6 +104,16 @@ dotnet test tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj
 
 The harness discovers every directory under `tests/cases/`, compiles `transform.xsl` with the published Bosak XSLT packages, runs it against `input.xml` (when present), normalizes whitespace, and compares with the golden `expected.xml` / `expected.txt`. See `tests/Bosak.Exslt.Tests/README.md` for the case-layout contract and `tests/ATTRIBUTION.md` for upstream provenance.
 
+## Training: learn XSLT with EXSLT
+
+`training/` holds a self-paced curriculum of **eleven sessions** that teach XSLT 3.0 by test-first re-creation of the EXSLT functions — from the processing model and templates (session 01) through functions, recursion, node identity, and duration arithmetic, to the limits of pure XSLT (session 11, capstone). Each session is a branded, standalone lesson with a RED starter stylesheet, a golden output to converge on, progressive hints, and a reference solution:
+
+```bash
+dotnet test training/TrainingTests/TrainingTests.csproj
+```
+
+Start at [`training/README.md`](training/README.md). The training tree is a sandbox: session stylesheets are self-contained and never include the library, so experimenting there cannot break the artifact in `src/`.
+
 ## Repository layout
 
 ```
@@ -111,6 +121,8 @@ src/       Library modules: exslt.xsl (master), exsl.xsl, math.xsl, strings.xsl,
            dates-and-times.xsl, sets.xsl, dynamic.xsl
 tests/     Golden-file corpus (tests/cases/) + xUnit runner (tests/Bosak.Exslt.Tests/)
            + fixture provenance (tests/ATTRIBUTION.md)
+training/  Self-paced XSLT 3.0 training curriculum: ten branded session lessons with
+           RED-to-GREEN exercises + independent harness (training/TrainingTests/)
 docs/      Architecture, compatibility matrix, feature registry, style guides, ADRs
 assets/    Fytala Docs Kit brand assets (logos, CSS, brand swatches) — synced from
            the Prime docs-kit; integrity pinned in docs-kit/manifest.json
@@ -131,6 +143,7 @@ ROADMAP.md Release stages, milestones, known limitations (repository root)
 | [docs/DOCUMENTATION_STYLE_GUIDE.md](docs/DOCUMENTATION_STYLE_GUIDE.md) | Fytala Docs Kit branding contract (kit-managed) |
 | [docs/XSLT_STYLE_GUIDE.md](docs/XSLT_STYLE_GUIDE.md) | XSLT file, function-doc, and test-fixture style rules |
 | [docs/AGENT_HANDOVER.md](docs/AGENT_HANDOVER.md) | Session state for AI agents |
+| [training/README.md](training/README.md) | Self-paced XSLT 3.0 training curriculum index (eleven sessions) |
 | [tests/ATTRIBUTION.md](tests/ATTRIBUTION.md) | Upstream fixture provenance (libxslt, MIT) |
 
 ## Project hygiene

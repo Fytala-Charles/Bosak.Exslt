@@ -48,6 +48,18 @@ Bosak.Exslt/
 │   │                       sets 3, common 2, date 2)
 │   ├── Bosak.Exslt.Tests/  xUnit harness (net10.0) on published Bosak.Xslt packages
 │   ├── ATTRIBUTION.md      Upstream provenance (libxslt, MIT) + divergence log
+├── training/
+│   ├── README.md           Curriculum index (branded, self-paced; About FYTALA)
+│   ├── 00-setup/           Setup session: install guide, check-setup.ps1
+│   │                       configuration check, VS Code mini-guide (no exercise)
+│   ├── NN-slug/            Session: branded lesson README + starter/ + solution/
+│   │                       + input.xml + case/ (meta.json + expected.xml|expected.txt)
+│   ├── xpath/              XPath foundations track (parallel curriculum; same
+│   │   │                   RED→GREEN method, exercises are raw .xpath expressions)
+│   │   ├── README.md       Track index
+│   │   ├── NN-slug/        XPath session: lesson + exercise.xpath + case/
+│   │   └── XPathTrainingTests/  xUnit harness on published Bosak.XPath.Api
+│   └── TrainingTests/      xUnit harness: Solution_matches_golden + Starter_differs_from_golden per session
 ├── docs/                   Architecture, compatibility matrix, feature registry,
 │                           style guides, ADRs, agent handover
 ├── assets/                 Fytala Docs Kit brand assets (logos, CSS, brand swatches) —
@@ -87,6 +99,10 @@ and must stay in sync with `src/`.
 | `src/*.xsl` (the library) | Standard XSLT 3.0 / XPath 3.1 + F&O only | Vendor extensions, processor conditionals, any engine-specific feature, any C#/package reference |
 | `tests/cases/` | `src/*.xsl` via relative `xsl:include` (`../../../src/<module>.xsl`) | Anything outside the repo |
 | `tests/Bosak.Exslt.Tests` (harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (currently 0.12.3-beta); copies cases and `src/*.xsl` to its output via `<None Include>` links | Project references into `src/` (there is no project there), un-published engine builds |
+| `training/*/starter/`, `training/*/solution/*.xsl` (training material) | Standard XSLT 3.0 / XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | `src/*.xsl` via `xsl:include`/`xsl:import` — training is a sandbox; the library appears only as read-along reference after the learner's attempt |
+| `training/xpath/*/starter/`, `training/xpath/*/solution/exercise.xpath` (XPath training material) | Pure XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | XSLT instructions, extension functions, `src/*.xsl` |
+| `training/TrainingTests` (training harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (same versions as the golden harness); copies `training/NN-*/` sessions to its output | `tests/cases/`, `src/` — it copies nothing from either tree |
+| `training/xpath/XPathTrainingTests` (XPath training harness) | Published **Bosak.XPath.Api**, **Bosak.XPath.Core**, and **Bosak.XPath.Providers** packages only; copies `training/xpath/NN-*/` sessions to its output | `src/`, `tests/` — it copies nothing from either tree |
 
 Rationale: the library must run unmodified on any conformant XSLT 3.0 processor —
 that *is* the compatibility claim. The harness, conversely, must run against the
@@ -114,6 +130,31 @@ golden-file pattern:
      without formatting (`ToString(DisableFormatting)`); canonical strings must match.
    - Text goldens (`expected.txt`): both sides are reduced to their
      whitespace-separated token stream, so line endings and indentation never flake.
+
+**Training harness.** `training/TrainingTests` (xUnit, net10.0) reuses the pattern
+above against a second, independent corpus. A *session* is any `training/NN-*`
+directory holding `case/meta.json` (the same marker `tools/check-docs.ps1` uses for
+integrity checks). Two tests per session:
+
+- `Solution_matches_golden` — the session's `solution/transform.xsl` must match
+  `case/expected.xml`/`expected.txt`; this guards the teaching material itself.
+- `Starter_differs_from_golden` — the session's `starter/transform.xsl` (which must compile and
+  run) must **not** match the golden; a starter that already solves the exercise
+  fails the build, protecting the lesson for the next learner.
+
+Session transforms are self-contained (never include `src/`), so the training
+harness copies no library files — unlike the golden harness, whose `src/*.xsl`
+copy-link exists precisely so case `xsl:include` hrefs resolve.
+
+**XPath training harness.** `training/xpath/XPathTrainingTests` applies the same
+contract to the XPath foundations track, where the artifact under test is a raw
+expression: a session is `training/xpath/NN-*` with `case/meta.json`; the harness
+evaluates `starter|solution/exercise.xpath` against the session's `input.xml`
+through `XPath31Expression.Compile(...).Evaluate(...)` (published
+**Bosak.XPath.Api**) and compares the rendered result with `case/expected.txt` as
+a token stream. Rendering follows the track README: atomic values as themselves,
+sequences item-by-item joined with ` | `, the empty sequence as `()`. The
+`Starter_differs_from_golden` test again fails the build if a starter stops being a stub.
 
 ## 6. Data Flow
 

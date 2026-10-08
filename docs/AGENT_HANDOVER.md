@@ -11,7 +11,7 @@
 - **Spine:** the **three-tier compatibility model** ([ADR-001](./ADR-001-three-tier-compatibility-model.md)) — tier 1 = thin wrappers over native XPath 3.1; tier 2 = genuine pure-XSLT implementations; tier 3 = documented-only (`dyn:evaluate`), slot terminates with `xsl:message`. Never a fake implementation.
 - **Repo:** initialized 2026-10-06 on explicit owner request — branch `main` tracks `origin/main`, remote `git@github.com:Fytala-Charles/Bosak.Exslt.git` (public), two commits pushed. Location: `D:/Development/Bosak.Exslt`. Note: this machine's SSH key authenticates as collaborator account `poco-irrilevante` (same setup as the Bosak core repo); the collaborator invite was accepted 2026-10-06, so SSH push/pull works as usual.
 - **Language:** XSLT 3.0 stylesheets (the product) + one xUnit test harness (net10.0).
-- **Status:** **Pre-release skeleton, fully green.** 7 library modules; golden-file harness **15/15** against published `Bosak.Xslt` **0.12.3-beta**; full house documentation set (`ARCHITECTURE.md`, `FEATURE_REQUESTS.md`, `AGENT_HANDOVER.md`, kit style guide, ADR-000/001, root `ROADMAP.md`) landed 2026-10-06; **Fytala Docs Kit v1.2.0 branding adopted** (assets, banners, About FYTALA, footers, checker section 6) same day; **repository bootstrapped same day** (`main` live at `Fytala-Charles/Bosak.Exslt`, initial commit pushed); `tools/check-docs.ps1` ALL CHECKS PASSED.
+- **Status:** **Pre-release skeleton, fully green.** 7 library modules; golden-file harness **15/15** against published `Bosak.Xslt` **0.12.3-beta**; full house documentation set (`ARCHITECTURE.md`, `FEATURE_REQUESTS.md`, `AGENT_HANDOVER.md`, kit style guide, ADR-000/001, root `ROADMAP.md`) landed 2026-10-06; **Fytala Docs Kit v1.2.0 branding adopted** (assets, banners, About FYTALA, footers, checker section 6) same day; **repository bootstrapped same day** (`main` live at `Fytala-Charles/Bosak.Exslt`, initial commit pushed); `tools/check-docs.ps1` ALL CHECKS PASSED. **Training curriculum (REQ-007) scaffolded same day:** branded self-paced index `training/README.md`, sessions 00–02 (`00-setup` install guide + configuration check, `01-xslt-basics` processing model + templates, `02-first-stylesheet` with the RED→GREEN exercise on `math:highest`, `03-recursion` with the `str:padding`/`str:align` tail-recursion exercise), the independent `training/TrainingTests` harness (6/6, session-directory discovery), plus the companion **XPath foundations track** (`training/xpath/`: branded index, session `01-values-and-paths` on raw `.xpath` expressions, `XPathTrainingTests` harness 2/2 on published `Bosak.XPath.Api`) — training is a self-contained sandbox that never includes `src/`.
 - **Relation to the core roadmap:** tracked against **core REQ-121** (EXSLT / legacy migration) — the core engine stays standards-only; EXSLT compatibility lives here. The host-backed tier question (`dyn:evaluate`, `math:random`, `func:function` commercial option) is REQ-004 in `docs/FEATURE_REQUESTS.md`.
 
 ---
@@ -32,6 +32,13 @@
 | Three-tier ADR | `docs/ADR-001-three-tier-compatibility-model.md` |
 | Fixture provenance + verbatim libexslt MIT notice + import rules | `tests/ATTRIBUTION.md` |
 | Case-layout contract | `tests/Bosak.Exslt.Tests/README.md` |
+| Training curriculum: branded self-paced index (11-session plan, RED→GREEN method, golden rule) | `training/README.md` |
+| Training session 01 (XSLT basics): lesson + starter + solution + case (templates, `for-each`, value-of, AVTs) | `training/01-xslt-basics/` |
+| Training session 02: lesson + starter + solution + case (`math:min`/`math:max` given, implement `math:highest`) | `training/02-first-stylesheet/` |
+| Training session 03: lesson + starter + solution + case (recursion with an accumulator; implement `str:padding`, then `str:align` composed on it) | `training/03-recursion/` |
+| Training harness: per-session `Solution_matches_golden` / `Starter_differs_from_golden` on published Bosak packages, no `src/` copies | `training/TrainingTests/` |
+| XPath foundations track: branded index + session 01 (`01-values-and-paths`, exercise on raw `.xpath` files) | `training/xpath/README.md`, `training/xpath/01-values-and-paths/` |
+| XPath training harness: evaluates expressions via published `Bosak.XPath.Api`, renders results per track README, same RED/GREEN contract | `training/xpath/XPathTrainingTests/` |
 | House conventions + documentation sync checklist | `AGENTS.md` |
 
 Implementation status (full detail: `docs/COMPATIBILITY.md`):
@@ -75,18 +82,21 @@ All four must be green before any task is considered complete:
 
 1. `dotnet build tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj` — 0 warnings (TreatWarningsAsErrors), 0 errors.
 2. `dotnet test tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj` — all golden cases pass.
-3. `pwsh tools/check-docs.ps1 -ProjectPath .` — ALL CHECKS PASSED.
-4. Documentation sync checklist in `AGENTS.md` §7 satisfied for the files touched.
+3. `dotnet test training/TrainingTests/TrainingTests.csproj` — all sessions green (solution GREEN, starter RED).
+4. `dotnet test training/xpath/XPathTrainingTests/XPathTrainingTests.csproj` — all XPath sessions green.
+5. `pwsh tools/check-docs.ps1 -ProjectPath .` — ALL CHECKS PASSED.
+6. Documentation sync checklist in `AGENTS.md` §7 satisfied for the files touched.
 
 ---
 
 ## 6. Immediate Next Steps (in order)
 
-1. **REQ-001** — import the remaining deterministic libxslt EXSLT corpus (see `docs/FEATURE_REQUESTS.md` for the acceptance criteria and skip rules).
-2. **REQ-006 (remainder)** — add the CI workflow (`.github/workflows/build.yml`: build + `dotnet test` + `check-docs.ps1 -Strict`); the git bootstrap itself is done (2026-10-06).
-3. **REQ-004** — decide the `dyn:evaluate` host-backed tier against core REQ-121; update ADR-001 status.
-4. Hand-written edge-case goldens for functions without upstream coverage (`set:trailing`, `math:lowest`, `math:constant`, `str:decode-uri`, `date:seconds`, `date:sum`, `date:difference`) — list maintained in `ROADMAP.md` Stage 1.
-5. **REQ-002 / REQ-003 / REQ-005** — Xalan-J corpus, `xsl:package` packaging, sample gallery (post-v0.1.0 candidates).
+1. **REQ-007 (continuation)** — author training sessions 04–11 per the curriculum table in `training/README.md` (dependency-ordered; see the REQ-007 detail section in `docs/FEATURE_REQUESTS.md` for the session contract).
+2. **REQ-001** — import the remaining deterministic libxslt EXSLT corpus (see `docs/FEATURE_REQUESTS.md` for the acceptance criteria and skip rules).
+3. **REQ-006 (remainder)** — add the CI workflow (`.github/workflows/build.yml`: build + `dotnet test` + `check-docs.ps1 -Strict`); the git bootstrap itself is done (2026-10-06).
+4. **REQ-004** — decide the `dyn:evaluate` host-backed tier against core REQ-121; update ADR-001 status.
+5. Hand-written edge-case goldens for functions without upstream coverage (`set:trailing`, `math:lowest`, `math:constant`, `str:decode-uri`, `date:seconds`, `date:sum`, `date:difference`) — list maintained in `ROADMAP.md` Stage 1.
+6. **REQ-002 / REQ-003 / REQ-005** — Xalan-J corpus, `xsl:package` packaging, sample gallery (post-v0.1.0 candidates).
 
 ---
 

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<catalog>
+  <book id="b1">
+    <title>Emma</title>
+    <author>Jane Austen</author>
+    <year>1815</year>
+  </book>
+  <book id="b2">
+    <title>Persuasion</title>
+    <author>Jane Austen</author>
+    <year>1817</year>
+  </book>
+  <book id="b3">
+    <title>Frankenstein</title>
+    <author>Mary Shelley</author>
+    <year>1818</year>
+  </book>
+  <book id="b4">
+    <title>The Time Machine</title>
+    <author>H. G. Wells</author>
+    <year>1895</year>
+  </book>
+</catalog>

@@ -1,0 +1,8 @@
+{
+  "function": "paths (session topic)",
+  "namespace": "http://www.w3.org/2005/xpath-functions",
+  "tier": 0,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "XPath foundations session 01 exercise",
+  "notes": "Training case under training/xpath/, not part of the golden corpus in tests/cases/"
+}

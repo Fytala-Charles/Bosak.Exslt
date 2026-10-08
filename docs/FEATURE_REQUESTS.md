@@ -91,6 +91,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Pending | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | In Progress (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow pending) | Pre-v0.1.0 | Owner | 2026-10-06 |
+| `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | In Progress (sessions 00–03 scaffolded 2026-10-06) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
 
 > **Legend:**
 > - `Pending` — Under review, no decision yet.
@@ -320,6 +321,52 @@ The repository existed on disk only. House rules forbid agents from running `git
 |------|-------|----------|-----------|
 | 2026-10-06 | Kimi (skeleton) | Deferred to owner | House git rules |
 | 2026-10-06 | Owner (via Kimi, explicit request) | Bootstrapped: `git init` on `main`, repo created public at `Fytala-Charles/Bosak.Exslt`, initial commit pushed. Identity: repo-local `Charles Korthout <charles.korthout@fytala.nl>` (matches Bosak core). Collaborator invite sent to the machine's SSH account (`poco-irrilevante`, matching the Bosak core setup). Kit-managed files pinned to LF via `.gitattributes` so `check-docs.ps1` SHA-256 checks survive Windows checkouts. CI workflow remains open. | House rule satisfied: owner explicitly asked for init/commit/push. |
+
+---
+
+### REQ-007: Training curriculum (learning XSLT with EXSLT)
+
+**Requesting Party:** `Fytala`  
+**Submitted:** `2026-10-06`  
+**Status:** `In Progress` — sessions 00–02 scaffolded 2026-10-06: branded self-paced index `training/README.md`, session `00-setup` (install guide + `check-setup.ps1` configuration check), session `01-xslt-basics` (processing model, templates, literal result elements), session `02-first-stylesheet` (lesson + starter + solution + case on `math:highest`), `training/TrainingTests` harness green (4/4), `tools/check-docs.ps1` extended for session integrity and training branding. **Companion XPath foundations track scaffolded same day** (`training/xpath/` per owner decision: a separate, reusable base-knowledge training referenced from the XSLT curriculum): branded index, session `01-values-and-paths` (raw `.xpath` exercises), `XPathTrainingTests` harness green (2/2) on published `Bosak.XPath.Api`. Session `03-recursion` scaffolded 2026-10-06 (lesson + starter + solution + case on recursive `str:padding` and `str:align`; harness green 6/6 including the session's two discovery-generated tests).
+
+#### Problem Statement
+
+The repository's training/showcase role deserves structured learning material, not only "read the tier-2 sources". The owner defined the shape: **eleven sessions, rising difficulty — XSLT basics first, then each session taking one EXSLT function and teaching the XSLT techniques needed to implement it**, documented as Markdown, with starter stylesheets and a test to enable TDD. Crucially, training is **different from the library**: the training sources must never jeopardize the library artifact — a sandbox with a one-way, deliberately-taught bridge (capstone) into the real corpus.
+
+#### Proposed Solution
+
+Ten numbered sessions `training/NN-slug/`, each a self-contained, Fytala-branded, self-explorable unit:
+
+- `README.md` — lesson: concept walkthrough ("naive attempt → why it fails → real implementation"), RED→GREEN exercise with progressive hints, library cross-reference (`src/…`) **after** the learner's attempt, "go further" section. No session assumes a trainer present.
+- `starter/transform.xsl` — compiles and runs, but its output is non-golden (the `Starter_differs_from_golden` harness test fails the build if a starter accidentally solves the exercise).
+- `solution/transform.xsl` — the reference answer; `Solution_matches_golden` pins it to the golden.
+- `input.xml` + `case/` (`meta.json` in the golden-corpus shape + `expected.xml`/`expected.txt`).
+
+Harness `training/TrainingTests` mirrors the golden harness (same published Bosak packages, same whitespace-normalized comparison) but copies **no** `src/` files — session stylesheets are self-contained by rule. Session 10 is the capstone: the learner executes the real contribution workflow into `src/` + `tests/cases/` + the documentation sync checklist. Full curriculum outline (dependency-ordered techniques and vehicle functions): `training/README.md`.
+
+#### Acceptance Criteria
+
+- [ ] All 11 sessions available; each has a branded lesson README, a RED starter, a GREEN solution, and valid case metadata.
+- [ ] XPath foundations track (`training/xpath/`) available alongside: 4–5 sessions of pure XPath 3.1 on raw `.xpath` expression files, referenced as prerequisites from the XSLT sessions that assume them.
+- [ ] Training stylesheets never `xsl:include`/`xsl:import` `src/` (isolation rule; `docs/ARCHITECTURE.md` §4 records it).
+- [ ] `dotnet test training/TrainingTests/TrainingTests.csproj` green; training docs pass `tools/check-docs.ps1` session-integrity and branding checks.
+- [ ] Session 10 teaches the full library contribution workflow (file headers, `docs/COMPATIBILITY.md`, `tests/ATTRIBUTION.md`, doc sync checklist).
+
+#### Impact Analysis
+| Layer | Impact | Notes |
+|-------|--------|-------|
+| src/ modules | None until session 10 | Capstone deliberately teaches the contribution path |
+| golden corpus | None | Training cases live under `training/`, never in `tests/cases/` |
+| docs | New tree + registry row | `training/` README + sessions are branded public-facing docs |
+
+#### Related Requests
+- REQ-005 (sample gallery is the consumer-facing sibling), core REQ-121
+
+#### Decision Log
+| Date | Actor | Decision | Rationale |
+|------|-------|----------|-----------|
+| 2026-10-06 | Owner (via Kimi) | Accepted; scaffold session 01 | Training as sandbox under root; branding contract applies; library must stay jeopardize-proof |
 
 ---
 

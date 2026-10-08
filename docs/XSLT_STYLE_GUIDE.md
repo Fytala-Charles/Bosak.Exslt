@@ -85,6 +85,18 @@ purpose, parameters, and any non-obvious invariant.
   may only be *changed* (never deleted) this way.
 - **Include path:** case transforms include library modules via
   `../../../src/<module>.xsl` (three levels up from the case directory).
+- **Training sessions** (`training/NN-slug/`) are fixtures for learners, not golden
+  cases: `case/meta.json` uses the same shape with
+  `"source": { "project": "hand-written", "license": "Apache-2.0" }` and a `notes`
+  field marking the case as training material. Session transforms (`starter/`,
+  `solution/`) are **self-contained** — they never include `src/`; the library is
+  referenced only in lesson prose, as read-along material. Training cases are
+  exercised by `training/TrainingTests/`, never by the golden harness.
+- **XPath training sessions** (`training/xpath/NN-slug/`) follow the same rules
+  with `starter|solution/exercise.xpath` (exactly one pure XPath 3.1 expression,
+  no XSLT instructions or extension functions) and text goldens
+  (`case/expected.txt`). The harness renders results as a token stream
+  (`value | value | …`, `()` for the empty sequence).
 
 ---
 

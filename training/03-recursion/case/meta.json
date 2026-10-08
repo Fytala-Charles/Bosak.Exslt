@@ -1,0 +1,8 @@
+{
+  "function": "str:padding",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 03 exercise; semantics per the EXSLT 1.0 spec (exslt.org) and the libxslt reference implementation. Second vehicle of the session: str:align, composed on str:padding.",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

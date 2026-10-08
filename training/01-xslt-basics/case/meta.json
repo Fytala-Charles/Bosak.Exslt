@@ -1,0 +1,8 @@
+{
+  "function": "(none — XSLT basics: templates and the processing model)",
+  "namespace": "http://www.w3.org/1999/XSL/Transform",
+  "tier": 0,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 01 exercise: template rules, xsl:for-each, xsl:value-of, attribute value templates",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

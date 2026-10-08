@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- XPath training test project: no public API surface, so no XML documentation
+         file is generated. IDE0005 cannot run on build without doc generation
+         (roslyn#41640), so it is suppressed here. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);IDE0005</NoWarn>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Bosak.XPath.Api" Version="0.12.3-beta" />
+    <PackageReference Include="Bosak.XPath.Core" Version="0.12.3-beta" />
+    <PackageReference Include="Bosak.XPath.Providers" Version="0.12.3-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- XPath training sessions are copied so each session's exercise.xpath
+         resolves its input.xml and case/ files from the copied location.
+         Expressions are pure XPath 3.1; no library files are copied. -->
+    <None Include="..\0*\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="xpath" />
+  </ItemGroup>
+
+</Project>
