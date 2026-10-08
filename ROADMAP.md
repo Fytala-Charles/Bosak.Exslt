@@ -95,9 +95,20 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
 
 ### Stage 4 — Packaging and release
 
-- [ ] Evaluate `xsl:package` so each namespace module can ship as a versioned
-      package consumable via `xsl:use-package`, alongside the plain
-      import/include files (which remain the primary distribution). *(REQ-003)*
+- [x] `xsl:package` per namespace module — **done 2026-10-08 (REQ-003
+      Implemented)**: six package descriptors in `src/pkg/`
+      (`urn:fytala:exslt:{common,math,strings,date,sets,dynamic}`,
+      `package-version="1.0.0"`) wrap the plain modules via `xsl:include` +
+      explicit-names `xsl:expose`; package-mode golden case
+      `tests/cases/packages/use-package.1` proves cross-package calls with a
+      prefix version range. Plain import/include files remain the primary
+      distribution. Known engine deviation: intra-package helper calls resolve
+      against the public-exposure table only, so strings/date internals are
+      exposed `public` and marked as implementation details (candidate core
+      gap, report with the REQ-004 findings). Package location is host-API
+      (`XsltFunctionLibrary.RegisterPackage`) — implementation-defined per the
+      spec.
+      *(REQ-003)*
 - [ ] First tagged release (0.1.0) once the corpus covers every implemented
       function and `dotnet test` is green in CI.
 - [ ] Publish as a Fytala open-source artifact next to the Bosak engine packages.

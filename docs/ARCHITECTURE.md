@@ -6,8 +6,9 @@
 </div>
 
 > **Status:** pre-release, fully green — 7 library modules on the three-tier
-> compatibility model, golden-file harness 73/73 against published Bosak.Xslt
-> 0.12.3-beta packages. The three-tier model itself is the load-bearing architectural
+> compatibility model, golden-file harness 104/104 against published Bosak.Xslt
+> 0.12.3-beta packages, plus REQ-003 xsl:package descriptors under `src/pkg/`.
+> The three-tier model itself is the load-bearing architectural
 > decision; it is recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md).
 
 ---
@@ -41,11 +42,15 @@ Bosak.Exslt/
 │   ├── strings.xsl         str   — http://exslt.org/strings
 │   ├── dates-and-times.xsl date  — http://exslt.org/dates-and-times
 │   ├── sets.xsl            set   — http://exslt.org/sets
-│   └── dynamic.xsl         dyn   — http://exslt.org/dynamic (tier-3 slots only)
+│   ├── sets.xsl            set   — http://exslt.org/sets
+│   ├── dynamic.xsl         dyn   — http://exslt.org/dynamic (tier-3 slots only)
+│   └── pkg/                XSLT 3.0 package descriptors (REQ-003): one xsl:package
+│                           per module, wrapping the plain file via xsl:include and
+│                           exposing the public EXSLT names for xsl:use-package
 ├── tests/
 │   ├── cases/<ns>/<case>/  Golden corpus: transform.xsl + expected.xml|expected.txt
-│   │                       + meta.json (+ input.xml); 73 cases (math 15, strings 8,
-│   │                       sets 6, common 10, date 34)
+│   │                       + meta.json (+ input.xml); 104 cases (math 29, strings 15,
+│   │                       sets 12, common 13, date 34, packages 1)
 │   ├── Bosak.Exslt.Tests/  xUnit harness (net10.0) on published Bosak.Xslt packages
 │   ├── ATTRIBUTION.md      Upstream provenance (libxslt, MIT) + divergence log
 ├── training/
@@ -87,6 +92,7 @@ processor.
 | `dates-and-times.xsl` | `http://exslt.org/dates-and-times` | full `date:*` surface (largest module) | all tier 2 |
 | `sets.xsl` | `http://exslt.org/sets` | `intersection`, `difference`, `has-same-node` (wrappers); `distinct`, `leading`, `trailing` | 3 × tier 1, 3 × tier 2 |
 | `dynamic.xsl` | `http://exslt.org/dynamic` | `evaluate` slot → terminating `xsl:message` | tier 3 |
+| `src/pkg/*.package.xsl` | `urn:fytala:exslt:*` | REQ-003 XSLT 3.0 package descriptors: one `xsl:package` per module, wrapping the plain file via `xsl:include`, exposing the public EXSLT names (`str:*`/`date:_*` internals exposed public too — the engine resolves intra-package helper calls against the public exposed table) | packaging only |
 
 Tier totals: 7 tier-1 wrappers, 20+ tier-2 genuine implementations, 1 tier-3
 documented slot. `docs/COMPATIBILITY.md` is the authoritative per-function registry
@@ -98,7 +104,7 @@ and must stay in sync with `src/`.
 |-------|---------------|--------------------|
 | `src/*.xsl` (the library) | Standard XSLT 3.0 / XPath 3.1 + F&O only | Vendor extensions, processor conditionals, any engine-specific feature, any C#/package reference |
 | `tests/cases/` | `src/*.xsl` via relative `xsl:include` (`../../../src/<module>.xsl`) | Anything outside the repo |
-| `tests/Bosak.Exslt.Tests` (harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (currently 0.12.3-beta); copies cases and `src/*.xsl` to its output via `<None Include>` links | Project references into `src/` (there is no project there), un-published engine builds |
+| `tests/Bosak.Exslt.Tests` (harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (currently 0.12.3-beta); copies cases and `src/**/*.*` to its output via `<None Include>` links | Project references into `src/` (there is no project there), un-published engine builds |
 | `training/*/starter/`, `training/*/solution/*.xsl` (training material) | Standard XSLT 3.0 / XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | `src/*.xsl` via `xsl:include`/`xsl:import` — training is a sandbox; the library appears only as read-along reference after the learner's attempt |
 | `training/xpath/*/starter/`, `training/xpath/*/solution/exercise.xpath` (XPath training material) | Pure XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | XSLT instructions, extension functions, `src/*.xsl` |
 | `training/TrainingTests` (training harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (same versions as the golden harness); copies `training/NN-*/` sessions to its output | `tests/cases/`, `src/` — it copies nothing from either tree |
@@ -131,6 +137,18 @@ golden-file pattern:
    - Text goldens (`expected.txt`): both sides are reduced to their
      whitespace-separated token stream, so line endings and indentation never flake.
 
+**Package mode (REQ-003).** A case whose `meta.json` carries `"mode": "package"`
+consumes the library through `xsl:use-package` instead of `xsl:include`. Before
+compiling such a case, the harness registers every `src/pkg/*.package.xsl`
+descriptor once per process: it reads `name`/`package-version` from the package
+root and calls the static
+`Bosak.Xslt.Api.XsltFunctionLibrary.RegisterPackage(name, version, absoluteFileUri)`.
+Registration is required because the XSLT spec leaves package location resolution
+implementation-defined — `xsl:use-package` alone fails with XTSE3000 on the Bosak
+engine. The package case `tests/cases/packages/use-package.1/` exercises
+cross-package calls into the math and strings packages (date verified ad hoc);
+the plain include-mode corpus is unaffected.
+
 **Training harness.** `training/TrainingTests` (xUnit, net10.0) reuses the pattern
 above against a second, independent corpus. A *session* is any `training/NN-*`
 directory holding `case/meta.json` (the same marker `tools/check-docs.ps1` uses for
@@ -162,8 +180,9 @@ pull request: `dotnet build` of the golden harness project (warnings are errors
 via `TreatWarningsAsErrors`), then the three test projects — `Bosak.Exslt.Tests`,
 `TrainingTests`, `XPathTrainingTests` — then `pwsh tools/check-docs.ps1
 -ProjectPath . -Strict`. The build step precedes the test steps so the
-`<None Include>` copy of `tests/cases/**` and `src/*.xsl` into the output
-directory happens before any test run.
+`<None Include>` copy of `tests/cases/**` and `src/**/*.*` (library modules plus
+the REQ-003 `src/pkg/` package descriptors) into the output directory happens
+before any test run.
 
 ## 6. Data Flow
 

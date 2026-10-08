@@ -90,6 +90,38 @@ Then call EXSLT functions as before:
 
 For tier-1 functions the documentation comment above each `xsl:function` names the native XPath 3.1 form, so migration can proceed call-site by call-site.
 
+### Consuming via `xsl:package`
+
+The plain files remain the primary distribution, but every module also ships an
+XSLT 3.0 package descriptor in `src/pkg/`. Each descriptor wraps the plain file
+via `xsl:include` and exposes only the public EXSLT names, so a stylesheet can
+consume the library versioned and side-effect-free:
+
+```xml
+<xsl:use-package name="urn:fytala:exslt:math" package-version="1.0"/>
+<xsl:use-package name="urn:fytala:exslt:strings" package-version="1.0"/>
+```
+
+```xml
+<xsl:value-of select="math:max(item/price)"/>
+<xsl:for-each select="str:tokenize($csv, ',')"> ... </xsl:for-each>
+```
+
+The XSLT spec leaves package location resolution implementation-defined, so on
+the Bosak engine the host registers each descriptor once:
+
+```csharp
+XsltFunctionLibrary.RegisterPackage(
+    "urn:fytala:exslt:math", "1.0.0",
+    new Uri(pathToMathPackageXsl).AbsoluteUri);
+```
+
+Available packages: `urn:fytala:exslt:common`, `urn:fytala:exslt:math`,
+`urn:fytala:exslt:strings`, `urn:fytala:exslt:date`, `urn:fytala:exslt:sets`,
+`urn:fytala:exslt:dynamic` (all `package-version="1.0.0"`). A golden case
+exercising cross-package consumption lives at
+`tests/cases/packages/use-package.1/`.
+
 ## Learn Bosak XSLT by reading real code
 
 If you are learning XSLT 3.0 (or evaluating the Bosak engine), the tier-2 modules are the reading material:
@@ -123,6 +155,8 @@ Start at [`training/README.md`](training/README.md). The training tree is a sand
 ```
 src/       Library modules: exslt.xsl (master), exsl.xsl, math.xsl, strings.xsl,
            dates-and-times.xsl, sets.xsl, dynamic.xsl
+src/pkg/   XSLT 3.0 package descriptors (REQ-003): one xsl:package per module,
+           wrapping the plain file via xsl:include for xsl:use-package consumption
 tests/     Golden-file corpus (tests/cases/) + xUnit runner (tests/Bosak.Exslt.Tests/)
            + fixture provenance (tests/ATTRIBUTION.md)
 training/  Self-paced XSLT 3.0 training curriculum: ten branded session lessons with

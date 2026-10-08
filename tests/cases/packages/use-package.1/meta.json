@@ -1,0 +1,12 @@
+{
+  "function": "math:max",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "mode": "package",
+  "source": {
+    "project": "hand-written",
+    "license": "Apache-2.0",
+    "path": "REQ-003 package-mode case"
+  },
+  "adaptations": "hand-written case exercising xsl:use-package consumption of the urn:fytala:exslt:math and urn:fytala:exslt:strings packages (prefix version range 1.0 against registered 1.0.0). Requires host registration via XsltFunctionLibrary.RegisterPackage, performed by the harness when meta.json carries \"mode\": \"package\". Goldens are engine-verified output."
+}

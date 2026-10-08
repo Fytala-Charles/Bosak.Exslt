@@ -8,7 +8,7 @@ Each case is a directory under `tests/cases/<namespace>/<case>/` containing:
 | `input.xml` | no | Source document. When absent, an empty root node is used as the source. |
 | `expected.xml` | one of `expected.xml` / `expected.txt` | Golden result for XML output. Compared after insignificant-whitespace normalization. |
 | `expected.txt` | one of `expected.xml` / `expected.txt` | Golden result for text output. Compared as a whitespace-separated token stream. |
-| `meta.json` | yes | Provenance: function under test, namespace URI, compatibility tier, and source attribution. |
+| `meta.json` | yes | Provenance: function under test, namespace URI, compatibility tier, and source attribution. A `"mode": "package"` entry marks a case whose transform consumes the library via `xsl:use-package` — the harness then registers the `src/pkg/*.package.xsl` descriptors with the engine before compiling. |
 
 `meta.json` schema:
 
@@ -17,6 +17,7 @@ Each case is a directory under `tests/cases/<namespace>/<case>/` containing:
   "function": "math:max",
   "namespace": "http://exslt.org/math",
   "tier": 1,
+  "mode": "package",
   "source": {
     "project": "libxslt",
     "license": "MIT",
@@ -26,6 +27,12 @@ Each case is a directory under `tests/cases/<namespace>/<case>/` containing:
   "notes": "optional free-form remarks"
 }
 ```
+
+`"mode": "package"` is optional (plain include-mode is the default). When
+present, the harness scans `src/pkg/*.package.xsl` in the output directory and
+registers each descriptor via `Bosak.Xslt.Api.XsltFunctionLibrary.RegisterPackage`
+before compiling the case — required because `xsl:use-package` cannot resolve a
+package the engine has not been told where to find.
 
 The harness discovers cases automatically; adding a directory is enough. See
 `../ATTRIBUTION.md` for the upstream corpora and per-case provenance rules.

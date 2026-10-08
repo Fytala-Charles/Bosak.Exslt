@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-08 (**REQ-002 Implemented: Xalan-J second corpus imported — 30 cases from `apache/xalan-test` (Apache-2.0; 22 verbatim, 8 documented adaptations, 10 skips recorded), corpus 103/103; dual-corpus pins for `math:power` and `exsl:object-type` divergences + two new divergence classes (`StrictMath` float noise, XPath 3.1 number formatting) in ATTRIBUTION/COMPATIBILITY. Also today: REQ-004 Accepted — `dyn:evaluate` to become a thin wrapper over standard `xsl:evaluate` (ADR-001 amendment), blocked on the engine's `xsl:evaluate` context-item gap (XPDY0002), reported against core REQ-121; REQ-001 implemented earlier — full deterministic libxslt corpus (61 cases) + 6 gap cases; REQ-006 Implemented — CI workflow `.github/workflows/build.yml` (ubuntu-latest) green; REQ-007 and REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-003 Implemented: six `xsl:package` descriptors in `src/pkg/` (`urn:fytala:exslt:{common,math,strings,date,sets,dynamic}` v1.0.0) wrapping the plain modules via `xsl:include` + explicit `xsl:expose`; package-mode golden case (`tests/cases/packages/use-package.1`, harness registers packages on `meta.json` `"mode": "package"`); one documented engine deviation (intra-package helper calls resolve against public-exposure table only → strings/date internals exposed `public`, marked as implementation details). Also today: REQ-002 Implemented — Xalan-J second corpus (30 cases, corpus 103→104 with the package case); REQ-004 Accepted — `dyn:evaluate` wrapper over standard `xsl:evaluate` blocked on the engine's context-item gap (XPDY0002), reported against core REQ-121; REQ-001 implemented earlier — full libxslt corpus (61 cases) + 6 gap cases; REQ-006 Implemented — CI workflow green; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -87,7 +87,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 |----|------------------|---------|------------|--------|----------------|-------|-----------|
 | `REQ-001` | `Bosak.Exslt` | Import the remaining deterministic libxslt EXSLT corpus (math, strings, sets, common, date directories) into the golden-file layout | 15 seed cases exist; the remaining deterministic cases (~60 files across 5 directories) pin the rest of the implemented surface against the reference implementation | Implemented (all acceptance criteria met 2026-10-08: corpus 73/73; REQ-002 remains Pending) | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Implemented (all acceptance criteria met 2026-10-08: 30 cases from `apache/xalan-test`, corpus 103/103) | v0.1.0 | Unassigned | 2026-10-06 |
-| `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Pending | v0.2.0 | Unassigned | 2026-10-06 |
+| `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Implemented (all acceptance criteria met 2026-10-08: six `src/pkg/` descriptors, package-mode case, corpus 104/104) | v0.2.0 | Unassigned | 2026-10-06 |
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Accepted (decision recorded 2026-10-08: wrapper over standard `xsl:evaluate` — no native/commercial function needed; landing blocked on the engine's `xsl:evaluate` context-item gap, tracked against core REQ-121; slot stays terminating meanwhile) | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | Implemented (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow added 2026-10-08 — [`.github/workflows/build.yml`](../.github/workflows/build.yml), `ubuntu-latest`, all gates green) | Pre-v0.1.0 | Owner | 2026-10-06 |
@@ -185,7 +185,7 @@ Fetch a starter set from the Xalan-J repository, convert to the case layout with
 
 **Requesting Party:** `Bosak.Exslt` (maintainers)  
 **Submitted:** `2026-10-06`  
-**Status:** `Pending`
+**Status:** `Implemented` (all acceptance criteria met 2026-10-08; corpus 104/104)
 
 #### Problem Statement
 
@@ -197,15 +197,15 @@ Add `xsl:package` wrappers per namespace module (keeping the plain files primary
 
 #### Acceptance Criteria
 
-- [ ] Each namespace consumable via `xsl:use-package` with a version range.
-- [ ] Package-mode golden case proving cross-package function calls.
+- [x] Each namespace consumable via `xsl:use-package` with a version range. *Six package descriptors in `src/pkg/` (`urn:fytala:exslt:{common,math,strings,date,sets,dynamic}`, `package-version="1.0.0"`); each wraps the plain module via `xsl:include` + explicit-names `xsl:expose` — no implementation duplication. Probe-verified: prefix ranges (`package-version="1.0"` matches `1.0.0`), explicit multi-name expose lists, and cross-package calls all work on Bosak 0.12.3-beta. Package location is host-API: `XsltFunctionLibrary.RegisterPackage(name, version, uri)` — the XSLT spec leaves this implementation-defined.*
+- [x] Package-mode golden case proving cross-package function calls. *`tests/cases/packages/use-package.1/` consumes math + strings via `xsl:use-package` (prefix range); harness registers packages when `meta.json` carries `"mode": "package"`. Verified load-bearing: stripping the flag fails with XTSE3000.*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
 |-------|--------|-------|
-| src/ modules | New files | `xsl:package` variants; plain `.xsl` files unchanged |
-| golden corpus | New cases | Package-mode case(s) |
-| docs | Usage section | `README.md` + `docs/ARCHITECTURE.md` |
+| src/ modules | +6 package descriptors under `src/pkg/` | Plain `.xsl` files unchanged and remain primary |
+| golden corpus | +1 case (104 total) | Package-mode case under `tests/cases/packages/` |
+| docs | Usage section + harness docs | `README.md`, `docs/ARCHITECTURE.md`, `tests/Bosak.Exslt.Tests/README.md` (new `mode` meta.json flag) |
 
 #### Related Requests
 - REQ-006 (bootstrap first — packages need a repo)
@@ -213,7 +213,7 @@ Add `xsl:package` wrappers per namespace module (keeping the plain files primary
 #### Decision Log
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
-| — | — | Pending | Sequenced after bootstrap and corpus work |
+| 2026-10-08 | Kimi | Implemented | Engine package support probed working (xsl:package, xsl:include-in-package, xsl:expose, prefix version ranges, RegisterPackage); one documented engine deviation: intra-package helper calls resolve against the public-exposure table only, so strings/date internals are exposed `public` and marked as implementation details (candidate core gap, reported with REQ-004's findings) |
 
 ---
 

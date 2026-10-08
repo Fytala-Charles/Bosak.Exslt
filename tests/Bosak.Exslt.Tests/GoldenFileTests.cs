@@ -12,6 +12,8 @@
 //                      |     Author       |Version|  Date          | Notes                                                                                    |
 //                      |==================|=======|================|=========================================================================================
 //                      | Charles Korthout | 0.1   | 06-10-2026     | Creation                                                                                 |
+//                      | Charles Korthout | 0.2   | 08-10-2026     | REQ-003: package-mode cases — meta.json "mode":"package" triggers lazy registration of   |
+//                      |                  |       |                | the src/pkg descriptors via XsltFunctionLibrary.RegisterPackage.                          |
 //                      |==================|=======|================|=========================================================================================
 // ===========================================================================================================================================================
 
@@ -65,6 +67,11 @@ public sealed class GoldenFileTests
         var caseDirectory = Path.Combine(CasesRoot, @case);
         var transformPath = Path.Combine(caseDirectory, "transform.xsl");
 
+        if (CaseRunsInPackageMode(caseDirectory))
+        {
+            RegisterPackagesOnce();
+        }
+
         var xsl = File.ReadAllText(transformPath);
         var compiler = new XsltCompiler();
         // The base URI lets xsl:import/xsl:include inside the transform resolve the
@@ -89,6 +96,58 @@ public sealed class GoldenFileTests
             var expected = File.ReadAllText(Path.Combine(caseDirectory, "expected.txt"));
             Assert.Equal(NormalizeText(expected), NormalizeText(actual));
         }
+    }
+
+    private static bool packagesRegistered;
+
+    /// <summary>
+    /// True when the case's <c>meta.json</c> carries <c>"mode": "package"</c>:
+    /// the transform uses <c>xsl:use-package</c> and the EXSLT package
+    /// descriptors must be registered with the engine first.
+    /// </summary>
+    private static bool CaseRunsInPackageMode(string caseDirectory)
+    {
+        var metaPath = Path.Combine(caseDirectory, "meta.json");
+        if (!File.Exists(metaPath))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(metaPath));
+            return document.RootElement.TryGetProperty("mode", out var mode)
+                   && mode.GetString() == "package";
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Registers every <c>src/pkg/*.package.xsl</c> descriptor with the engine's
+    /// static package registry. Runs at most once per test process; the engine's
+    /// re-registration behavior is undefined, so double registration is avoided.
+    /// </summary>
+    private static void RegisterPackagesOnce()
+    {
+        if (packagesRegistered)
+        {
+            return;
+        }
+
+        var packageDirectory = Path.Combine(AppContext.BaseDirectory, "src", "pkg");
+        foreach (var packageFile in Directory.EnumerateFiles(packageDirectory, "*.package.xsl"))
+        {
+            var package = XDocument.Load(packageFile);
+            var root = package.Root!;
+            var name = root.Attribute("name")!.Value;
+            var version = root.Attribute("package-version")!.Value;
+            XsltFunctionLibrary.RegisterPackage(name, version, new Uri(packageFile).AbsoluteUri);
+        }
+
+        packagesRegistered = true;
     }
 
     /// <summary>

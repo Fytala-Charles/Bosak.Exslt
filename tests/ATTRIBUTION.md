@@ -137,6 +137,7 @@ upstream ASF license comment blocks verbatim; goldens are stored as
 | `strings/strings8` | `tests/exslt/strings/strings8` | version 1.0 → 3.0; library included; UTF-16 → UTF-8 — matched upstream verbatim |
 | `strings/strings10` | `tests/exslt/strings/strings10` | version 1.0 → 3.0; library included — matched upstream verbatim |
 | `strings/strings11` | `tests/exslt/strings/strings11` | version 1.0 → 3.0; library included — matched upstream verbatim |
+| `packages/use-package.1` | hand-written (Apache-2.0) | REQ-003 package-mode case: consumes `urn:fytala:exslt:math` and `urn:fytala:exslt:strings` via `xsl:use-package` (prefix version range `1.0` against registered `1.0.0`); requires the harness registration path (`meta.json` `"mode": "package"`). Goldens are engine-verified output |
 
 "Library included" means an `xsl:include` of the corresponding
 `src/<module>.xsl` was added; no template, input, or expected content was

@@ -23,7 +23,7 @@
     <!-- Golden corpus and library modules are copied so that the relative
          xsl:include paths inside transform.xsl resolve inside the output directory. -->
     <None Include="..\cases\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="cases" />
-    <None Include="..\..\src\*.xsl" CopyToOutputDirectory="PreserveNewest" LinkBase="src" />
+    <None Include="..\..\src\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="src" />
   </ItemGroup>
 
 </Project>
