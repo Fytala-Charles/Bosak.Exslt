@@ -114,14 +114,14 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
       (`XsltFunctionLibrary.RegisterPackage`) — implementation-defined per the
       spec.
       *(REQ-003)*
-- [x] First tagged release (0.1.0) — **prepared 2026-10-08**: every gate green
-      in CI (110/110 + 22/22 + 10/10 + `check-docs.ps1 -Strict` on
-      ubuntu-latest), release notes drafted in `RELEASE-NOTES.md`; the
-      annotated tag itself is the owner's to create (`git tag -a 0.1.0 -m
-      "Bosak.Exslt 0.1.0 — first tagged release"`, then `git push origin 0.1.0`).
-      Note: MinVer is not wired into the build (no packable project yet), so
-      the tag is a conventional source-release marker — see the versioning
-      note at the top of this file.
+- [x] First tagged release (0.1.0) — **done 2026-10-08**: annotated tag `0.1.0`
+      on `e909740`, pushed to origin; every gate green in CI (110/110 + 22/22 +
+      10/10 + `check-docs.ps1 -Strict` on ubuntu-latest); release notes in
+      `RELEASE-NOTES.md`. Note: MinVer is not wired into the build (no packable
+      project yet), so the tag is a conventional source-release marker — see the
+      versioning note at the top of this file. The CI workflow triggers on
+      `branches: [main]` only, so tag pushes do not re-run CI (the tagged
+      commit passed as a branch push).
 - [ ] Publish as a Fytala open-source artifact next to the Bosak engine packages.
 - [ ] Static-HTML rendering of the sample gallery — the `samples/` tree and
       branded `samples/README.md` gallery are live (REQ-005 Implemented
@@ -138,7 +138,7 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
 | M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
 | M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases; REQ-002: 30 Xalan-J cases from apache/xalan-test; REQ-003: +1 package-mode case — corpus 104/104, all Implemented) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending (divergence pinning done 2026-10-06 in REQ-001 batch 3 + `month-name.1` re-golden; non-deterministic `current.xsl` skip-recorded; year-range item still awaits the Bosak engine representation decision) |
-| M6 — Release | First tag (0.1.0), CI green, artifact published | Tag prepared 2026-10-08 (release notes in `RELEASE-NOTES.md`, CI green; owner creates the annotated tag); artifact publish open |
+| M6 — Release | First tag (0.1.0), CI green, artifact published | Tag done 2026-10-08 (`0.1.0` annotated on `e909740`, CI green on the commit); artifact publish open |
 | M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |
 | M8 — Sample gallery | Runnable legacy/modern pair per module with harness-captured outputs; branded gallery README; SamplesTests in the harness | Done (2026-10-08, REQ-005; static-HTML rendering follow-up) |
 
@@ -168,7 +168,7 @@ Limitations hit while building the library, and how the modules work around them
 - Git initialized 2026-10-06 (REQ-006 git part done); CI workflow added
   2026-10-08 — `.github/workflows/build.yml` (ubuntu-latest) gates build,
   all three test projects, and `check-docs.ps1 -Strict` on push/PR
-  (REQ-006 Implemented). 0.1.0 tag prepared 2026-10-08 (see Stage 4 and
+  (REQ-006 Implemented). 0.1.0 tagged 2026-10-08 (see Stage 4 and
   `RELEASE-NOTES.md`); MinVer is planned, not wired — no packable project yet.
 
 ## 4. Relation to REQ-121
