@@ -222,7 +222,7 @@ foreach ($file in $mdFiles) {
     }
 
     foreach ($target in $targets) {
-        if ($target -notmatch '^[A-Za-z]:[\\/]' -and $target -notmatch '^\.[\\/]') {
+        if (-not [System.IO.Path]::IsPathRooted($target)) {
             $target = Join-Path $root $target
         }
         if (Test-Path $target) {
