@@ -80,7 +80,9 @@ Every EXSLT function belongs to exactly one tier — this is the product's spine
 
 ## 6. Versioning
 
-- Semantic Versioning; tags produced by MinVer once git is initialized.
+- Semantic Versioning from git tags; MinVer is the planned mechanism once a
+  packable .NET artifact exists (not wired into the build today — the library
+  ships as XSLT sources, so tags are conventional source-release markers).
 - Bump `Minor` for new functions/namespaces, `Patch` for bug fixes.
 - Record bumps in file headers and `ROADMAP.md`.
 
@@ -164,4 +166,4 @@ After **every** successful implementation step, update the following canonical d
 
 ---
 
-*Last updated: 06 October 2026*
+*Last updated: 08 October 2026*
