@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<events>
+  <event name="launched" date="2026-10-06T14:30:00Z"/>
+  <event name="birthday" date="2000-02-29"/>
+  <event name="archive"  date="1900-03-01"/>
+  <event name="century"  date="2026"/>
+  <event name="mystery"  date="not-a-date"/>
+  <event name="overflow" date="2023-13-45"/>
+</events>

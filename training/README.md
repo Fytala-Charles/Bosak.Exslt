@@ -95,7 +95,7 @@ the library, with headers, attribution, and documentation updates.
 | 5 | [Stateful scanning](05-stateful-scanning/README.md) | Left-to-right scans, recursion with an accumulator, positional mapping | `str:replace` | Available |
 | 6 | [Nodes, identity, grouping](06-nodes-and-grouping/README.md) | `is` vs `=`, document order, `except`/`intersect`, `xsl:for-each-group` | `set:has-same-node`, `set:distinct`, `set:difference` | Available |
 | 7 | [Result trees and types](07-result-trees-and-types/README.md) | What variables hold in XSLT 3.0, document nodes, `instance of` | `exsl:node-set`, `exsl:object-type` | Available |
-| 8 | Dates I — parsing & formatting | `xs:date`/`xs:dateTime`, `format-date` picture strings, invalid input | `date:year`, `date:leap-year`, `date:month-name` | Planned |
+| 8 | [Dates I — parsing &amp; formatting](08-dates-parsing-formatting/README.md) | `xs:date`/`xs:dateTime`, `format-date` picture strings, invalid input | `date:year`, `date:leap-year`, `date:month-name` | Available |
 | 9 | Dates II — duration arithmetic | `xs:duration` component arithmetic, carry/normalization, decimal precision | `date:duration`, `date:add-duration`, `date:sum` | Planned |
 | 10 | The limits of pure XSLT | Function items, `fold-left`/`map`/`filter`, why `dyn:evaluate` cannot exist here | `dyn:evaluate` (tier 3), `func:*` | Planned |
 | 11 | Capstone: ship a function | Full contribution workflow — golden case first, then implementation | learner's choice | Planned |

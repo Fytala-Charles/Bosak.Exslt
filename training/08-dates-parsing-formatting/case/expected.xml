@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<report>
+  <event name="launched">
+    <year>2026</year>
+    <leap>false</leap>
+    <month/>
+  </event>
+  <event name="birthday">
+    <year>2000</year>
+    <leap>true</leap>
+    <month/>
+  </event>
+  <event name="archive">
+    <year>1900</year>
+    <leap>false</leap>
+    <month/>
+  </event>
+  <event name="century">
+    <year>2026</year>
+    <leap>false</leap>
+    <month/>
+  </event>
+  <event name="mystery">
+    <year>NaN</year>
+    <leap>false</leap>
+    <month/>
+  </event>
+  <event name="overflow">
+    <year>NaN</year>
+    <leap>false</leap>
+    <month/>
+  </event>
+</report>

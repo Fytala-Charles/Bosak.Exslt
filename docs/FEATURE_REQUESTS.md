@@ -91,7 +91,8 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Pending | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | In Progress (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow pending) | Pre-v0.1.0 | Owner | 2026-10-06 |
-| `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | In Progress (sessions 00–07 scaffolded 2026-10-06) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
+| `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | In Progress (sessions 00–08 scaffolded 2026-10-06) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
+| `REQ-008` | `Bosak.Exslt` (maintainers) | Fix the latent date-formatting type defect: `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` pass an `xs:dateTime` to `format-date` (first parameter `xs:date?`) → `XPTY0004` → silent `''`/`NaN` for every input on signature-enforcing engines | Found while authoring training session 08 (2026-10-06); `date:time` already applies the correct cast pattern (`xs:time(substring(string(...), 12))`) — the fix is that same one-line cast per function, each with a new golden case per the TDD rule | Accepted | Pre-v0.1.0 | Unassigned | 2026-10-06 |
 
 > **Legend:**
 > - `Pending` — Under review, no decision yet.
@@ -328,7 +329,7 @@ The repository existed on disk only. House rules forbid agents from running `git
 
 **Requesting Party:** `Fytala`  
 **Submitted:** `2026-10-06`  
-**Status:** `In Progress` — sessions 00–02 scaffolded 2026-10-06: branded self-paced index `training/README.md`, session `00-setup` (install guide + `check-setup.ps1` configuration check), session `01-xslt-basics` (processing model, templates, literal result elements), session `02-first-stylesheet` (lesson + starter + solution + case on `math:highest`), `training/TrainingTests` harness green (4/4), `tools/check-docs.ps1` extended for session integrity and training branding. **Companion XPath foundations track scaffolded same day** (`training/xpath/` per owner decision: a separate, reusable base-knowledge training referenced from the XSLT curriculum): branded index, session `01-values-and-paths` (raw `.xpath` exercises), `XPathTrainingTests` harness green (2/2) on published `Bosak.XPath.Api`. Session `03-recursion` scaffolded 2026-10-06 (lesson + starter + solution + case on recursive `str:padding` and `str:align`; harness green 6/6 including the session's two discovery-generated tests). Session `04-regular-expressions` scaffolded 2026-10-06 (lesson + starter + solution + case on `str:tokenize`, `str:split`, and ASCII-scoped hand-rolled `str:encode-uri`; the lesson teaches around the three documented Bosak 0.12.3-beta engine quirks; harness green 8/8). Session `05-stateful-scanning` scaffolded 2026-10-06 (lesson + starter + solution + case on the left-to-right scanner behind `str:replace` — earliest-position wins, document-order tie-break, no re-scanning; harness green 10/10). Session `06-nodes-and-grouping` scaffolded 2026-10-06 (lesson + starter + solution + case on identity-based `set:has-same-node`, `set:distinct`, and `set:difference` — `is` vs `=`, `<<` document order, `except`; harness green 12/12). Session `07-result-trees-and-types` scaffolded 2026-10-06 (lesson + starter + solution + case on `exsl:node-set` as the XSLT 3.0 identity and `exsl:object-type` via `instance of`, pinning the documented RTF→`node-set` divergence; harness green 14/14).
+**Status:** `In Progress` — sessions 00–02 scaffolded 2026-10-06: branded self-paced index `training/README.md`, session `00-setup` (install guide + `check-setup.ps1` configuration check), session `01-xslt-basics` (processing model, templates, literal result elements), session `02-first-stylesheet` (lesson + starter + solution + case on `math:highest`), `training/TrainingTests` harness green (4/4), `tools/check-docs.ps1` extended for session integrity and training branding. **Companion XPath foundations track scaffolded same day** (`training/xpath/` per owner decision: a separate, reusable base-knowledge training referenced from the XSLT curriculum): branded index, session `01-values-and-paths` (raw `.xpath` exercises), `XPathTrainingTests` harness green (2/2) on published `Bosak.XPath.Api`. Session `03-recursion` scaffolded 2026-10-06 (lesson + starter + solution + case on recursive `str:padding` and `str:align`; harness green 6/6 including the session's two discovery-generated tests). Session `04-regular-expressions` scaffolded 2026-10-06 (lesson + starter + solution + case on `str:tokenize`, `str:split`, and ASCII-scoped hand-rolled `str:encode-uri`; the lesson teaches around the three documented Bosak 0.12.3-beta engine quirks; harness green 8/8). Session `05-stateful-scanning` scaffolded 2026-10-06 (lesson + starter + solution + case on the left-to-right scanner behind `str:replace` — earliest-position wins, document-order tie-break, no re-scanning; harness green 10/10). Session `06-nodes-and-grouping` scaffolded 2026-10-06 (lesson + starter + solution + case on identity-based `set:has-same-node`, `set:distinct`, and `set:difference` — `is` vs `=`, `<<` document order, `except`; harness green 12/12). Session `07-result-trees-and-types` scaffolded 2026-10-06 (lesson + starter + solution + case on `exsl:node-set` as the XSLT 3.0 identity and `exsl:object-type` via `instance of`, pinning the documented RTF→`node-set` divergence; harness green 14/14). Session `08-dates-parsing-formatting` scaffolded 2026-10-06 (lesson + starter + solution + case on `date:year`, `date:leap-year`, and `date:month-name` over a shared lenient ISO 8601 parser; `date:month-name` mirrors the library's `format-date` `[MNn]` spelling, and the golden pins its actual behavior on this engine — `format-date`'s `xs:date` parameter rejects the `xs:dateTime` argument with `XPTY0004`, so the try/catch yields `''`; harness green 16/16).
 
 #### Problem Statement
 
@@ -367,6 +368,39 @@ Harness `training/TrainingTests` mirrors the golden harness (same published Bosa
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
 | 2026-10-06 | Owner (via Kimi) | Accepted; scaffold session 01 | Training as sandbox under root; branding contract applies; library must stay jeopardize-proof |
+
+---
+
+### REQ-008: Fix latent date-formatting type defect (`format-date` family)
+
+**Requesting Party:** `Bosak.Exslt` (maintainers)
+**Submitted:** `2026-10-06`
+**Status:** `Accepted`
+
+#### Problem Statement
+
+Seven date functions — `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` — pass `date:_as-datetime($date-time)` (always an `xs:dateTime`) directly to `fn:format-date`, whose first parameter is typed `xs:date?`. On any signature-enforcing processor (including Bosak 0.12.3-beta, verified empirically 2026-10-06) this raises `err:XPTY0004`, which the functions' defensive `try/catch` swallows — so they silently return `''` (or `NaN` for the numeric ones) for **every** input. The golden corpus does not cover them (the two date cases are `duration.1`/`add-duration.1`), so the matrix rows read "implemented" while the behavior is empty. Not an engine bug: `format-date`/`format-dateTime` were independently verified working on this engine (`[Y0001]-[M01]-[D01]`, `[MNn]`, `[H01]:[m01]` all correct). Found during training session 08 authoring; the session's golden deliberately pins the current library behavior.
+
+#### Proposed Solution
+
+Apply the cast pattern `date:time` already uses (`xs:time(substring(string(date:_as-datetime($date-time)), 12))`) to the seven functions — i.e. `format-date(xs:date(substring(string(...), 1, 10)), ...)`. This is a bug fix, not a divergence: the functions change from "always empty" to the correct EXSLT answer, so no `tests/ATTRIBUTION.md` divergence entry is required (record the repair as an adaptation note instead). Per the golden-file TDD rule, each fixed function gets at least one happy-path golden case plus an edge case; `docs/COMPATIBILITY.md` test pointers are updated in the same step.
+
+#### Acceptance Criteria
+
+- [ ] All seven functions return the correct EXSLT values on Bosak 0.12.3-beta.
+- [ ] Each fixed function has at least one golden case (happy path + edge) under `tests/cases/date/`.
+- [ ] `docs/COMPATIBILITY.md` matrix and test pointers updated; no silent behavior change anywhere.
+- [ ] `dotnet test` green; `pwsh tools/check-docs.ps1 -ProjectPath .` ALL CHECKS PASSED.
+
+#### Impact Analysis
+| Layer | Impact | Notes |
+|-------|--------|-------|
+| src/ modules | `dates-and-times.xsl` | Seven one-line casts; header change-history row |
+| golden corpus | New cases | ≥7 case directories (one per function) |
+| docs | Matrix update | Test-coverage pointers in `docs/COMPATIBILITY.md` |
+
+#### Related Requests
+- REQ-001 (corpus import overlaps the new golden cases), REQ-007 (found during session 08)
 
 ---
 
