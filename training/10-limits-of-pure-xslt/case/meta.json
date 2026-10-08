@@ -1,0 +1,8 @@
+{
+  "function": "dyn:evaluate",
+  "namespace": "http://exslt.org/dynamic",
+  "tier": 3,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 10. The vehicle dyn:evaluate is tier 3: its src/dynamic.xsl slot terminates the transformation with xsl:message terminate=yes (dynamic XPath evaluation is not implementable in pure XSLT 3.0) and is demonstrated in the lesson, never in this golden. The golden pins the session's exercise instead: a pure-XSLT operation dispatcher — a registry map from op-name to function item (anonymous functions plus a named function reference), a map:contains guard against unknown ops (a missing key's empty sequence raises XPTY0004 when called, engine-verified), a fold-left map-accumulator summary, and a filter+for-each rejected list. This is the typed, compiled, safe answer to the use case that motivates dyn:evaluate for KNOWN operations. All function-item/HOF constructs used were empirically verified on Bosak 0.12.3-beta before authoring (see the session README).",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

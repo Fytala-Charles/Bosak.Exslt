@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<report>
+  <calc op="add" a="2" b="3">
+    <result>5</result>
+  </calc>
+  <calc op="sub" a="10" b="4">
+    <result>6</result>
+  </calc>
+  <calc op="mul" a="6" b="7">
+    <result>42</result>
+  </calc>
+  <calc op="div" a="20" b="4">
+    <result>5</result>
+  </calc>
+  <calc op="mod" a="17" b="5">
+    <result>2</result>
+  </calc>
+  <calc op="max" a="8" b="13">
+    <result>13</result>
+  </calc>
+  <calc op="unknown" a="1" b="2">
+    <rejected/>
+  </calc>
+  <calc op="typo" a="5" b="9">
+    <rejected/>
+  </calc>
+  <calc op="add" a="40" b="2">
+    <result>42</result>
+  </calc>
+  <summary evaluated="7" rejected="2" total="115"/>
+  <rejected>unknown,typo</rejected>
+</report>

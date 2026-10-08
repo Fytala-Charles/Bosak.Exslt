@@ -24,8 +24,11 @@
     <!-- Training sessions are copied so the transforms resolve their session's
          input.xml and case/ files from their copied location in the output
          directory. Training stylesheets are self-contained: unlike the golden
-         corpus they never include src/, so no library copy is needed here. -->
+         corpus they never include src/, so no library copy is needed here.
+         Sessions 00-09 live under 0*, sessions 10+ under 1*; the TrainingTests
+         discovery enumerates every directory and filters on case/meta.json. -->
     <None Include="..\0*\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="training" />
+    <None Include="..\1*\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="training" />
   </ItemGroup>
 
 </Project>

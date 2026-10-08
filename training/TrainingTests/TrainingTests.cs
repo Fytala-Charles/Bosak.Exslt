@@ -15,6 +15,8 @@
 //                      |==================|=======|================|=========================================================================================
 //                      | Charles Korthout | 0.1   | 06-10-2026     | Creation                                                                                 |
 //                      | Charles Korthout | 0.2   | 06-10-2026     | Renamed tests: Solution_matches_golden / Starter_differs_from_golden                    |
+//                      | Charles Korthout | 0.3   | 06-10-2026     | Session discovery: enumerate every directory (sessions 10+ do not start with "0");    |
+//                      |                  |       |                | the case/meta.json marker still does the filtering                                     |
 //                      |==================|=======|================|=========================================================================================
 // ===========================================================================================================================================================
 
@@ -37,8 +39,10 @@ public sealed class TrainingTests
     private static string TrainingRoot => Path.Combine(AppContext.BaseDirectory, "training");
 
     /// <summary>
-    /// Discovers all training sessions: directories under <c>training/</c> whose names
-    /// start with a two-digit number and that contain a <c>case/meta.json</c>. Directory
+    /// Discovers all training sessions: directories under <c>training/</c> that
+    /// contain a <c>case/meta.json</c> (numbered <c>NN-slug/</c> by convention —
+    /// sessions 10+ no longer start with "0", so the enumeration matches every
+    /// directory and lets the meta.json marker do the filtering). Directory
     /// names become the xUnit display names (e.g. <c>01-xslt-basics</c>).
     /// </summary>
     public static TheoryData<string> Sessions
@@ -51,7 +55,7 @@ public sealed class TrainingTests
                 return sessions;
             }
 
-            foreach (var directory in Directory.EnumerateDirectories(TrainingRoot, "0*"))
+            foreach (var directory in Directory.EnumerateDirectories(TrainingRoot))
             {
                 if (File.Exists(Path.Combine(directory, "case", "meta.json")))
                 {

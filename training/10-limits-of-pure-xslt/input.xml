@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<requests>
+  <calc op="add" a="2" b="3"/>
+  <calc op="sub" a="10" b="4"/>
+  <calc op="mul" a="6" b="7"/>
+  <calc op="div" a="20" b="4"/>
+  <calc op="mod" a="17" b="5"/>
+  <calc op="max" a="8" b="13"/>
+  <calc op="unknown" a="1" b="2"/>
+  <calc op="typo" a="5" b="9"/>
+  <calc op="add" a="40" b="2"/>
+</requests>
