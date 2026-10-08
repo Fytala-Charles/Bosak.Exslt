@@ -9,6 +9,9 @@
                    Tier 2 (genuine): distinct, leading, trailing. leading/trailing
                    reproduce the libxml2 reference rule (leader node must be a
                    member of the first node set) — see docs/COMPATIBILITY.md.
+  CHANGE HISTORY : 2026-10-06 | 1.0 -> 1.1 | set:trailing repaired: anchors on
+                   the FIRST node of the second argument in document order
+                   (xmlXPathNodeSetItem(arg2, 0)), not the last.
   COPYRIGHT      : Fytala
   LICENSE        : LICENSE (Apache-2.0)
   =======================================================================================
@@ -85,9 +88,9 @@
       Tier 2 — genuine implementation.
 
       Symmetric to set:leading: returns the nodes in $node-set1 that follow, in
-      document order, the last node of $node-set2. The same libxml2 containment
-      rule applies (the trailing node must be a member of $node-set1), and an empty
-      $node-set2 yields $node-set1 unchanged.
+      document order, the first node of $node-set2. The same libxml2 containment
+      rule applies (that leading node must be a member of $node-set1 — otherwise
+      the result is empty), and an empty $node-set2 yields $node-set1 unchanged.
   -->
   <xsl:function name="set:trailing" as="node()*">
     <xsl:param name="node-set1" as="node()*"/>
@@ -97,9 +100,9 @@
         <xsl:sequence select="$node-set1"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="trailer" as="node()"
-                      select="$node-set2[not(some $other in $node-set2 satisfies . &lt;&lt; $other)]"/>
-        <xsl:sequence select="if ($trailer intersect $node-set1) then $node-set1[$trailer &lt;&lt; .] else ()"/>
+        <xsl:variable name="leader" as="node()"
+                      select="$node-set2[not(some $other in $node-set2 satisfies $other &lt;&lt; .)]"/>
+        <xsl:sequence select="if ($leader intersect $node-set1) then $node-set1[. &gt;&gt; $leader] else ()"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>

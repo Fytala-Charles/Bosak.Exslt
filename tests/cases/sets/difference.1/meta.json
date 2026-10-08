@@ -1,0 +1,11 @@
+{
+  "function": "set:intersection, set:difference",
+  "namespace": "http://exslt.org/sets",
+  "tier": 1,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/sets/difference.1"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; documentation comment 'test intersection and difference on empty sets' and the whitespace-only text node preceding it removed (the Bosak engine does not strip whitespace-only text nodes adjacent to comments; libxslt does)"
+}

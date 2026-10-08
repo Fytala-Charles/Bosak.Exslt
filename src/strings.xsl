@@ -10,6 +10,13 @@
                    elements (no namespace) per the spec and the libxslt reference
                    implementation; fn:tokenize returns strings — see the per-function
                    notes when migrating.
+  CHANGE HISTORY : 2026-10-06 | 1.0 -> 1.1 | str:decode-uri repaired: percent-escape
+                   runs now decode as UTF-8 byte sequences (libxslt-compatible
+                   round-trip); previously each %XX became a Latin-1 codepoint,
+                   which turned non-ASCII input into control characters
+                   (SERE0006 on serialization). str:encode-uri full mode now
+                   leaves the RFC 2396 mark characters ! * ' ( ) and @
+                   unencoded, matching libxslt/libxml2.
   COPYRIGHT      : Fytala
   LICENSE        : LICENSE (Apache-2.0)
   =======================================================================================
@@ -219,23 +226,50 @@
       Tier 2 — genuine implementation.
 
       Encodes reserved characters in a URI for use in a URI. When $encode-reserved
-      is true, every character outside [a-zA-Z0-9\-_.~] is percent-encoded
-      (fn:encode-for-uri); when false, only characters illegal in a URI are escaped
-      and reserved characters are preserved (fn:iri-to-uri).
+      is true, every character outside [a-zA-Z0-9\-_.!~*'()@] is percent-encoded,
+      matching libxslt: its full mode leaves the RFC 2396 "mark" characters
+      ! * ' ( ) unencoded, and the underlying libxml2 xmlURIEscapeStr always
+      leaves @ unencoded (a hardcoded exception, even in full mode). fn:encode-for-uri
+      encodes all six, so its output is post-processed to restore them — safe
+      because encode-for-uri always encodes '%' itself, so a %21 token in its
+      output can only come from a literal '!'.
+      When false, only characters illegal in a URI are escaped and reserved
+      characters are preserved (fn:iri-to-uri); libxslt also escapes every
+      literal '%' in this mode, so '%' is pre-escaped to '%25' before
+      iri-to-uri (which leaves '%' alone but would double-escape its own
+      output if run first).
   -->
   <xsl:function name="str:encode-uri" as="xs:string">
     <xsl:param name="uri" as="xs:string"/>
     <xsl:param name="encode-reserved" as="xs:boolean"/>
-    <xsl:sequence select="if ($encode-reserved) then encode-for-uri($uri) else iri-to-uri($uri)"/>
+    <xsl:sequence select="if ($encode-reserved)
+                          then str:restore-uri-marks(encode-for-uri($uri))
+                          else iri-to-uri(replace($uri, '%', '%25'))"/>
+  </xsl:function>
+
+  <!-- Restores the characters libxslt's full-mode str:encode-uri leaves unencoded
+       but fn:encode-for-uri percent-encodes: the RFC 2396 "mark" characters
+       ! * ' ( ) and @ (xmlURIEscapeStr's hardcoded exception). The escape
+       tokens cannot occur except from the literal characters (encode-for-uri
+       encodes '%' itself), so a plain replace chain is exact. -->
+  <xsl:function name="str:restore-uri-marks" as="xs:string">
+    <xsl:param name="s" as="xs:string"/>
+    <xsl:sequence select="replace(replace(replace(replace(replace(replace(
+                            $s, '%21', '!'), '%2A', '*'), '%27', ''''), '%28', '('), '%29', ')'), '%40', '@')"/>
   </xsl:function>
 
   <!--
       Tier 2 — genuine implementation.
 
       Percent-decodes a URI. XPath 3.1 offers no decoding function, so this scans
-      the string character by character: a '%' followed by two hexadecimal digits
-      decodes to the corresponding character; anything else passes through
-      unchanged.
+      the string for maximal runs of consecutive %XX escapes and decodes each run
+      as a UTF-8 byte sequence (matching libxslt, which treats percent-escapes as
+      UTF-8 bytes — so decode-uri(encode-uri(x)) round-trips non-ASCII text).
+      Literal characters between runs pass through unchanged, as does a '%' that
+      is not followed by two hexadecimal digits. Malformed UTF-8 inside a run
+      (a stray continuation byte, or a bad/truncated multi-byte sequence) is not
+      an error: the offending byte is passed through as a raw codepoint and
+      decoding continues with the next byte — see docs/COMPATIBILITY.md.
   -->
   <xsl:function name="str:decode-uri" as="xs:string">
     <xsl:param name="uri" as="xs:string"/>
@@ -249,10 +283,82 @@
         <xsl:sequence select="concat(substring($uri, 1, $mark), str:decode-uri(substring($uri, $mark + 1)))"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="hex" as="xs:string" select="substring($uri, $mark + 1, 2)"/>
+        <xsl:variable name="run-length" as="xs:integer" select="str:escape-run-length($uri, $mark)"/>
+        <xsl:variable name="bytes" as="xs:integer*"
+          select="for $i in 1 to $run-length idiv 3
+                  return str:hex-to-codepoint(substring($uri, $mark + 3 * $i - 2, 2))"/>
         <xsl:sequence select="concat(substring($uri, 1, $mark - 1),
-                                     codepoints-to-string(str:hex-to-codepoint($hex)),
-                                     str:decode-uri(substring($uri, $mark + 3)))"/>
+                                     codepoints-to-string(str:utf8-decode($bytes)),
+                                     str:decode-uri(substring($uri, $mark + $run-length)))"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!-- Returns the length of the maximal run of consecutive %XX escapes starting
+       at $pos (a multiple of 3, or 0 when $pos is not at an escape). -->
+  <xsl:function name="str:escape-run-length" as="xs:integer">
+    <xsl:param name="s" as="xs:string"/>
+    <xsl:param name="pos" as="xs:integer"/>
+    <xsl:choose>
+      <xsl:when test="substring($s, $pos, 1) eq '%'
+                      and str:is-hex-pair(substring($s, $pos + 1, 2))">
+        <xsl:sequence select="3 + str:escape-run-length($s, $pos + 3)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="0"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!-- Decodes a UTF-8 byte sequence (integers 0-255) into Unicode codepoints.
+       Structural validation only: a lead byte with a bad or truncated
+       continuation run, or a stray continuation byte, is passed through as a
+       raw codepoint and decoding resumes at the following byte. -->
+  <xsl:function name="str:utf8-decode" as="xs:integer*">
+    <xsl:param name="bytes" as="xs:integer*"/>
+    <xsl:variable name="b1" as="xs:integer?" select="$bytes[1]"/>
+    <xsl:choose>
+      <xsl:when test="empty($bytes)">
+        <xsl:sequence select="()"/>
+      </xsl:when>
+      <xsl:when test="$b1 lt 192">
+        <!-- ASCII byte or stray continuation byte: pass through. -->
+        <xsl:sequence select="($b1, str:utf8-decode(subsequence($bytes, 2)))"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="width" as="xs:integer"
+          select="if ($b1 lt 224) then 2 else if ($b1 lt 240) then 3 else 4"/>
+        <xsl:variable name="seq" as="xs:integer*" select="subsequence($bytes, 1, $width)"/>
+        <xsl:choose>
+          <xsl:when test="count($seq) eq $width
+                          and (every $b in subsequence($seq, 2) satisfies ($b ge 128 and $b lt 192))">
+            <xsl:variable name="lead" as="xs:integer"
+              select="if ($width eq 2) then $b1 - 192
+                 else if ($width eq 3) then $b1 - 224
+                 else $b1 - 240"/>
+            <xsl:sequence select="(str:utf8-accumulate($lead, subsequence($seq, 2)),
+                                   str:utf8-decode(subsequence($bytes, $width + 1)))"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- Bad or truncated continuation run: pass the lead byte through. -->
+            <xsl:sequence select="($b1, str:utf8-decode(subsequence($bytes, 2)))"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!-- Accumulates continuation bytes (each contributes its low 6 bits) into a
+       partially-built codepoint. -->
+  <xsl:function name="str:utf8-accumulate" as="xs:integer">
+    <xsl:param name="prefix" as="xs:integer"/>
+    <xsl:param name="bytes" as="xs:integer*"/>
+    <xsl:choose>
+      <xsl:when test="empty($bytes)">
+        <xsl:sequence select="$prefix"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="str:utf8-accumulate(64 * $prefix + $bytes[1] - 128, subsequence($bytes, 2))"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>

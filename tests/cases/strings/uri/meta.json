@@ -1,0 +1,11 @@
+{
+  "function": "str:encode-uri, str:decode-uri",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/strings/uri"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; pins the src/strings.xsl 1.1 libxslt-parity repairs: str:decode-uri decodes percent-escape runs as UTF-8 bytes (was Latin-1 per byte), str:encode-uri full mode leaves the mark characters ! * ' ( ) and @ unencoded (via libxml2 xmlURIEscapeStr) and both modes escape a literal % to %25"
+}

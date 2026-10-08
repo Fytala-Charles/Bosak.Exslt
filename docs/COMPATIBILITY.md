@@ -51,8 +51,8 @@ Namespace URIs: `exsl` = `http://exslt.org/common`, `math` = `http://exslt.org/m
 | `str:padding` | 2 | implemented | Repeat/truncate padding to exactly `$length` characters. | `cases/strings/padding.1` |
 | `str:align` | 2 | implemented | `left` (default) / `right` / `center`; truncates the string when longer than the padding. | `cases/strings/align.1` |
 | `str:split` | 2 | implemented | Split on a regex `$pattern` (built on `fn:tokenize`); returns `token` elements; empty tokens dropped; `$pattern = ''` splits into characters; no `$pattern` splits on whitespace runs. | `cases/strings/split.1` |
-| `str:encode-uri` | 2 | implemented | `fn:encode-for-uri` when `$encode-reserved`, else `fn:iri-to-uri`. | — |
-| `str:decode-uri` | 2 | implemented | No native XPath 3.1 decode; percent-decoding implemented character-by-character. | — |
+| `str:encode-uri` | 2 | implemented | `$encode-reserved`: `fn:encode-for-uri`, then restore `%21 %2A %27 %28 %29 %40` → `! * ' ( ) @` — libxslt's full mode leaves the RFC 2396 mark characters and `@` (a hardcoded libxml2 `xmlURIEscapeStr` exception) unencoded. Else `fn:iri-to-uri` with every literal `%` pre-escaped to `%25` (`iri-to-uri` leaves `%` alone; libxslt escapes it). Exact: `encode-for-uri` always encodes `%` itself, so the restore tokens can only come from the literal characters. | `cases/strings/uri` |
+| `str:decode-uri` | 2 | implemented | No native XPath 3.1 decode. Scans for maximal runs of consecutive `%XX` escapes and decodes each run as a UTF-8 byte sequence (matching libxslt, so `decode-uri(encode-uri(x))` round-trips non-ASCII); a `%` not followed by two hex digits passes through. Malformed UTF-8 inside a run (stray continuation byte, bad/truncated sequence) is **not** an error: the offending byte is passed through as a raw codepoint and decoding resumes at the next byte (structural validation only, no overlong/surrogate check). | `cases/strings/uri` |
 
 ## date — Dates and Times (`src/dates-and-times.xsl`)
 
@@ -101,7 +101,7 @@ spec demands, and use `xs:dateTime` arithmetic plus `format-dateTime` underneath
 | `set:has-same-node` | 1 | wrapper | `some $a in $ns1, $b in $ns2 satisfies $a is $b` | `cases/sets/has-same-node.1` |
 | `set:distinct` | 2 | implemented | Nodes with distinct string values, document order, first occurrence kept. | `cases/sets/distinct.1` |
 | `set:leading` | 2 | implemented | Reproduces the libxml2 reference rule: nodes in `$ns1` preceding the document-first node of `$ns2`, **empty unless that node is itself in `$ns1`**; `$ns2` empty → `$ns1`. | `cases/sets/leading.1` |
-| `set:trailing` | 2 | implemented | Symmetric to `set:leading` against the document-last node of `$ns2`. | — |
+| `set:trailing` | 2 | implemented | Symmetric to `set:leading`: nodes in `$ns1` **following the document-first node of `$ns2`** (libxml2 anchors on `xmlXPathNodeSetItem(arg2, 0)`, not the last node), **empty unless that node is itself in `$ns1`**; `$ns2` empty → `$ns1`. | `cases/sets/trailing.1` |
 
 ## dyn — Dynamic (`src/dynamic.xsl`)
 

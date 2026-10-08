@@ -8,7 +8,7 @@ the rulebook.
 
 | Project | License | Upstream path pattern | Used for |
 |---------|---------|-----------------------|----------|
-| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 24 cases (15 seed + 9 REQ-001 batch 1) |
+| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 35 cases (15 seed + 9 REQ-001 batch 1 + 11 REQ-001 batch 2) |
 | hand-written (this project, Fytala) | Apache-2.0 | — | 7 REQ-008 date cases |
 
 libxslt's EXSLT test suite is the de-facto reference behavior for EXSLT
@@ -53,6 +53,17 @@ imported yet (see `../ROADMAP.md`, Stage 1).
 | `math/min.2` | `tests/exslt/math/min.2` | version 1.0 → 3.0; library included; pins empty-input edge (`Minimum: NaN`) |
 | `strings/tokenize.2` | `tests/exslt/strings/tokenize.2` | version 1.0 → 3.0; library included; `exclude-result-prefixes="str"` added (XSLT 3.0 ignores `extension-element-prefixes` for function namespaces — without it the `str` namespace leaked onto literal result elements); golden stored as `expected.txt` (fragment output, not a single document) |
 | `strings/tokenize.3` | `tests/exslt/strings/tokenize.3` | version 1.0 → 3.0; library included; golden stored as `expected.txt` (bare text lines); pins empty-token dropping on consecutive/adjacent delimiters — matched upstream verbatim |
+| `strings/uri` | `tests/exslt/strings/uri` | version 1.0 → 3.0; library included; pins the `src/strings.xsl` 1.1 libxslt-parity repairs: `str:decode-uri` decodes percent-escape runs as UTF-8 bytes (was Latin-1 per byte) and `str:encode-uri` full mode leaves the mark characters `! * ' ( )` and `@` unencoded and both modes escape a literal `%` to `%25` — matched upstream verbatim |
+| `sets/difference.1` | `tests/exslt/sets/difference.1` | version 1.0 → 3.0; library included; documentation comment and preceding whitespace-only text node removed (the Bosak engine does not strip whitespace-only text nodes adjacent to comments; libxslt does) — matched upstream verbatim |
+| `sets/trailing.1` | `tests/exslt/sets/trailing.1` | version 1.0 → 3.0; library included; pins `set:trailing` anchoring on the first node of the second argument in document order (libxml2 `xmlXPathNodeSetItem(arg2, 0)`) — matched upstream verbatim |
+| `common/node-set.2` | `tests/exslt/common/node-set.2` | version 1.0 → 3.0; library included — matched upstream verbatim |
+| `common/node-set.3` | `tests/exslt/common/node-set.3` | version 1.0 → 3.0; library included — matched upstream verbatim |
+| `common/node-set.4` | `tests/exslt/common/node-set.4` | version 1.0 → 3.0; library included; inert `mode` attribute dropped from the named template (XSLT 3.0 `XTSE0500` forbids `mode` on a matchless template; the golden reads `@mode` from the input document, which is a copy of the stylesheet); golden stored as `expected.txt` (two root elements, not one well-formed document) — matched upstream verbatim |
+| `common/node-set.5` | `tests/exslt/common/node-set.5` | version 1.0 → 3.0; library included; whitespace-only text node between the stylesheet comment and the `xsl:for-each` end tag removed (Bosak does not strip it; libxslt does) — matched upstream verbatim |
+| `common/node-set.6` | `tests/exslt/common/node-set.6` | version 1.0 → 3.0; library included — matched upstream verbatim |
+| `common/node-set.7` | `tests/exslt/common/node-set.7` | version 1.0 → 3.0; library included; golden stored as `expected.txt` (bare text output `A`, not a well-formed XML document) — matched upstream verbatim |
+| `common/node-set.8` | `tests/exslt/common/node-set.8` | version 1.0 → 3.0; library included — matched upstream verbatim |
+| `common/node-set.9` | `tests/exslt/common/node-set.9` | version 1.0 → 3.0; library included; `exclude-result-prefixes="exslt"` added (XSLT 1.0 `extension-element-prefixes` suppressed the namespace; under XSLT 3.0 `xsl:function` it leaks onto the result without the exclude) — matched upstream verbatim |
 
 "Library included" means an `xsl:include` of the corresponding
 `src/<module>.xsl` was added; no template, input, or expected content was
@@ -67,7 +78,8 @@ converted above or skipped here with a reason.
 |---------------|--------|
 | `tests/exslt/math/max.3` | Exercises `func:function`/`func:result` (EXSLT functions module — tier 3 documented, superseded by `xsl:function`); the `func:` machinery, not `math:max`, is the subject of the case |
 | `tests/exslt/math/power.1` | Golden pins libxslt binary-float formatting (`2.85311670611e+11`); our decimal-exact `math:power` cannot reproduce it without faking the value — see divergence 3 in `docs/COMPATIBILITY.md` |
-| `tests/exslt/strings/uri` | Held back (REQ-001 batch 1): conversion exposed a genuine library defect in `str:decode-uri` — percent-escapes are decoded byte→codepoint (Latin-1 style), so `%F0%9F%91%8C` becomes four control characters (`SERE0006` on serialization) instead of the UTF-8 character 👌; convert after the library fix |
+| `tests/exslt/common/dynamic-id` | Golden pins `generate-id()` values, which are processor-dependent by definition; no meaningful cross-engine comparison |
+| `tests/exslt/common/import-test1` | Exercises `func:function`/`func:result` (EXSLT functions module — tier 3 documented, superseded by `xsl:function`) plus `xsl:import` of `.imp` fragments; the `func:` machinery, not `exslt:node-set`, is the subject of the case |
 
 ## Known divergences pinned by (or visible in) the corpus
 
