@@ -102,10 +102,18 @@
       try/catch masked the resulting XPTY0004, silently returning '' for
       every input (see README section 6). The one-line repair extracts the
       date portion before formatting.
+
+      Library update (2026-10-06, REQ-001 batch 3): the rewritten library
+      rejects a bare gYear here — the EXSLT spec permits month-name only
+      dateTime, date, gYearMonth, gMonthDay and gMonth, and modern libxslt
+      returns '' for a gYear (documented divergence #3 in
+      docs/COMPATIBILITY.md). The guard below mirrors that contract; the
+      year extractors above still accept gYear.
   -->
   <xsl:function name="date:month-name" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
+                          else if (normalize-space($date-time) castable as xs:gYear) then ''
                           else (try {
                                   format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')
                                 } catch * { '' })"/>

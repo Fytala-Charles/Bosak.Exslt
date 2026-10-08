@@ -30,17 +30,17 @@ Namespace URIs: `exsl` = `http://exslt.org/common`, `math` = `http://exslt.org/m
 
 | Function | Tier | Status | Native equivalent / notes | Tests |
 |----------|------|--------|---------------------------|-------|
-| `math:min` | 1 | wrapper | `min($nodes ! number(.))` | `cases/math/min.1` |
-| `math:max` | 1 | wrapper | `max($nodes ! number(.))` | `cases/math/max.1` |
-| `math:highest` | 1 | wrapper | `$nodes[number(.) eq max($nodes ! number(.))]` | `cases/math/highest.1` |
-| `math:lowest` | 1 | wrapper | `$nodes[number(.) eq min($nodes ! number(.))]` | — |
-| `math:sqrt` | 1 | wrapper | XPath 3.1 `math:sqrt` | — |
-| `math:power` | 1 | wrapper | `math:exp($e * math:log($b))`. Diverges from libxslt `pow()` for negative bases (NaN here) and `power(0, 0)`; documented. | — |
-| `math:constant` | 1 | wrapper | `math:pi()`, `math:exp`, `math:log`, `math:sqrt` | — |
-| `math:log` | 1 | wrapper | XPath 3.1 `math:log` | — |
-| `math:sin` / `math:cos` / `math:tan` | 1 | wrapper | XPath 3.1 `math:sin` etc. | — |
-| `math:asin` / `math:acos` / `math:atan` / `math:atan2` | 1 | wrapper | XPath 3.1 `math:asin` etc. | — |
-| `math:exp` | 1 | wrapper | XPath 3.1 `math:exp` | — |
+| `math:min` | 1 | wrapper | `min($nodes ! number(.))` | `cases/math/min.1`, `cases/math/min.2` |
+| `math:max` | 1 | wrapper | `max($nodes ! number(.))` | `cases/math/max.1`, `cases/math/max.2` |
+| `math:highest` | 1 | wrapper | `$nodes[number(.) eq max($nodes ! number(.))]` | `cases/math/highest.1`, `cases/math/highest.2`, `cases/math/highest.5` |
+| `math:lowest` | 1 | wrapper | `$nodes[number(.) eq min($nodes ! number(.))]` | `cases/math/lowest.1`, `cases/math/lowest.2` |
+| `math:sqrt` | 1 | wrapper | XPath 3.1 `math:sqrt` | `cases/math/sqrt.1` |
+| `math:power` | 1 | wrapper | `math:exp($e * math:log($b))`. Diverges from libxslt `pow()` for negative bases (NaN here) and `power(0, 0)`; documented — pinned by `cases/math/power.1`. | `cases/math/power.1` |
+| `math:constant` | 1 | wrapper | `math:pi()`, `math:exp`, `math:log`, `math:sqrt` | `cases/math/constant.1` |
+| `math:log` | 1 | wrapper | XPath 3.1 `math:log` | `cases/math/log-exp.1` |
+| `math:sin` / `math:cos` / `math:tan` | 1 | wrapper | XPath 3.1 `math:sin` etc. | `cases/math/trig.1` |
+| `math:asin` / `math:acos` / `math:atan` / `math:atan2` | 1 | wrapper | XPath 3.1 `math:asin` etc. | `cases/math/trig.1` |
+| `math:exp` | 1 | wrapper | XPath 3.1 `math:exp` | `cases/math/log-exp.1` |
 
 ## str — Strings (`src/strings.xsl`)
 
@@ -108,8 +108,8 @@ sixteen extraction functions against one input type; they are referenced as
 
 | Function | Tier | Status | Native equivalent / notes | Tests |
 |----------|------|--------|---------------------------|-------|
-| `set:intersection` | 1 | wrapper | XPath 3.1 `intersect` operator | — |
-| `set:difference` | 1 | wrapper | XPath 3.1 `except` operator | — |
+| `set:intersection` | 1 | wrapper | XPath 3.1 `intersect` operator | `cases/sets/intersection.1` |
+| `set:difference` | 1 | wrapper | XPath 3.1 `except` operator | `cases/sets/difference.1` |
 | `set:has-same-node` | 1 | wrapper | `some $a in $ns1, $b in $ns2 satisfies $a is $b` | `cases/sets/has-same-node.1` |
 | `set:distinct` | 2 | implemented | Nodes with distinct string values, document order, first occurrence kept. | `cases/sets/distinct.1` |
 | `set:leading` | 2 | implemented | Reproduces the libxml2 reference rule: nodes in `$ns1` preceding the document-first node of `$ns2`, **empty unless that node is itself in `$ns1`**; `$ns2` empty → `$ns1`. | `cases/sets/leading.1` |

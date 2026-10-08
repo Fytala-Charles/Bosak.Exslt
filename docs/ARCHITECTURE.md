@@ -5,8 +5,8 @@
   <p>Module layout, dependency rules, harness architecture, data flow</p>
 </div>
 
-> **Status:** pre-release skeleton, fully green — 7 library modules on the three-tier
-> compatibility model, golden-file harness 22/22 against published Bosak.Xslt
+> **Status:** pre-release, fully green — 7 library modules on the three-tier
+> compatibility model, golden-file harness 73/73 against published Bosak.Xslt
 > 0.12.3-beta packages. The three-tier model itself is the load-bearing architectural
 > decision; it is recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md).
 
@@ -44,8 +44,8 @@ Bosak.Exslt/
 │   └── dynamic.xsl         dyn   — http://exslt.org/dynamic (tier-3 slots only)
 ├── tests/
 │   ├── cases/<ns>/<case>/  Golden corpus: transform.xsl + expected.xml|expected.txt
-│   │                       + meta.json (+ input.xml); 22 cases (math 3, strings 5,
-│   │                       sets 3, common 2, date 9)
+│   │                       + meta.json (+ input.xml); 73 cases (math 15, strings 8,
+│   │                       sets 6, common 10, date 34)
 │   ├── Bosak.Exslt.Tests/  xUnit harness (net10.0) on published Bosak.Xslt packages
 │   ├── ATTRIBUTION.md      Upstream provenance (libxslt, MIT) + divergence log
 ├── training/

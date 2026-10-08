@@ -1,0 +1,7 @@
+{
+  "function": "set:intersection",
+  "namespace": "http://exslt.org/sets",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — libxslt's sets suite has no dedicated intersection case (only sets/difference.1 touches set:intersection incidentally). Identity overlap via two name predicates over one flat node list (the same technique as sets/difference.1), superset intersection, empty-vs-root edge, and document-order preservation regardless of argument order. Goldens are engine-verified output of src/sets.xsl."
+}

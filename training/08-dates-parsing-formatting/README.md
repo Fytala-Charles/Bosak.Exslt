@@ -8,6 +8,16 @@
 > **Time:** ~60 minutes · **Prerequisites:** [session 07 — result trees and types](../07-result-trees-and-types/README.md) (the `instance of` / `castable as` family); [session 00](../00-setup/README.md) for tooling
 > **Vehicle:** EXSLT dates-and-times module, tier 2 (`http://exslt.org/dates-and-times`)
 
+> **Library update (2026-10-06, REQ-001 batch 3):** `src/dates-and-times.xsl`
+> was rewritten on the libexslt `date.c` algorithms, and `date:month-name`
+> now **rejects a bare `gYear`** (`month-name('2026')` → `''`): the EXSLT
+> spec permits only dateTime, date, gYearMonth, gMonthDay and gMonth, and
+> modern libxslt (1.1.45) returns `''` — see divergence #3 in
+> [`docs/COMPATIBILITY.md`](../../docs/COMPATIBILITY.md) and
+> [`tests/ATTRIBUTION.md`](../../tests/ATTRIBUTION.md). This session's
+> century event (`2026`) therefore has an empty `<month>` in the golden; the
+> solution gained the one-line guard, and the lesson flow is unchanged.
+
 ---
 
 ## 1. Dates are strings until you make them values
@@ -64,7 +74,7 @@ Three exercises over one shared design:
 | `2026-10-06T14:30:00Z` | full dateTime with timezone |
 | `2000-02-29` | a 400-year leap year (Feb 29 exists) |
 | `1900-03-01` | a century that is **not** leap |
-| `2026` | a bare year (ISO `gYear`) — valid EXSLT input |
+| `2026` | a bare year (ISO `gYear`) — valid EXSLT input for the *extractors*; `date:month-name` rejects it (`''`, see the library-update callout) |
 | `not-a-date` | invalid → `NaN` / `''` |
 | `2023-13-45` | structurally date-like but month 13 — invalid → `NaN` / `''` |
 
@@ -148,7 +158,9 @@ specified: `format-date(xs:date('2026-10-06'), '[MNn]')` returns `October`.
 So your exercise is the library's line, wrapped in the session's standard
 contract: `try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]') }
 catch * { '' }`, with the `not($date-time)` early return for the absent
-argument.
+argument — and, since the library update, a gYear guard in front so a bare
+year returns `''` instead of `'January'` (the century event exists to
+prove it).
 
 Now the story, because it is the session's core lesson. `format-date`'s
 first parameter is typed **`xs:date?`** — a *date*, not a dateTime. Your
@@ -170,7 +182,7 @@ golden you are about to match is the *post-fix* world: real month names.
 
 ### Hints (progressive — try each before opening the next)
 
-1. Write the library's repaired line: `format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')`, inside the `try { … } catch * { '' }` skeleton, keeping the `not($date-time)` early return.
+1. Write the library's repaired line: `format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')`, inside the `try { … } catch * { '' }` skeleton, keeping the `not($date-time)` early return — and add the gYear guard (`normalize-space($date-time) castable as xs:gYear`) so the bare-year row returns `''`.
 2. The conversion is not optional on this engine: with the raw `xs:dateTime`
    argument the call raises `XPTY0004`, and the `catch *` silently turns it
    into `''`. That is precisely the defect the library shipped under REQ-008 —
@@ -178,9 +190,10 @@ golden you are about to match is the *post-fix* world: real month names.
    added. A catch block that "handles" an error by erasing the result is a
    bug amplifier, not error handling.
 3. Predict the whole `<month>` column before running: `October`, `February`,
-   `March`, `January` for the four parseable events; empty only for `mystery`
-   and `overflow`, where the parser's `date:INVALID` is doing its lawful job.
-   Two empty rows are the contract working; six were the bug.
+   `March` for the three date-shaped events; empty for `century` (the
+   library-update guard rejecting bare gYear), `mystery` and `overflow`,
+   where the parser's `date:INVALID` is doing its lawful job.
+   Three empty rows are the contract working; six were the bug.
 4. The starter's off-by-one lookup list is the wrong mechanism entirely;
    pictures are the real tool. Compare how many characters each version
    spends on the problem.
@@ -214,10 +227,12 @@ code with the comments rewritten in your own words. That is what tier 2 looks
 like when the native types do most of the work: the *genuine implementation*
 is the lenient contract around the strict primitives.
 
-`date:month-name` should be the library's code word for word — same line,
-same `try`/`catch *`, same early return, including the repaired `xs:date`
-cast. The golden prints real month names for the four parseable events; only
-`mystery` and `overflow` stay empty.
+`date:month-name` should be the library's code in spirit — same line, same
+`try`/`catch *`, same early return, including the repaired `xs:date`
+cast — plus the one-line gYear guard from the library-update callout,
+which the rewritten library enforces per-function. The golden prints real
+month names for the three date-shaped events; `century`, `mystery` and
+`overflow` stay empty.
 
 An honest-probe sidebar, because this session's own history proves the
 point: during development, the *uncast* library line was described in these

@@ -1,0 +1,7 @@
+{
+  "function": "math:sqrt",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — no upstream libxslt coverage exists for math:sqrt. Perfect squares and exact fractions pinned exactly; sqrt(2) pinned to the engine-verified IEEE double (1.4142135623730951); negative input pinned to NaN (XPath 3.1 math:sqrt domain). Goldens are engine-verified output of src/math.xsl."
+}

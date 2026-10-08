@@ -1,0 +1,12 @@
+
+constant('PI',1)      : 3
+constant('PI',3)      : 3.14
+constant('PI',15)     : 3.14159265358979
+constant('E',5)       : 2.7183
+constant('SQRRT2',4)  : 1.414
+constant('SQRT1_2',3) : 0.707
+constant('LN2',3)     : 0.693
+constant('LN10',3)    : 2.3
+constant('LOG2E',3)   : 1.44
+constant('PI',0)      : 3.141592653589793
+constant('BOGUS',3)   : NaN

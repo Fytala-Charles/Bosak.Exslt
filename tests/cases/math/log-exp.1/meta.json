@@ -1,0 +1,7 @@
+{
+  "function": "math:log, math:exp",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — no upstream libxslt coverage exists for math:log/math:exp. Exact identities pinned exactly (log(1)=0, exp(0)=1); log(E via math:constant) pins the engine's double noise (1.0000000000000018); log(0) pins -INF and exp(1000) pins INF per IEEE-754 XPath 3.1 semantics; negative log pins NaN. Goldens are engine-verified output of src/math.xsl."
+}

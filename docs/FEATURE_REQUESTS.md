@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-06 (**skeleton complete: 7 library modules (6 namespace modules + master) on the three-tier model, golden-file harness green (22/22 cases: 15 libxslt-derived + 7 hand-written REQ-008 date cases) against Bosak.Xslt 0.12.3-beta; Fytala Docs Kit branding adopted; repository bootstrapped 2026-10-06 and live at `Fytala-Charles/Bosak.Exslt` — REQ-006 git part done, CI workflow pending; REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-001 implemented: full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-002 Xalan-J import remains Pending; REQ-006 git part done, CI workflow pending; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -85,7 +85,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 
 | ID | Requesting Party | Summary | Motivation | Status | Target Version | Owner | Submitted |
 |----|------------------|---------|------------|--------|----------------|-------|-----------|
-| `REQ-001` | `Bosak.Exslt` | Import the remaining deterministic libxslt EXSLT corpus (math, strings, sets, common, date directories) into the golden-file layout | 15 seed cases exist; the remaining deterministic cases (~60 files across 5 directories) pin the rest of the implemented surface against the reference implementation | Accepted | v0.1.0 | Unassigned | 2026-10-06 |
+| `REQ-001` | `Bosak.Exslt` | Import the remaining deterministic libxslt EXSLT corpus (math, strings, sets, common, date directories) into the golden-file layout | 15 seed cases exist; the remaining deterministic cases (~60 files across 5 directories) pin the rest of the implemented surface against the reference implementation | Implemented (all acceptance criteria met 2026-10-08: corpus 73/73; REQ-002 remains Pending) | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Pending | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Pending | v0.2.0 | Unassigned | 2026-10-06 |
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Pending | TBD | Unassigned | 2026-10-06 |
@@ -110,7 +110,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 
 **Requesting Party:** `Bosak.Exslt` (maintainers)  
 **Submitted:** `2026-10-06`  
-**Status:** `Accepted`
+**Status:** `Implemented` (2026-10-08 — all acceptance criteria met; gates green)
 
 #### Problem Statement
 
@@ -122,15 +122,15 @@ Mechanically convert each deterministic case to the `tests/cases/<namespace>/<ca
 
 #### Acceptance Criteria
 
-- [ ] Every remaining deterministic libxslt case for the five imported directories is converted or has a recorded skip reason in `tests/ATTRIBUTION.md`.
-- [ ] Every function listed in `docs/COMPATIBILITY.md` as "implemented" or "wrapper" has at least one golden case.
-- [ ] `dotnet test` green; `pwsh tools/check-docs.ps1 -ProjectPath .` ALL CHECKS PASSED.
+- [x] Every remaining deterministic libxslt case for the five imported directories is converted or has a recorded skip reason in `tests/ATTRIBUTION.md`. *61 libxslt-derived cases converted (batches 1–3, 46 of them matched upstream verbatim); 5 skip reasons recorded: `math/max.3`, `math/power.1`, `common/dynamic-id`, `common/import-test1`, `date/current.xsl`; the out-of-scope upstream directories (`dynamic/`, `functions/`, `saxon/`, `crypto/`) are noted in `tests/ATTRIBUTION.md`.*
+- [x] Every function listed in `docs/COMPATIBILITY.md` as "implemented" or "wrapper" has at least one golden case. *Verified 2026-10-08; six hand-written gap cases (REQ-001 batch 4, engine-verified goldens) cover functions with no upstream coverage: `math/sqrt.1`, `math/power.1`, `math/constant.1`, `math/log-exp.1`, `math/trig.1`, `sets/intersection.1`. Only tier-3 documented slots and the non-deterministic `date:date-time` lack goldens, both by design.*
+- [x] `dotnet test` green; `pwsh tools/check-docs.ps1 -ProjectPath .` ALL CHECKS PASSED. *73/73 and ALL CHECKS PASSED on 2026-10-08.*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
 |-------|--------|-------|
 | src/ modules | None | No module changes expected; divergences get documented, not patched around |
-| golden corpus | New cases | ~40–60 new case directories |
+| golden corpus | New cases | 51 new case directories: 45 new libxslt conversions + `date.1` replacing the hand-written REQ-008 case of the same name (batch 3) + 6 batch-4 hand-written gap cases with engine-verified goldens (5 math + 1 sets) — final corpus 73 (61 libxslt-derived + 12 hand-written) |
 | docs | Matrix update | Test-coverage column pointers in `docs/COMPATIBILITY.md` |
 
 #### Related Requests
@@ -140,6 +140,7 @@ Mechanically convert each deterministic case to the `tests/cases/<namespace>/<ca
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
 | 2026-10-06 | Kimi | Accepted | Deterministic corpus is the cheapest compatibility evidence available |
+| 2026-10-08 | Kimi | Implemented | Batches 1–3 converted all 61 importable libxslt cases (46 verbatim, divergences recorded); batch 4 added six engine-verified hand-written gap cases so every implemented/wrapper function has ≥1 golden; corpus 73/73, check-docs ALL CHECKS PASSED |
 
 ---
 

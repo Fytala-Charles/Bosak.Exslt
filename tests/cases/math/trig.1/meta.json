@@ -1,0 +1,7 @@
+{
+  "function": "math:sin, math:cos, math:tan, math:asin, math:acos, math:atan, math:atan2",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — no upstream libxslt coverage exists for the trigonometric wrappers. Canonical angles pinned exactly where IEEE-exact (sin(0)=0, cos(0)=1, sin(pi/2)=1, cos(pi)=-1, acos(1)=0); tan(pi/4) and the inverse-function pins carry engine double noise (e.g. tan(pi/4)=0.9999999999999999). atan2(0,0) pins 0, which is the XPath 3.1/IEEE-754 defined result (not NaN). Domain edges: asin(2) pins NaN. Goldens are engine-verified output of src/math.xsl."
+}

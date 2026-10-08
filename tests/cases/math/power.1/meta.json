@@ -1,0 +1,7 @@
+{
+  "function": "math:power",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — libxslt's math/power.1 was skipped (pins binary-float pow() formatting), so this pins our documented exp/log-based implementation instead. power(0,0) and negative bases return NaN per documented divergence 3 in docs/COMPATIBILITY.md (libxslt C pow() returns 1 and real powers respectively); power(10,-2) pins the exp/log float path (0.009999999999999995), not decimal-exact 0.01. Goldens are engine-verified output of src/math.xsl."
+}

@@ -1,0 +1,7 @@
+{
+  "function": "math:constant",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy + edge) — no upstream libxslt coverage exists for math:constant. Pins significant-digit rounding of every recognized name (including the EXSLT-spec spelling SQRRT2), the precision < 1 passthrough (full double value), and NaN for unknown names. Values are the XPath 3.1 double literals of the Bosak engine (engine-verified), matching libxslt's double literals bit-for-bit at full precision. Goldens are engine-verified output of src/math.xsl."
+}

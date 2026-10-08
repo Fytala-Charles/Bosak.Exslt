@@ -18,7 +18,7 @@
   <event name="century">
     <year>2026</year>
     <leap>false</leap>
-    <month>January</month>
+    <month/>
   </event>
   <event name="mystery">
     <year>NaN</year>

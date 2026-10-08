@@ -9,7 +9,7 @@ the rulebook.
 | Project | License | Upstream path pattern | Used for |
 |---------|---------|-----------------------|----------|
 | [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 61 cases (15 seed + 9 REQ-001 batch 1 + 11 REQ-001 batch 2 + 26 REQ-001 batch 3) |
-| hand-written (this project, Fytala) | Apache-2.0 | — | 6 REQ-008 date cases (`date.1` was converted to the libxslt battery in batch 3) |
+| hand-written (this project, Fytala) | Apache-2.0 | — | 12 cases: 6 REQ-008 date cases (`date.1` converted to the libxslt battery in batch 3) + 6 REQ-001 batch-4 gap cases for functions with no upstream coverage |
 
 libxslt's EXSLT test suite is the de-facto reference behavior for EXSLT
 (implemented by the libexslt library). The MIT license permits reuse with
@@ -64,6 +64,12 @@ imported yet (see `../ROADMAP.md`, Stage 1).
 | `date/sum.1` | `tests/exslt/date/sum.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
 | `date/sum.2` | `tests/exslt/date/sum.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
 | `date/month-name.1` | hand-written (Apache-2.0) | REQ-008 repair case pinning post-repair `date:month-name`; **re-goldened 2026-10-06 (line 3 only)**: `month-name('2026')` corrected from `'January'` to `''` — the EXSLT spec's permitted formats (dateTime, date, gYearMonth, gMonth) and modern libxslt 1.1.45 (probed via lxml: `''`) both reject `xs:gYear`; libxslt's own `gyear.1` case requires `''`. See "Known divergences" |
+| `math/sqrt.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for `math:sqrt` (no upstream coverage): perfect squares and exact fractions pinned exactly, `sqrt(2)` pinned to the engine-verified IEEE double, negative input → `NaN`. Goldens are engine-verified output |
+| `math/power.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for `math:power` (upstream `math/power.1` skipped as binary-float): pins the documented exp/log implementation — `power(0,0)` and negative bases → `NaN` (divergence 3 in `docs/COMPATIBILITY.md`), `power(10,-2)` pins the exp/log float path (`0.009999999999999995`), not decimal-exact `0.01`. Goldens are engine-verified output |
+| `math/constant.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for `math:constant` (no upstream coverage): significant-digit rounding of every recognized name incl. the spec spelling `SQRRT2`, precision < 1 passthrough, unknown name → `NaN`. Goldens are engine-verified output |
+| `math/log-exp.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for `math:log`/`math:exp` (no upstream coverage): exact identities (`log(1)=0`, `exp(0)=1`), `log(0)` → `-INF`, `exp(1000)` → `INF`, `log(E)` pins engine double noise. Goldens are engine-verified output |
+| `math/trig.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for the seven trigonometric wrappers (no upstream coverage): canonical-angle pins, inverse-function double noise (`tan(pi/4)=0.9999999999999999`), domain edge `asin(2)` → `NaN`, `atan2(0,0)` pins `0` (the IEEE-754/XPath 3.1 defined result). Goldens are engine-verified output |
+| `sets/intersection.1` | hand-written (Apache-2.0) | REQ-001 batch 4 gap case for `set:intersection` (libxslt's sets suite has no dedicated case): identity overlap via name predicates over one flat node list (same technique as `sets/difference.1`), superset intersection, empty-vs-root edge, document-order preservation. Goldens are engine-verified output |
 | `date/month-abbreviation.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:month-abbreviation` incl. `*-3` width edge |
 | `date/week-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:week-in-year` (ISO week edge) |
 | `date/day-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-in-year` (leap-year edge) |
@@ -106,6 +112,8 @@ converted above or skipped here with a reason.
 | `tests/exslt/common/dynamic-id` | Golden pins `generate-id()` values, which are processor-dependent by definition; no meaningful cross-engine comparison |
 | `tests/exslt/common/import-test1` | Exercises `func:function`/`func:result` (EXSLT functions module — tier 3 documented, superseded by `xsl:function`) plus `xsl:import` of `.imp` fragments; the `func:` machinery, not `exslt:node-set`, is the subject of the case |
 | `tests/exslt/date/current.xsl` | Time-dependent: exercises `date:date()`/`date:time()` with no argument (default today/now) and `date:date-time()`; output cannot be pinned to a golden |
+
+The remaining upstream directories are out of scope for the golden corpus (REQ-001 covers only the five imported namespaces): `tests/exslt/dynamic/` (exercises `dyn:evaluate`, tier 3 documented), `tests/exslt/functions/` (the XSLT 1.0 `func:function` machinery, tier 3 documented), `tests/exslt/saxon/` (Saxon-processor-specific), and `tests/exslt/crypto/` (the `crypto` module is not part of EXSLT 1.0 and no module ships for it).
 
 ## Known divergences pinned by (or visible in) the corpus
 

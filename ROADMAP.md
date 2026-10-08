@@ -12,6 +12,9 @@
 > - `src/dates-and-times.xsl` 1.0 → 1.1 (2026-10-06): REQ-008 — seven `xs:date`
 >   casts at the `format-date` call sites; the family moved from always-empty
 >   to correct EXSLT answers. Bug fix, not a divergence.
+> - `src/dates-and-times.xsl` 1.2 → 1.3 (2026-10-06): REQ-001 batch 3 — full
+>   rewrite on the libexslt `date.c` algorithms; the 26-case libxslt date
+>   battery passes verbatim.
 
 ---
 
@@ -28,13 +31,20 @@
       hand-written REQ-008 date cases) imported/written per
       (`tests/ATTRIBUTION.md`) — the full suite is green against the published
       Bosak.Xslt 0.12.3-beta packages.
-- [ ] Full import of the deterministic, license-compatible remainder of the
-      libxslt EXSLT corpus (math, strings, sets, common, date directories) and, as a
-      second legal source, Xalan-J's EXSLT tests (Apache-2.0) for coverage of cases
-      libxslt does not exercise. *(REQ-001, REQ-002)*
-- [ ] Hand-written edge-case goldens for `str:decode-uri`, `str:encode-uri`,
-      `set:trailing`, `math:lowest`, `math:constant`, `date:seconds`, `date:sum`,
-      `date:difference` (functions without upstream coverage yet).
+- [x] Full import of the deterministic, license-compatible remainder of the
+      libxslt EXSLT corpus — **done 2026-10-08 (REQ-001 Implemented)**: 61
+      libxslt-derived cases total (46 conversions from batches 1–3, all matched
+      upstream verbatim; 5 deterministic cases skip-recorded in
+      `tests/ATTRIBUTION.md`); Xalan-J's EXSLT tests (Apache-2.0) remain as the
+      second legal source for coverage of cases libxslt does not exercise.
+      *(REQ-002)*
+- [x] Hand-written edge-case goldens for functions without upstream coverage
+      — **done 2026-10-08 (REQ-001 batch 4)**: six engine-verified cases
+      (`math/sqrt.1`, `math/power.1`, `math/constant.1`, `math/log-exp.1`,
+      `math/trig.1`, `sets/intersection.1`); the earlier edge list
+      (`str:decode-uri`/`str:encode-uri`, `set:trailing`, `math:lowest`,
+      `date:seconds`, `date:sum`, `date:difference`) is covered by the
+      converted upstream cases. Corpus 73/73.
 - [ ] Training curriculum: eleven self-paced branded sessions under `training/`,
       one XSLT 3.0 technique per session taught test-first on an EXSLT function,
       with the independent RED/GREEN harness in `training/TrainingTests/` —
@@ -90,8 +100,8 @@ terminating-message behavior.
 | M2 — Golden harness | xUnit harness on published Bosak.Xslt packages | Done (2026-10-06) |
 | M3 — Starter corpus | 15 libxslt-derived cases, 15/15 green | Done (2026-10-06) |
 | M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
-| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Pending (REQ-001, REQ-002) |
-| M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending |
+| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases, corpus 73/73; REQ-002 Xalan-J supplements still Pending) |
+| M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending (divergence pinning done 2026-10-06 in REQ-001 batch 3 + `month-name.1` re-golden; non-deterministic `current.xsl` skip-recorded; year-range item still awaits the Bosak engine representation decision) |
 | M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (REQ-006) |
 | M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |
 
@@ -117,8 +127,6 @@ Limitations hit while building the library, and how the modules work around them
 
 - `dyn:evaluate` is unavailable by design (tier 3) until the host-backed decision
   (Stage 3) lands.
-- Several date functions have no golden coverage yet; their semantics are
-  implemented but not pinned by executable evidence (see §1 Stage 1 checklist).
 - Git initialized 2026-10-06 (REQ-006 git part done); CI workflow and first tag
   still pending.
 

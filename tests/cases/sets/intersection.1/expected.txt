@@ -1,0 +1,5 @@
+
+intersection(i,e)  : Vienna;Berlin;
+intersection(i,all): Paris;Madrid;Vienna;Calais;Berlin;
+intersection(i,/)  : []
+intersection order : Vienna;Berlin;
