@@ -8,8 +8,8 @@ the rulebook.
 
 | Project | License | Upstream path pattern | Used for |
 |---------|---------|-----------------------|----------|
-| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 35 cases (15 seed + 9 REQ-001 batch 1 + 11 REQ-001 batch 2) |
-| hand-written (this project, Fytala) | Apache-2.0 | — | 7 REQ-008 date cases |
+| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 61 cases (15 seed + 9 REQ-001 batch 1 + 11 REQ-001 batch 2 + 26 REQ-001 batch 3) |
+| hand-written (this project, Fytala) | Apache-2.0 | — | 6 REQ-008 date cases (`date.1` was converted to the libxslt battery in batch 3) |
 
 libxslt's EXSLT test suite is the de-facto reference behavior for EXSLT
 (implemented by the libexslt library). The MIT license permits reuse with
@@ -37,8 +37,33 @@ imported yet (see `../ROADMAP.md`, Stage 1).
 | `common/object-type.1` | `tests/exslt/common/object-type.1` | version 1.0 → 3.0; library included; XSLT 1.0 RTF check and Saxon-only external check dropped (XSLT 3.0 cannot distinguish result tree fragments — see `docs/COMPATIBILITY.md`); golden adjusted to match |
 | `date/duration.1` | `tests/exslt/date/duration.1` | version 1.0 → 3.0; library included; expected output kept verbatim from libxslt — see "Known divergences" |
 | `date/add-duration.1` | `tests/exslt/date/add-duration.1` | version 1.0 → 3.0; library included |
-| `date/date.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix behavior of `date:date` (happy + invalid-input edge); semantics per EXSLT 1.0 spec |
-| `date/month-name.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:month-name` (happy + gYear/invalid edges) |
+| `date/date.1` | `tests/exslt/date/date.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` (text output) — matched upstream verbatim; replaces the earlier hand-written REQ-008 case of the same name |
+| `date/date.2` | `tests/exslt/date/date.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/datetime.1` | `tests/exslt/date/datetime.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/datetime.2` | `tests/exslt/date/datetime.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gday.1` | `tests/exslt/date/gday.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gday.2` | `tests/exslt/date/gday.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gmonth.1` | `tests/exslt/date/gmonth.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gmonth.2` | `tests/exslt/date/gmonth.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gmonthday.1` | `tests/exslt/date/gmonthday.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gmonthday.2` | `tests/exslt/date/gmonthday.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gyear.1` | `tests/exslt/date/gyear.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gyear.2` | `tests/exslt/date/gyear.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gyearmonth.1` | `tests/exslt/date/gyearmonth.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/gyearmonth.2` | `tests/exslt/date/gyearmonth.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/time.1` | `tests/exslt/date/time.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/time.2` | `tests/exslt/date/time.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/add.1` | `tests/exslt/date/add.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/add.2` | `tests/exslt/date/add.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/add-duration.2` | `tests/exslt/date/add-duration.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/difference.1` | `tests/exslt/date/difference.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/difference.2` | `tests/exslt/date/difference.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/duration.2` | `tests/exslt/date/duration.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/seconds.1` | `tests/exslt/date/seconds.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/seconds.2` | `tests/exslt/date/seconds.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/sum.1` | `tests/exslt/date/sum.1` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/sum.2` | `tests/exslt/date/sum.2` | version 1.0 → 3.0; library included; golden stored as `expected.txt` — matched upstream verbatim |
+| `date/month-name.1` | hand-written (Apache-2.0) | REQ-008 repair case pinning post-repair `date:month-name`; **re-goldened 2026-10-06 (line 3 only)**: `month-name('2026')` corrected from `'January'` to `''` — the EXSLT spec's permitted formats (dateTime, date, gYearMonth, gMonth) and modern libxslt 1.1.45 (probed via lxml: `''`) both reject `xs:gYear`; libxslt's own `gyear.1` case requires `''`. See "Known divergences" |
 | `date/month-abbreviation.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:month-abbreviation` incl. `*-3` width edge |
 | `date/week-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:week-in-year` (ISO week edge) |
 | `date/day-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-in-year` (leap-year edge) |
@@ -80,6 +105,7 @@ converted above or skipped here with a reason.
 | `tests/exslt/math/power.1` | Golden pins libxslt binary-float formatting (`2.85311670611e+11`); our decimal-exact `math:power` cannot reproduce it without faking the value — see divergence 3 in `docs/COMPATIBILITY.md` |
 | `tests/exslt/common/dynamic-id` | Golden pins `generate-id()` values, which are processor-dependent by definition; no meaningful cross-engine comparison |
 | `tests/exslt/common/import-test1` | Exercises `func:function`/`func:result` (EXSLT functions module — tier 3 documented, superseded by `xsl:function`) plus `xsl:import` of `.imp` fragments; the `func:` machinery, not `exslt:node-set`, is the subject of the case |
+| `tests/exslt/date/current.xsl` | Time-dependent: exercises `date:date()`/`date:time()` with no argument (default today/now) and `date:date-time()`; output cannot be pinned to a golden |
 
 ## Known divergences pinned by (or visible in) the corpus
 
@@ -90,8 +116,15 @@ converted above or skipped here with a reason.
    lines remain verbatim libxslt output.
 2. **`common/object-type.1`**: libxslt reports `RTF` for result tree fragments;
    XSLT 3.0 has no such type, so that check was removed rather than faked.
+3. **`date/month-name.1` (hand-written)**: the original golden claimed
+   `month-name('2026') = 'January'`, encoding the pre-rewrite cast-based
+   behavior, which accepted `xs:gYear`. The EXSLT spec's permitted formats
+   for `month-name` (dateTime, date, gYearMonth, gMonth) and the modern
+   libxslt reference (1.1.45, probed via lxml: `''`) both reject gYear —
+   and libxslt's own `gyear.1` case requires `''` for a gYear input. The
+   golden line was re-goldened to `''` (all other lines unchanged).
 
-> **Not a divergence — REQ-008 (2026-10-06):** the seven hand-written
+> **Not a divergence — REQ-008 (2026-10-06):** the six remaining hand-written
 > `date/*.1` cases above pin the behavior of the `format-date` family *after*
 > the REQ-008 repair. Before the repair those functions returned `''`/`NaN`
 > for every input (an `xs:dateTime` handed to `format-date`'s `xs:date?`

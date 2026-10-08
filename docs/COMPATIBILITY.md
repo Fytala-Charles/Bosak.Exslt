@@ -58,39 +58,51 @@ Namespace URIs: `exsl` = `http://exslt.org/common`, `math` = `http://exslt.org/m
 
 All functions take an ISO 8601 string (dateTime, date, gYearMonth, gYear, gMonthDay,
 gMonth, gDay, or time), returning `NaN`/`''` on invalid input exactly as the EXSLT
-spec demands, and use `xs:dateTime` arithmetic plus `format-dateTime` underneath.
+spec demands. The module is a pure-XSLT port of the libexslt `date.c` algorithms
+(v1.3, 2026-10-06): regex parsing and integer/decimal arithmetic with C-like
+truncation — no `xs:date`/`xs:dateTime` casts and no `format-date` on the
+golden-tested paths, so libxslt's exact output (including number formatting and
+BC-year handling) is reproduced.
 
-> **REQ-008 repair (2026-10-06):** the seven `format-date` call sites
-> (`date:date`, `date:month-name`, `date:month-abbreviation`,
-> `date:week-in-year`, `date:day-in-year`, `date:day-name`,
-> `date:day-abbreviation`) handed `date:_as-datetime`'s `xs:dateTime` to a
-> parameter typed `xs:date?`; the surrounding `try`/`catch` masked the
-> resulting `XPTY0004`, so all seven returned `''` for every valid date. The
-> call sites now cast (`xs:date(substring(string(…), 1, 10))`) and return
-> correct EXSLT answers. This is a bug fix, not a divergence.
+The 14 libxslt *extraction battery* cases — `cases/date/{date.1, date.2,
+datetime.1, datetime.2, gday.1, gday.2, gmonth.1, gmonth.2, gmonthday.1,
+gmonthday.2, gyear.1, gyear.2, gyearmonth.1, gyearmonth.2}` — each call all
+sixteen extraction functions against one input type; they are referenced as
+"battery" below.
+
+> **REQ-008 repair (2026-10-06), superseded by the v1.3 rewrite:** the seven
+> `format-date` call sites originally handed `date:_as-datetime`'s
+> `xs:dateTime` to a parameter typed `xs:date?`; the surrounding `try`/`catch`
+> masked the resulting `XPTY0004`, so all seven returned `''` for every valid
+> date. The repair cast the argument (`xs:date(substring(string(…), 1, 10))`);
+> the v1.3 rewrite then replaced the whole cast-based implementation with the
+> libexslt port described above, so extraction functions now follow libxslt's
+> per-type validity contracts exactly (e.g. `date:month-in-year` accepts
+> gMonthDay; `date:week-in-year` accepts only dateTime/date). Bug fix, not a
+> divergence.
 
 | Function | Tier | Status | Notes | Tests |
 |----------|------|--------|-------|-------|
-| `date:date-time` | 2 | implemented | Current date/time as `YYYY-MM-DDThh:mm:ss`. Non-deterministic; not golden-tested. | — |
-| `date:date` | 2 | implemented | Date portion of argument (default: today). | `cases/date/date.1` |
-| `date:time` | 2 | implemented | Time portion of argument (default: now). | — |
-| `date:year` | 2 | implemented | | — |
-| `date:leap-year` | 2 | implemented | | — |
-| `date:month-in-year` | 2 | implemented | | — |
-| `date:month-name` / `date:month-abbreviation` | 2 | implemented | English names via `format-date` (`[MNn]`). | `cases/date/month-name.1`, `cases/date/month-abbreviation.1` |
-| `date:week-in-year` | 2 | implemented | ISO week number. | `cases/date/week-in-year.1` |
-| `date:day-in-year` | 2 | implemented | | `cases/date/day-in-year.1` |
-| `date:day-in-month` | 2 | implemented | | — |
-| `date:day-of-week-in-month` | 2 | implemented | Ordinal week of month (1–5). | — |
-| `date:day-in-week` | 2 | implemented | 1 = Sunday, per EXSLT. | — |
-| `date:day-name` / `date:day-abbreviation` | 2 | implemented | English names via `format-date` (`[FNn]`). | `cases/date/day-name.1`, `cases/date/day-abbreviation.1` |
-| `date:hour-in-day` / `date:minute-in-hour` / `date:second-in-minute` | 2 | implemented | | — |
-| `date:duration` | 2 | implemented | Seconds → `PnDTnHnMnS`. Decimal-exact (`xs:decimal`); libxslt's binary-float rounding edge (e.g. `3599.99999999999` → `PT1H`) is a documented divergence. | `cases/date/duration.1` |
-| `date:add-duration` | 2 | implemented | Component arithmetic with libxslt normalization: months carry into years, seconds carry into days, days do **not** carry into months. | `cases/date/add-duration.1` |
-| `date:add` | 2 | implemented | Calendar addition via `xs:dateTime + xs:duration`. Normalization may differ from libxslt's component arithmetic (documented; no golden test). | — |
-| `date:difference` | 2 | implemented | `xs:dateTime` subtraction → dayTimeDuration formatted as `PnDTnHnM…S`. Years/months are not expressible in the result; libxslt approximates with average month lengths — both are approximations, ours is exact for ≤ 24h-per-day calendars. | — |
-| `date:seconds` | 2 | implemented | Total seconds of a duration, or epoch seconds of a dateTime. | — |
-| `date:sum` | 2 | implemented | Sum of a node-set of durations. | — |
+| `date:date-time` | 2 | implemented | Current date/time as `YYYY-MM-DDThh:mm:ss`. Non-deterministic; not golden-tested (libxslt's `current.xsl` is skipped for the same reason — see `tests/ATTRIBUTION.md`). | — |
+| `date:date` | 2 | implemented | Date portion of argument (default: today). | battery |
+| `date:time` | 2 | implemented | Time portion of argument (default: now). | `cases/date/time.1`, `cases/date/time.2`, battery |
+| `date:year` | 2 | implemented | | battery |
+| `date:leap-year` | 2 | implemented | Returns the strings `'true'`/`'false'`/`'NaN'` (libxslt XPath 1.0 number output), not `xs:boolean`. | battery |
+| `date:month-in-year` | 2 | implemented | Accepts gMonthDay per libxslt's type contract. | battery |
+| `date:month-name` / `date:month-abbreviation` | 2 | implemented | English names. gYear is rejected (`''`), per the EXSLT spec's permitted formats and modern libxslt — see "Known divergences". | `cases/date/month-name.1`, `cases/date/month-abbreviation.1`, battery |
+| `date:week-in-year` | 2 | implemented | ISO week number; accepts only dateTime/date. | `cases/date/week-in-year.1`, battery |
+| `date:day-in-year` | 2 | implemented | | `cases/date/day-in-year.1`, battery |
+| `date:day-in-month` | 2 | implemented | | battery |
+| `date:day-of-week-in-month` | 2 | implemented | Ordinal week of month (1–5). | battery |
+| `date:day-in-week` | 2 | implemented | 1 = Sunday, per EXSLT; accepts only dateTime/date. | `cases/date/day-name.1`, battery |
+| `date:day-name` / `date:day-abbreviation` | 2 | implemented | English names; accept only dateTime/date. | `cases/date/day-name.1`, `cases/date/day-abbreviation.1`, battery |
+| `date:hour-in-day` / `date:minute-in-hour` / `date:second-in-minute` | 2 | implemented | Accept only dateTime/time. | battery |
+| `date:duration` | 2 | implemented | Seconds → `PnDTnHnMnS`. Decimal-exact (`xs:decimal`); libxslt's binary-float rounding edge (e.g. `3599.99999999999` → `PT1H`) is a documented divergence. | `cases/date/duration.1`, `cases/date/duration.2` |
+| `date:add-duration` | 2 | implemented | Port of libexslt `_exsltDateAddDurCalc`: months carry into years, seconds carry into days, days do **not** carry into months; opposite-sign component sums are indeterminate → `''` (matches libxslt). | `cases/date/add-duration.1`, `cases/date/add-duration.2` |
+| `date:add` | 2 | implemented | Port of libexslt `_exsltDateAdd` component arithmetic (not calendar arithmetic); result type is the less specific of the operands' types, and promoted dateTime results always print a timezone (`Z` when zero). Matches libxslt verbatim. | `cases/date/add.1`, `cases/date/add.2` |
+| `date:difference` | 2 | implemented | Port of libexslt `_exsltDateDifference`; both operands truncate to the less specific type, gYear/gYearMonth differences yield an exact month count, and day-level differences are exact day arithmetic with timezone offsets folded in. Matches libxslt verbatim. | `cases/date/difference.1`, `cases/date/difference.2` |
+| `date:seconds` | 2 | implemented | Total seconds of a duration, or epoch seconds of a dateTime. | `cases/date/seconds.1`, `cases/date/seconds.2` |
+| `date:sum` | 2 | implemented | Sum of a node-set of durations; ignores non-duration nodes (empty string on error, per libxslt). | `cases/date/sum.1`, `cases/date/sum.2` |
 
 ## set — Sets (`src/sets.xsl`)
 
@@ -125,8 +137,13 @@ Recorded here and in `tests/ATTRIBUTION.md`:
    second counts (e.g. `3599.99999999999`) is not reproduced.
 3. `math:power` uses `exp/log` and returns NaN for negative bases; libxslt's `pow()`
    returns real powers there.
-4. `date:add` uses calendar arithmetic via `xs:dateTime + xs:duration`; libxslt uses
-   component normalization. Month-end edge cases (e.g. Jan 31 + P1M) may differ.
+4. `date/month-name.1` (hand-written case): the golden line `month-name('2026') =
+   'January'` was re-goldened to `''` on 2026-10-06. The original encoded the
+   pre-rewrite cast-based behavior, which accepted `xs:gYear`; the EXSLT spec's
+   permitted formats for `month-name` (dateTime, date, gYearMonth, gMonth) and
+   modern libxslt (1.1.45, probed: `''`) both reject gYear, and libxslt's own
+   `gyear.1` case requires `''`. The library matches the corrected golden and the
+   libxslt battery verbatim.
 
 ---
 

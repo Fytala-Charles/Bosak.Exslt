@@ -3,5 +3,5 @@
   "namespace": "http://exslt.org/dates-and-times",
   "tier": 2,
   "source": { "project": "hand-written", "license": "Apache-2.0" },
-  "adaptations": "hand-written case (happy path + invalid-input edge) pinning the REQ-008 repair of date:month-name: the format-date first argument is cast to xs:date, changing behavior from always-empty to the correct EXSLT answer — a bug fix, not a divergence (see docs/FEATURE_REQUESTS.md REQ-008, docs/COMPATIBILITY.md)"
+  "adaptations": "hand-written case (happy path + invalid-input edge) pinning the REQ-008 repair of date:month-name: the format-date first argument is cast to xs:date, changing behavior from always-empty to the correct EXSLT answer (see docs/FEATURE_REQUESTS.md REQ-008, docs/COMPATIBILITY.md). RE-GOLDENED 2026-10-06 (line 3 only): the original expectation month-name('2026') = 'January' encoded the pre-rewrite cast-based behavior, which accepted xs:gYear; the EXSLT spec's permitted formats for month-name (dateTime, date, gYearMonth, gMonth) and the modern libxslt reference (probed 1.1.45: '') both reject gYear, so the golden line was corrected to ''. Recorded in docs/COMPATIBILITY.md and tests/ATTRIBUTION.md."
 }
