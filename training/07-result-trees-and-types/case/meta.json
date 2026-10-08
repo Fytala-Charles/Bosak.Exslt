@@ -1,0 +1,8 @@
+{
+  "function": "exsl:object-type",
+  "namespace": "http://exslt.org/common",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 07 exercise; semantics per the EXSLT 1.0 spec (exslt.org) with the documented divergence that XSLT 1.0 RTFs report as 'node-set' (XSLT 3.0 has no fragment type) — recorded in docs/COMPATIBILITY.md. Companion vehicle of the session: exsl:node-set (tier 1 identity in XSLT 3.0).",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

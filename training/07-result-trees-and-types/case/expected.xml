@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<result>
+  <best>apples</best>
+  <grand>28</grand>
+  <of-rtf>node-set</of-rtf>
+  <of-string>string</of-string>
+  <of-number>number</of-number>
+  <of-boolean>boolean</of-boolean>
+  <of-nodes>node-set</of-nodes>
+  <of-empty>node-set</of-empty>
+  <of-map>external</of-map>
+</result>

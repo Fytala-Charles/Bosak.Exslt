@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<sales>
+  <row product="apples" qty="4" price="2.50"/>
+  <row product="pears"  qty="3" price="3.00"/>
+  <row product="figs"   qty="6" price="1.50"/>
+</sales>
