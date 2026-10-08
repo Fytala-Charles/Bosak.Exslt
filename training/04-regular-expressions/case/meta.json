@@ -1,0 +1,8 @@
+{
+  "function": "str:tokenize",
+  "namespace": "http://exslt.org/strings",
+  "tier": 1,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 04 exercise; semantics per the EXSLT 1.0 spec (exslt.org) and the libxslt reference implementation. Companion vehicles of the session: str:split and str:encode-uri (tier 2). str:encode-uri is deliberately ASCII-scoped here — the library delegates full UTF-8 encoding to native encode-for-uri/iri-to-uri.",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

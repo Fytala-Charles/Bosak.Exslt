@@ -91,7 +91,7 @@ the library, with headers, attribution, and documentation updates.
 | 1 | [XSLT basics](01-xslt-basics/README.md) | The processing model, template rules, literal result elements, `xsl:value-of` / `xsl:for-each`, attribute value templates | — (transform `<team>` into a roster document) | Available |
 | 2 | [Your first stylesheet](02-first-stylesheet/README.md) | Stylesheet anatomy, `xsl:function`, sequences, the `!` operator, empty-input handling | `math:min`, `math:max`, `math:highest` | Available |
 | 3 | [Recursion as the basic loop](03-recursion/README.md) | Recursive `xsl:function`, default parameters, `substring` arithmetic | `str:padding`, `str:align` | Available |
-| 4 | Regular expressions | `fn:tokenize`, escaping literal delimiters, `analyze-string` vs `tokenize` | `str:tokenize`, `str:split`, `str:encode-uri` | Planned |
+| 4 | [Regular expressions](04-regular-expressions/README.md) | `fn:tokenize`, escaping literal delimiters, `analyze-string` vs `tokenize` | `str:tokenize`, `str:split`, `str:encode-uri` | Available |
 | 5 | Stateful scanning | Left-to-right scans, recursion with an accumulator, positional mapping | `str:replace` | Planned |
 | 6 | Nodes, identity, grouping | `is` vs `=`, document order, `except`/`intersect`, `xsl:for-each-group` | `set:has-same-node`, `set:distinct`, `set:difference` | Planned |
 | 7 | Result trees and types | What variables hold in XSLT 3.0, document nodes, `instance of` | `exsl:node-set`, `exsl:object-type` | Planned |
