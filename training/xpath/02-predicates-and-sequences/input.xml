@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<catalog>
+  <shelf name="classics">
+    <book id="b1">
+      <title>Emma</title>
+      <author>Austen</author>
+      <year>1815</year>
+      <price>8</price>
+    </book>
+    <book id="b2">
+      <title>Persuasion</title>
+      <author>Austen</author>
+      <year>1817</year>
+      <price>10</price>
+    </book>
+    <book id="b3">
+      <title>Frankenstein</title>
+      <author>Shelley</author>
+      <year>1818</year>
+      <price>9</price>
+    </book>
+  </shelf>
+  <shelf name="scifi">
+    <book id="b4">
+      <title>Dune</title>
+      <author>Herbert</author>
+      <year>1965</year>
+      <price>12</price>
+    </book>
+    <book id="b5">
+      <title>Frankenstein</title>
+      <author>Shelley</author>
+      <year>1831</year>
+      <price>11</price>
+    </book>
+    <magazine id="m1">
+      <title>Analog</title>
+      <year>1950</year>
+    </magazine>
+  </shelf>
+</catalog>

@@ -1,0 +1,1 @@
+1: | Emma | Persuasion | Frankenstein | Frankenstein | 2: | Emma | Dune | 3: | Frankenstein | Frankenstein | 4: | 5 | 2 | false | 5: | Emma | Persuasion | Frankenstein | Dune | Frankenstein | 6: | total: | 5 | Emma | Dune

@@ -1,0 +1,20 @@
+(
+  (:: Part 1 — pre-1900 book titles ::)
+  '1:',
+  //book[xs:integer(year) lt 1900]/title,
+  (:: Part 2 — the FIRST book of every shelf ::)
+  '2:',
+  //shelf/book[1]/title,
+  (:: Part 3 — the LAST book of every shelf ::)
+  '3:',
+  //shelf/book[last()]/title,
+  (:: Part 4 — counts and existence ::)
+  '4:',
+  (count(//book), count(//shelf), exists(//magazine[xs:integer(year) lt 1900])),
+  (:: Part 5 — union of two filtered title sets ::)
+  '5:',
+  //book[xs:integer(year) lt 1900]/title | //book[xs:integer(price) gt 9]/title,
+  (:: Part 6 — one concatenated sequence ::)
+  '6:',
+  ('total:', count(//book), //shelf/book[1]/title)
+)
