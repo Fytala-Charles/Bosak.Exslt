@@ -47,11 +47,17 @@ Bosak.Exslt/
 │   └── pkg/                XSLT 3.0 package descriptors (REQ-003): one xsl:package
 │                           per module, wrapping the plain file via xsl:include and
 │                           exposing the public EXSLT names for xsl:use-package
+├── samples/
+│   ├── README.md           Runnable gallery (REQ-005, branded): per-module
+│   │                       legacy.xsl vs modern.xsl + engine-captured outputs
+│   └── <module>/           common, math, strings, date, sets, dynamic — each with
+│                           legacy.xsl + modern.xsl (+ input.xml, output.*.*)
 ├── tests/
 │   ├── cases/<ns>/<case>/  Golden corpus: transform.xsl + expected.xml|expected.txt
 │   │                       + meta.json (+ input.xml); 104 cases (math 29, strings 15,
 │   │                       sets 12, common 13, date 34, packages 1)
 │   ├── Bosak.Exslt.Tests/  xUnit harness (net10.0) on published Bosak.Xslt packages
+│   │                       (GoldenFileTests + SamplesTests)
 │   ├── ATTRIBUTION.md      Upstream provenance (libxslt, MIT) + divergence log
 ├── training/
 │   ├── README.md           Curriculum index (branded, self-paced; About FYTALA)
@@ -104,6 +110,7 @@ and must stay in sync with `src/`.
 |-------|---------------|--------------------|
 | `src/*.xsl` (the library) | Standard XSLT 3.0 / XPath 3.1 + F&O only | Vendor extensions, processor conditionals, any engine-specific feature, any C#/package reference |
 | `tests/cases/` | `src/*.xsl` via relative `xsl:include` (`../../../src/<module>.xsl`) | Anything outside the repo |
+| `samples/` (REQ-005 gallery) | `src/exslt.xsl` via relative `xsl:import` (`../../src/exslt.xsl`) for `legacy.xsl`; `modern.xsl` is self-contained standard XSLT 3.0 | Anything outside the repo |
 | `tests/Bosak.Exslt.Tests` (harness) | Published **Bosak.Xslt** and **Bosak.XPath.Providers** NuGet packages only (currently 0.12.3-beta); copies cases and `src/**/*.*` to its output via `<None Include>` links | Project references into `src/` (there is no project there), un-published engine builds |
 | `training/*/starter/`, `training/*/solution/*.xsl` (training material) | Standard XSLT 3.0 / XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | `src/*.xsl` via `xsl:include`/`xsl:import` — training is a sandbox; the library appears only as read-along reference after the learner's attempt |
 | `training/xpath/*/starter/`, `training/xpath/*/solution/exercise.xpath` (XPath training material) | Pure XPath 3.1 + F&O only; a session's own `input.xml` + `case/` files | XSLT instructions, extension functions, `src/*.xsl` |
@@ -149,6 +156,15 @@ engine. The package case `tests/cases/packages/use-package.1/` exercises
 cross-package calls into the math and strings packages (date verified ad hoc);
 the plain include-mode corpus is unaffected.
 
+**Samples harness (REQ-005).** `SamplesTests` (same project) discovers every
+directory under the copied `samples/` tree containing a `legacy.xsl`, runs both
+`legacy.xsl` (XSLT 1.0 idiom + `xsl:import` of the library master) and
+`modern.xsl` (self-contained XSLT 3.0) against the optional `input.xml`, and
+compares with the engine-captured `output.legacy.*` / `output.modern.*` goldens
+using the same whitespace-normalized XML / token-stream text idioms as the
+golden corpus. The captured outputs are never edited by hand: a library change
+that moves a sample's output fails the build.
+
 **Training harness.** `training/TrainingTests` (xUnit, net10.0) reuses the pattern
 above against a second, independent corpus. A *session* is any `training/NN-*`
 directory holding `case/meta.json` (the same marker `tools/check-docs.ps1` uses for
@@ -180,9 +196,9 @@ pull request: `dotnet build` of the golden harness project (warnings are errors
 via `TreatWarningsAsErrors`), then the three test projects — `Bosak.Exslt.Tests`,
 `TrainingTests`, `XPathTrainingTests` — then `pwsh tools/check-docs.ps1
 -ProjectPath . -Strict`. The build step precedes the test steps so the
-`<None Include>` copy of `tests/cases/**` and `src/**/*.*` (library modules plus
-the REQ-003 `src/pkg/` package descriptors) into the output directory happens
-before any test run.
+`<None Include>` copy of `tests/cases/**`, `src/**/*.*` (library modules plus
+the REQ-003 `src/pkg/` package descriptors) and `samples/**` (the REQ-005
+gallery) into the output directory happens before any test run.
 
 ## 6. Data Flow
 

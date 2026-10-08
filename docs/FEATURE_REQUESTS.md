@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-08 (**REQ-003 Implemented: six `xsl:package` descriptors in `src/pkg/` (`urn:fytala:exslt:{common,math,strings,date,sets,dynamic}` v1.0.0) wrapping the plain modules via `xsl:include` + explicit `xsl:expose`; package-mode golden case (`tests/cases/packages/use-package.1`, harness registers packages on `meta.json` `"mode": "package"`); one documented engine deviation (intra-package helper calls resolve against public-exposure table only → strings/date internals exposed `public`, marked as implementation details). Also today: REQ-002 Implemented — Xalan-J second corpus (30 cases, corpus 103→104 with the package case); REQ-004 Accepted — `dyn:evaluate` wrapper over standard `xsl:evaluate` blocked on the engine's context-item gap (XPDY0002), reported against core REQ-121; REQ-001 implemented earlier — full libxslt corpus (61 cases) + 6 gap cases; REQ-006 Implemented — CI workflow green; REQ-007 and REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-005 Implemented: sample gallery — six `samples/<module>/` pairs (legacy XSLT 1.0 idiom + modern XSLT 3.0, harness-captured outputs), `SamplesTests` reruns all 12 transforms every run (110/110), branded `samples/README.md`; static-HTML site rendering deferred. New engine quirk: a `version="1.0"` caller breaks the library's typed internals (XTTE0570) — gotcha §4.11. Also today: REQ-003 Implemented — six `xsl:package` descriptors in `src/pkg/` + package-mode case (104→110); REQ-002 Implemented — Xalan-J second corpus (30 cases); REQ-004 Accepted — `dyn:evaluate` wrapper blocked on the engine's `xsl:evaluate` context-item gap (XPDY0002), reported against core REQ-121; REQ-001 implemented earlier; REQ-006 Implemented — CI workflow green; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -89,7 +89,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Implemented (all acceptance criteria met 2026-10-08: 30 cases from `apache/xalan-test`, corpus 103/103) | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Implemented (all acceptance criteria met 2026-10-08: six `src/pkg/` descriptors, package-mode case, corpus 104/104) | v0.2.0 | Unassigned | 2026-10-06 |
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Accepted (decision recorded 2026-10-08: wrapper over standard `xsl:evaluate` — no native/commercial function needed; landing blocked on the engine's `xsl:evaluate` context-item gap, tracked against core REQ-121; slot stays terminating meanwhile) | TBD | Unassigned | 2026-10-06 |
-| `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
+| `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Implemented (acceptance criteria met 2026-10-08: six samples with harness-captured outputs + branded gallery README + SamplesTests 110/110; static-HTML rendering deferred) | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | Implemented (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow added 2026-10-08 — [`.github/workflows/build.yml`](../.github/workflows/build.yml), `ubuntu-latest`, all gates green) | Pre-v0.1.0 | Owner | 2026-10-06 |
 | `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | Implemented (XSLT curriculum sessions 00–11 + addendum complete 2026-10-06; XPath foundations track 01–05 also complete 2026-10-06 — all acceptance criteria met) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-008` | `Bosak.Exslt` (maintainers) | Fix the latent date-formatting type defect: `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` pass an `xs:dateTime` to `format-date` (first parameter `xs:date?`) → `XPTY0004` → silent `''`/`NaN` for every input on signature-enforcing engines | Found while authoring training session 08 (2026-10-06); `date:time` already applies the correct cast pattern (`xs:time(substring(string(...), 12))`) — the fix is that same one-line cast per function, each with a new golden case per the TDD rule | Implemented | Pre-v0.1.0 | Unassigned | 2026-10-06 — seven `xs:date` casts landed in `dates-and-times.xsl`, seven new golden cases (`tests/cases/date/`), harness 22/22 |
@@ -258,7 +258,7 @@ Decision recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md) (ame
 
 **Requesting Party:** `Fytala`  
 **Submitted:** `2026-10-06`  
-**Status:** `Pending`
+**Status:** `Implemented` (acceptance criteria met 2026-10-08 — runnable samples + harness-captured outputs; static-HTML site rendering deferred as a follow-up, see Decision Log)
 
 #### Problem Statement
 
@@ -270,15 +270,15 @@ Static site generated from runnable samples in a `samples/` tree (each sample = 
 
 #### Acceptance Criteria
 
-- [ ] One runnable sample per namespace module.
-- [ ] Sample outputs produced by the harness, not hand-written.
+- [x] One runnable sample per namespace module. *Six samples under `samples/{common,math,strings,date,sets,dynamic}/`, each with `legacy.xsl` (XSLT 1.0 idiom, `xsl:import` of the library master), `modern.xsl` (the same task in idiomatic XSLT 3.0 without the library), `input.xml` where needed, and captured outputs. `SamplesTests` reruns both transforms of every sample on every test run (6 tests).*
+- [x] Sample outputs produced by the harness, not hand-written. *All 12 outputs byte-captured by running the transforms through the Bosak 0.12.3-beta engine; `SamplesTests` re-verifies them on every run.*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
 |-------|--------|-------|
-| src/ modules | None | |
-| golden corpus | None (samples are not goldens) | |
-| docs | New tree | `samples/` + site generator |
+| src/ modules | None | One new engine quirk surfaced (see Decision Log) |
+| golden corpus | None (samples are not goldens) | +6 sample tests in the same harness project (110 total) |
+| docs | New `samples/` tree + branded gallery README | Root README "Samples" pointer; ARCHITECTURE.md rows |
 
 #### Related Requests
 - REQ-006 (bootstrap; site publishing needs a repo)
@@ -286,7 +286,8 @@ Static site generated from runnable samples in a `samples/` tree (each sample = 
 #### Decision Log
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
-| — | — | Pending | Post-v0.1.0 candidate |
+| 2026-10-08 | Kimi | Implemented (samples + harness capture + gallery README); static-HTML site rendering deferred | The two acceptance criteria define done; the branded `samples/README.md` gallery satisfies the consumable-showcase intent today, and an HTML generator can be added without touching samples |
+| 2026-10-08 | Kimi | New engine quirk recorded (candidate core gap) | A `version="1.0"` caller makes the library's typed internals fail (XTTE0570: `xs:integer` locals evaluated under 1.0 double arithmetic) — the `date` sample's legacy file therefore carries `version="3.0"` with the idiom intact; gotcha §4.11 of the handover |
 
 ---
 

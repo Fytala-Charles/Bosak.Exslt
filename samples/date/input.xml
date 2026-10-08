@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schedule start="2026-10-08T09:00:00">
+  <task name="setup" duration="PT1H0M"/>
+  <task name="build" duration="PT2H30M"/>
+  <task name="test" duration="PT0H45M"/>
+</schedule>

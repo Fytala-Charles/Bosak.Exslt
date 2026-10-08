@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><product sku="KB_100"><tag>input</tag><tag>transform</tag><tag>legacy</tag></product><product sku="MS_200"><tag>output</tag><tag>modern</tag></product>

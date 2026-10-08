@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orders>
+  <order id="A102" price="19.99"/>
+  <order id="A103" price="45.50"/>
+  <order id="A104" price="12.00"/>
+</orders>

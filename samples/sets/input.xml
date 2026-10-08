@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <shelf name="desk">
+    <book title="XSLT 2.0 Programmer's Reference" cat="xml"/>
+    <book title="Learning XSLT" cat="xslt"/>
+  </shelf>
+  <shelf name="bag">
+    <book title="Learning XSLT" cat="xslt"/>
+    <book title="Domain-Driven Design" cat="dotnet"/>
+  </shelf>
+</library>

@@ -122,6 +122,13 @@ Available packages: `urn:fytala:exslt:common`, `urn:fytala:exslt:math`,
 exercising cross-package consumption lives at
 `tests/cases/packages/use-package.1/`.
 
+## Samples
+
+`samples/` holds the runnable gallery (REQ-005): one migration sample per module
+— the XSLT 1.0 + EXSLT legacy form, the idiomatic XSLT 3.0 modern form, and both
+outputs as actually produced by the Bosak engine. The `SamplesTests` suite reruns
+every sample on every test run. See [`samples/README.md`](samples/README.md).
+
 ## Learn Bosak XSLT by reading real code
 
 If you are learning XSLT 3.0 (or evaluating the Bosak engine), the tier-2 modules are the reading material:
@@ -157,6 +164,9 @@ src/       Library modules: exslt.xsl (master), exsl.xsl, math.xsl, strings.xsl,
            dates-and-times.xsl, sets.xsl, dynamic.xsl
 src/pkg/   XSLT 3.0 package descriptors (REQ-003): one xsl:package per module,
            wrapping the plain file via xsl:include for xsl:use-package consumption
+samples/   Runnable sample gallery (REQ-005): one migration sample per module —
+           legacy.xsl (XSLT 1.0 idiom + EXSLT) vs modern.xsl (idiomatic 3.0),
+           engine-captured outputs, verified by the SamplesTests harness
 tests/     Golden-file corpus (tests/cases/) + xUnit runner (tests/Bosak.Exslt.Tests/)
            + fixture provenance (tests/ATTRIBUTION.md)
 training/  Self-paced XSLT 3.0 training curriculum: ten branded session lessons with

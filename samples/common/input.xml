@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inventory>
+  <item name="wireless mouse" status="ok"/>
+  <item name="usb-c hub" status="backorder"/>
+  <item name="keyboard" status="ok"/>
+  <item name="webcam" status="backorder"/>
+</inventory>

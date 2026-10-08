@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product sku="KB-100" tags="input,transform,legacy"/>
+  <product sku="MS-200" tags="output,modern"/>
+</catalog>

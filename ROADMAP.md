@@ -112,6 +112,9 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
 - [ ] First tagged release (0.1.0) once the corpus covers every implemented
       function and `dotnet test` is green in CI.
 - [ ] Publish as a Fytala open-source artifact next to the Bosak engine packages.
+- [ ] Static-HTML rendering of the sample gallery — the `samples/` tree and
+      branded `samples/README.md` gallery are live (REQ-005 Implemented
+      2026-10-08); a site generator on top is future work. *(REQ-005 follow-up)*
 
 ## 2. Milestones
 
@@ -122,10 +125,11 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
 | M2 — Golden harness | xUnit harness on published Bosak.Xslt packages | Done (2026-10-06) |
 | M3 — Starter corpus | 15 libxslt-derived cases, 15/15 green | Done (2026-10-06) |
 | M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
-| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases, corpus 73/73; REQ-002: 30 Xalan-J cases from apache/xalan-test, corpus 103/103 — both Implemented) |
+| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases; REQ-002: 30 Xalan-J cases from apache/xalan-test; REQ-003: +1 package-mode case — corpus 104/104, all Implemented) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending (divergence pinning done 2026-10-06 in REQ-001 batch 3 + `month-name.1` re-golden; non-deterministic `current.xsl` skip-recorded; year-range item still awaits the Bosak engine representation decision) |
 | M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (CI workflow live 2026-10-08 per REQ-006; first tag + artifact publish open) |
 | M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |
+| M8 — Sample gallery | Runnable legacy/modern pair per module with harness-captured outputs; branded gallery README; SamplesTests in the harness | Done (2026-10-08, REQ-005; static-HTML rendering follow-up) |
 
 ## 3. Known Limitations
 

@@ -24,6 +24,7 @@
          xsl:include paths inside transform.xsl resolve inside the output directory. -->
     <None Include="..\cases\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="cases" />
     <None Include="..\..\src\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="src" />
+    <None Include="..\..\samples\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="samples" />
   </ItemGroup>
 
 </Project>
