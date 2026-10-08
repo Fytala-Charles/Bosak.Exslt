@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+  <rules>
+    <rule from="ab" to="x"/>
+    <rule from="abc" to="[ABC]"/>
+    <rule from="x" to="*"/>
+  </rules>
+  <overlap>zabcz</overlap>
+  <pairwise>abc and ab</pairwise>
+  <rescan>tab x</rescan>
+</data>

@@ -1,0 +1,8 @@
+{
+  "function": "str:replace",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 05 exercise; semantics per the EXSLT 1.0 spec (exslt.org) and the libxslt reference implementation: single left-to-right pass, earliest position wins, ties broken by rule document order, matches never re-scanned, missing replacement means the empty string.",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}
