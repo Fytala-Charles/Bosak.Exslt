@@ -110,7 +110,7 @@ upstream ASF license comment blocks verbatim; goldens are stored as
 | `common/common1` | `tests/exslt/common/common1` | version 1.0 → 3.0; library included — matched upstream verbatim |
 | `common/common2` | `tests/exslt/common/common2` | version 1.0 → 3.0; library included — matched upstream verbatim |
 | `common/common3` | `tests/exslt/common/common3` | version 1.0 → 3.0; library included; `exslt:object-type($tree)` RTF line dropped (XSLT 3.0 cannot distinguish result tree fragments — divergence 2, cf. `common/object-type.1`); golden adjusted to remove the `RTF` token |
-| `math/math2` | `tests/exslt/math/math2` | version 1.0 → 3.0; library included; `exclude-result-prefixes="math"` added; one golden line adapted (`acos(0.253)` StrictMath last-ulp noise) — see "Known divergences" 4 |
+| `math/math2` | `tests/exslt/math/math2` | version 1.0 → 3.0; library included; `exclude-result-prefixes="math"` added; acos echoes displayed via `format-number(…, '0.00000000000000')` — the engine's last-ulp `acos` differs across host platforms (Windows …327 vs Linux …3272, .NET pal difference; found by CI 2026-10-08), golden pinned at 14 decimals where both agree — see "Known divergences" 4 |
 | `math/math3` | `tests/exslt/math/math3` | version 1.0 → 3.0; library included; `exclude-result-prefixes="math"` added; one golden line adapted (`asin(0.253)` StrictMath last-ulp noise) — divergence 4 |
 | `math/math4` | `tests/exslt/math/math4` | version 1.0 → 3.0; library included; `exclude-result-prefixes="math"` added — matched upstream verbatim |
 | `math/math7` | `tests/exslt/math/math7` | version 1.0 → 3.0; library included; `exclude-result-prefixes="math"` added; two golden lines adapted (StrictMath argument-reduction/last-ulp noise, incl. large-argument `cos(5223849703457)`) — divergence 4 |
@@ -203,6 +203,15 @@ converted above or skipped here with a reason.
    (`tan(5223849703457)`). For arguments of magnitude ~5×10¹², sin/cos/tan
    results are inherently reduction-sensitive: both engines agree to 7+
    significant digits, which is the meaningful cross-implementation bound.
+   **Platform sensitivity (found by CI 2026-10-08):** the engine's last-ulp
+   trig results are not even stable across host platforms — `acos(0.253)`
+   is `1.315016439662327` on Windows and `1.3150164396623272` on Linux
+   (.NET runtime pal difference). `math/math2` therefore displays its acos
+   echoes via `format-number(…, '0.00000000000000')`, pinning the golden at
+   14 decimal places where both platforms agree. The other trig cases
+   (`math3`, `math7`, `math16`, `math18`) pass on both platforms today but
+   carry the same latent risk if a future runtime shifts a value across a
+   rounding boundary; the same rounding treatment is the recorded remedy.
 5. **XPath 3.1 number formatting (REQ-002)**: XPath 3.1 `xs:double` string
    conversion prints large magnitudes in scientific notation
    (`5223849703457` → `5.223849703457E12`) and spells the overflow value

@@ -157,6 +157,11 @@ Recorded here and in `tests/ATTRIBUTION.md`:
    `math/math18` were adapted to this engine's values (all other lines verbatim
    Xalan output). For arguments of magnitude ~5×10¹², sin/cos/tan results are
    inherently reduction-sensitive; both engines agree to 7+ significant digits.
+   **Platform sensitivity (CI, 2026-10-08):** the engine's last-ulp trig results
+   also differ across host platforms (`acos(0.253)`: `…327` Windows vs `…3272`
+   Linux — .NET runtime pal difference). `math/math2` pins its echoes at 14
+   decimal places via `format-number` where both platforms agree; the same
+   treatment is the recorded remedy if other trig cases flip on a future runtime.
 6. **XPath 3.1 number formatting (REQ-002; `tests/ATTRIBUTION.md` divergence 5):**
    XPath 3.1 `xs:double` string conversion prints large magnitudes in scientific
    notation (`5223849703457` → `5.223849703457E12`) and spells overflow `INF`

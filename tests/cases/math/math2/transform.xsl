@@ -24,31 +24,31 @@
 <xsl:template match="/">
    <out>
       ArcCos value of zero is:
-      <xsl:value-of select="math:acos($zero)"/><br/>
+      <xsl:value-of select="format-number(math:acos($zero), '0.00000000000000')"/><br/>
       ArcCos value of nzero is:
-      <xsl:value-of select="math:acos($nzero)"/><br/>
+      <xsl:value-of select="format-number(math:acos($nzero), '0.00000000000000')"/><br/>
       ArcCos value of num1 is:
-      <xsl:value-of select="math:acos($num1)"/><br/>
+      <xsl:value-of select="format-number(math:acos($num1), '0.00000000000000')"/><br/>
       ArcCos value of num2 is:
-      <xsl:value-of select="math:acos($num2)"/><br/>
+      <xsl:value-of select="format-number(math:acos($num2), '0.00000000000000')"/><br/>
       ArcCos value of temp1 is:
-      <xsl:value-of select="math:acos($temp1)"/><br/>
+      <xsl:value-of select="format-number(math:acos($temp1), '0.00000000000000')"/><br/>
       ArcCos value of temp2 is:
-      <xsl:value-of select="math:acos($temp2)"/><br/>
+      <xsl:value-of select="format-number(math:acos($temp2), '0.00000000000000')"/><br/>
       ArcCos value of rad1 is:
-      <xsl:value-of select="math:acos($rad1)"/><br/>
+      <xsl:value-of select="format-number(math:acos($rad1), '0.00000000000000')"/><br/>
       ArcCos value of rad2 is:
-      <xsl:value-of select="math:acos($rad2)"/><br/>
+      <xsl:value-of select="format-number(math:acos($rad2), '0.00000000000000')"/><br/>
       ArcCos value of rad3 is:
-      <xsl:value-of select="math:acos($rad3)"/><br/>
+      <xsl:value-of select="format-number(math:acos($rad3), '0.00000000000000')"/><br/>
       ArcCos value of rad4 is:
-      <xsl:value-of select="math:acos($rad4)"/><br/>
+      <xsl:value-of select="format-number(math:acos($rad4), '0.00000000000000')"/><br/>
       ArcCos value of input1 number is:
-      <xsl:value-of select="math:acos($input1)"/><br/>
+      <xsl:value-of select="format-number(math:acos($input1), '0.00000000000000')"/><br/>
       ArcCos value of input2 number is:
-      <xsl:value-of select="math:acos($input2)"/><br/>
+      <xsl:value-of select="format-number(math:acos($input2), '0.00000000000000')"/><br/>
       ArcCos value of input3 number is:
-      <xsl:value-of select="math:acos($input3)"/>
+      <xsl:value-of select="format-number(math:acos($input3), '0.00000000000000')"/>
 
    </out>
 </xsl:template>

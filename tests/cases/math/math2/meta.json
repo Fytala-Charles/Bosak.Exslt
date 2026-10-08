@@ -7,5 +7,5 @@
     "license": "Apache-2.0",
     "path": "tests/exslt/math/math2.xsl + tests/exslt/math/math2.xml (golden tests/exslt-gold/math/math2.out)"
   },
-  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). One golden line adapted to the engine acos value: Xalan StrictMath prints acos(0.253)=1.3150164396623272, the engine 1.315016439662327 (last-ulp noise)."
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). The echoed acos values are displayed via format-number(..., '0.00000000000000'): the engine's last-ulp acos results differ across host platforms (Windows 1.315016439662327 vs Linux 1.3150164396623272 — .NET runtime pal difference), so the golden is pinned at 14 decimal places where both platforms agree (divergence 4, ATTRIBUTION.md)."
 }
