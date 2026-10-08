@@ -1,0 +1,11 @@
+{
+  "function": "str:tokenize",
+  "namespace": "http://exslt.org/strings",
+  "tier": 1,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/strings/tokenize.3"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; golden stored as expected.txt (output is bare text lines, not a well-formed XML document)"
+}

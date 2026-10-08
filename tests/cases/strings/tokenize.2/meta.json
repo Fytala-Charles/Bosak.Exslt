@@ -1,0 +1,11 @@
+{
+  "function": "str:tokenize",
+  "namespace": "http://exslt.org/strings",
+  "tier": 1,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/strings/tokenize.2"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include; exclude-result-prefixes=\"str\" added (XSLT 3.0 ignores extension-element-prefixes for function namespaces — without it the str namespace leaked onto literal result elements); golden stored as expected.txt (output is an XML fragment, not a single document)"
+}

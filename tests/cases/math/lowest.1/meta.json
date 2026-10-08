@@ -1,0 +1,11 @@
+{
+  "function": "math:lowest",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "libxslt",
+    "license": "MIT",
+    "path": "tests/exslt/math/lowest.1"
+  },
+  "adaptations": "version attribute bumped from 1.0 to 3.0; library module included via xsl:include"
+}

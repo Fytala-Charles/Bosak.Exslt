@@ -8,7 +8,7 @@ the rulebook.
 
 | Project | License | Upstream path pattern | Used for |
 |---------|---------|-----------------------|----------|
-| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 15 cases (all pre-REQ-008) |
+| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 24 cases (15 seed + 9 REQ-001 batch 1) |
 | hand-written (this project, Fytala) | Apache-2.0 | — | 7 REQ-008 date cases |
 
 libxslt's EXSLT test suite is the de-facto reference behavior for EXSLT
@@ -44,10 +44,30 @@ imported yet (see `../ROADMAP.md`, Stage 1).
 | `date/day-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-in-year` (leap-year edge) |
 | `date/day-name.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-name` (happy + invalid edge) |
 | `date/day-abbreviation.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-abbreviation` (happy + invalid edge) |
+| `math/highest.2` | `tests/exslt/math/highest.2` | version 1.0 → 3.0; library included; pins empty-input edge (`Highest: `) |
+| `math/highest.5` | `tests/exslt/math/highest.5` | version 1.0 → 3.0; library included; pins `math:lowest` + `math:highest` with duplicate extrema (tie order) |
+| `math/lowest.1` | `tests/exslt/math/lowest.1` | version 1.0 → 3.0; library included |
+| `math/lowest.2` | `tests/exslt/math/lowest.2` | version 1.0 → 3.0; library included; pins empty-input edge (`Lowest: `) |
+| `math/max.2` | `tests/exslt/math/max.2` | version 1.0 → 3.0; library included; pins empty-input edge (`Maximum: NaN`) |
+| `math/max.5` | `tests/exslt/math/max.5` | version 1.0 → 3.0; library included; pins `math:min` + `math:max` over attribute nodes |
+| `math/min.2` | `tests/exslt/math/min.2` | version 1.0 → 3.0; library included; pins empty-input edge (`Minimum: NaN`) |
+| `strings/tokenize.2` | `tests/exslt/strings/tokenize.2` | version 1.0 → 3.0; library included; `exclude-result-prefixes="str"` added (XSLT 3.0 ignores `extension-element-prefixes` for function namespaces — without it the `str` namespace leaked onto literal result elements); golden stored as `expected.txt` (fragment output, not a single document) |
+| `strings/tokenize.3` | `tests/exslt/strings/tokenize.3` | version 1.0 → 3.0; library included; golden stored as `expected.txt` (bare text lines); pins empty-token dropping on consecutive/adjacent delimiters — matched upstream verbatim |
 
 "Library included" means an `xsl:include` of the corresponding
 `src/<module>.xsl` was added; no template, input, or expected content was
 otherwise altered unless listed.
+
+## Skipped upstream cases (REQ-001)
+
+Recorded per REQ-001's acceptance criterion — every upstream case is either
+converted above or skipped here with a reason.
+
+| Upstream case | Reason |
+|---------------|--------|
+| `tests/exslt/math/max.3` | Exercises `func:function`/`func:result` (EXSLT functions module — tier 3 documented, superseded by `xsl:function`); the `func:` machinery, not `math:max`, is the subject of the case |
+| `tests/exslt/math/power.1` | Golden pins libxslt binary-float formatting (`2.85311670611e+11`); our decimal-exact `math:power` cannot reproduce it without faking the value — see divergence 3 in `docs/COMPATIBILITY.md` |
+| `tests/exslt/strings/uri` | Held back (REQ-001 batch 1): conversion exposed a genuine library defect in `str:decode-uri` — percent-escapes are decoded byte→codepoint (Latin-1 style), so `%F0%9F%91%8C` becomes four control characters (`SERE0006` on serialization) instead of the UTF-8 character 👌; convert after the library fix |
 
 ## Known divergences pinned by (or visible in) the corpus
 
