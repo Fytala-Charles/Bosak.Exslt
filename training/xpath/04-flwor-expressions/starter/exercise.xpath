@@ -1,0 +1,17 @@
+(
+  (:: Slot 1 — bind once, use in return ::)
+  '1:',
+  (),
+  (:: Slot 2 — iterate, filter, format ::)
+  '2:',
+  //book[xs:integer(stock) gt 0]/@id,
+  (:: Slot 3 — rank by price, descending ::)
+  '3:',
+  (),
+  (:: Slot 4 — a FLWOR inside a FLWOR ::)
+  '4:',
+  (),
+  (:: Slot 5 — bind an intermediate, aggregate ::)
+  '5:',
+  ()
+)

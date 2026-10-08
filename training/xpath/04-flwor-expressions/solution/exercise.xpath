@@ -1,0 +1,17 @@
+(
+  (:: Slot 1 — bind once, use in return ::)
+  '1:',
+  let $ids := string-join(//book/@id, ',') return concat('ids=', $ids),
+  (:: Slot 2 — iterate, filter, format ::)
+  '2:',
+  for $b in //book where xs:integer($b/stock) gt 0 return concat($b/@id, ':', $b/title),
+  (:: Slot 3 — rank by price, descending (engine has no order by — see lesson) ::)
+  '3:',
+  reverse(sort(//book, (), function($b) { xs:integer($b/price) })) ! concat(@id, ':', price),
+  (:: Slot 4 — a FLWOR inside a FLWOR ::)
+  '4:',
+  for $s in //shelf return ($s/@name, (for $b in $s/book return $b/@id)),
+  (:: Slot 5 — bind an intermediate, aggregate ::)
+  '5:',
+  let $total := sum(//book/xs:integer(stock)) return concat('total=', $total, ',avg-idiv=', $total idiv count(//book))
+)
