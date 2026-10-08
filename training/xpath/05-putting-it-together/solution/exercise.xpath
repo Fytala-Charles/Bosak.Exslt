@@ -1,0 +1,28 @@
+(
+  (:: Slot 1 — the bestseller line ::)
+  '1:',
+  let $m := max(//book/xs:integer(stock)) return
+    //book[xs:integer(stock) eq $m] ! concat('bestseller:', @id, ':', title, ':', stock),
+  (:: Slot 2 — per-shelf breakdown ::)
+  '2:',
+  for $s in //shelf return concat($s/@name, ':', count($s/book), ':', sum($s/book/xs:integer(stock))),
+  (:: Slot 3 — rating ranking with tie markers ::)
+  '3:',
+  reverse(sort(//book, (), function($b) { xs:integer($b/rating) }))
+    ! concat(@id, ':', rating, if (xs:integer(rating) eq max(//book/xs:integer(rating))) then '*' else ''),
+  (:: Slot 4 — catalog validation rules ::)
+  '4:',
+  (count(//shelf/book) eq count(//book),
+   not(//book[xs:integer(stock) lt 0]),
+   //book/@id = ('b1', 'b2', 'b3', 'b4', 'b5'),
+   every $x in ('b1', 'b6') satisfies //book/@id = $x,
+   exists(//magazine[xs:integer(year) gt 1900])),
+  (:: Slot 5 — the capstone summary line ::)
+  '5:',
+  let $in := //book[xs:integer(stock) gt 0] return string-join((
+    concat('books=', count(//book)),
+    concat('in-stock=', count($in)),
+    concat('top-rating=', max(//book/xs:integer(rating))),
+    concat('cheapest-in-stock=', $in[xs:integer(price) eq min($in/xs:integer(price))]/title)
+  ), ';')
+)

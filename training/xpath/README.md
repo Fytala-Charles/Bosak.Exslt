@@ -63,14 +63,16 @@ matter — comparison is on the token stream — but item order always does.
 | 2 | [Predicates & sequences](02-predicates-and-sequences/README.md) | `[...]` filters, positional predicates, `count`/`exists`/`empty`, union and concatenation | Available |
 | 3 | [Functions & operators](03-functions-and-operators/README.md) | The `fn:*` library, arithmetic and comparisons, `!` simple map, `if`/`then`/`else` | Available |
 | 4 | [FLWOR expressions](04-flwor-expressions/README.md) | `for`/`let`/`where`/`order by`/`return`, variable bindings | Available |
-| 5 | Putting it together | Multi-step expressions over richer documents; bridge to XSLT session 02 | Planned |
+| 5 | [Putting it together](05-putting-it-together/README.md) | Multi-step expressions over richer documents; bridge to XSLT session 02 | Available |
+
+All five sessions are Available. When you finish here, continue with the
+[XSLT curriculum](../README.md) — its session 02 assumes this track's sessions 1
+and 2, and later sessions lean on the rest.
 
 ## Pacing
 
 30–45 minutes per session, self-paced, in order — each session's expressions
-use the previous session's concepts. When you finish here, continue with the
-[XSLT curriculum](../README.md) — its session 02 assumes this track's sessions 1
-and 2.
+use the previous session's concepts.
 
 ## Authoring a new session
 

@@ -1,0 +1,17 @@
+(
+  (:: Slot 1 — the bestseller line ::)
+  '1:',
+  (),
+  (:: Slot 2 — per-shelf breakdown ::)
+  '2:',
+  (),
+  (:: Slot 3 — rating ranking with tie markers ::)
+  '3:',
+  sort(//book, (), function($b) { xs:integer($b/rating) }) ! concat(@id, ':', rating),
+  (:: Slot 4 — catalog validation rules ::)
+  '4:',
+  (),
+  (:: Slot 5 — the capstone summary line ::)
+  '5:',
+  ()
+)
