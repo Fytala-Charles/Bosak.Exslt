@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-06 (**skeleton complete: 7 library modules (6 namespace modules + master) on the three-tier model, golden-file harness green (15/15 libxslt-derived cases) against Bosak.Xslt 0.12.3-beta; Fytala Docs Kit branding adopted; repository bootstrapped 2026-10-06 and live at `Fytala-Charles/Bosak.Exslt` — REQ-006 git part done, CI workflow pending**)
+> **Living Registry** — Last updated: 2026-10-06 (**skeleton complete: 7 library modules (6 namespace modules + master) on the three-tier model, golden-file harness green (22/22 cases: 15 libxslt-derived + 7 hand-written REQ-008 date cases) against Bosak.Xslt 0.12.3-beta; Fytala Docs Kit branding adopted; repository bootstrapped 2026-10-06 and live at `Fytala-Charles/Bosak.Exslt` — REQ-006 git part done, CI workflow pending; REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -92,7 +92,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | In Progress (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow pending) | Pre-v0.1.0 | Owner | 2026-10-06 |
 | `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | In Progress (sessions 00–08 scaffolded 2026-10-06) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
-| `REQ-008` | `Bosak.Exslt` (maintainers) | Fix the latent date-formatting type defect: `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` pass an `xs:dateTime` to `format-date` (first parameter `xs:date?`) → `XPTY0004` → silent `''`/`NaN` for every input on signature-enforcing engines | Found while authoring training session 08 (2026-10-06); `date:time` already applies the correct cast pattern (`xs:time(substring(string(...), 12))`) — the fix is that same one-line cast per function, each with a new golden case per the TDD rule | Accepted | Pre-v0.1.0 | Unassigned | 2026-10-06 |
+| `REQ-008` | `Bosak.Exslt` (maintainers) | Fix the latent date-formatting type defect: `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` pass an `xs:dateTime` to `format-date` (first parameter `xs:date?`) → `XPTY0004` → silent `''`/`NaN` for every input on signature-enforcing engines | Found while authoring training session 08 (2026-10-06); `date:time` already applies the correct cast pattern (`xs:time(substring(string(...), 12))`) — the fix is that same one-line cast per function, each with a new golden case per the TDD rule | Implemented | Pre-v0.1.0 | Unassigned | 2026-10-06 — seven `xs:date` casts landed in `dates-and-times.xsl`, seven new golden cases (`tests/cases/date/`), harness 22/22 |
 
 > **Legend:**
 > - `Pending` — Under review, no decision yet.
@@ -375,11 +375,12 @@ Harness `training/TrainingTests` mirrors the golden harness (same published Bosa
 
 **Requesting Party:** `Bosak.Exslt` (maintainers)
 **Submitted:** `2026-10-06`
-**Status:** `Accepted`
+**Status:** `Implemented`
+**Resolved:** `2026-10-06` — all seven functions repaired and golden-tested; harness 22/22.
 
 #### Problem Statement
 
-Seven date functions — `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` — pass `date:_as-datetime($date-time)` (always an `xs:dateTime`) directly to `fn:format-date`, whose first parameter is typed `xs:date?`. On any signature-enforcing processor (including Bosak 0.12.3-beta, verified empirically 2026-10-06) this raises `err:XPTY0004`, which the functions' defensive `try/catch` swallows — so they silently return `''` (or `NaN` for the numeric ones) for **every** input. The golden corpus does not cover them (the two date cases are `duration.1`/`add-duration.1`), so the matrix rows read "implemented" while the behavior is empty. Not an engine bug: `format-date`/`format-dateTime` were independently verified working on this engine (`[Y0001]-[M01]-[D01]`, `[MNn]`, `[H01]:[m01]` all correct). Found during training session 08 authoring; the session's golden deliberately pins the current library behavior.
+Seven date functions — `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` — pass `date:_as-datetime($date-time)` (always an `xs:dateTime`) directly to `fn:format-date`, whose first parameter is typed `xs:date?`. On any signature-enforcing processor (including Bosak 0.12.3-beta, verified empirically 2026-10-06) this raises `err:XPTY0004`, which the functions' defensive `try/catch` swallows — so they silently return `''` (or `NaN` for the numeric ones) for **every** input. The golden corpus does not cover them (the two date cases are `duration.1`/`add-duration.1`), so the matrix rows read "implemented" while the behavior is empty. Not an engine bug: `format-date`/`format-dateTime` were independently verified working on this engine (`[Y0001]-[M01]-[D01]`, `[MNn]`, `[H01]:[m01]` all correct). Found during training session 08 authoring; at filing time the session's golden deliberately pinned the then-current (always-empty) library behavior — it has since been re-pinned to the post-repair world (see Resolution).
 
 #### Proposed Solution
 
@@ -387,10 +388,24 @@ Apply the cast pattern `date:time` already uses (`xs:time(substring(string(date:
 
 #### Acceptance Criteria
 
-- [ ] All seven functions return the correct EXSLT values on Bosak 0.12.3-beta.
-- [ ] Each fixed function has at least one golden case (happy path + edge) under `tests/cases/date/`.
-- [ ] `docs/COMPATIBILITY.md` matrix and test pointers updated; no silent behavior change anywhere.
-- [ ] `dotnet test` green; `pwsh tools/check-docs.ps1 -ProjectPath .` ALL CHECKS PASSED.
+- [x] All seven functions return the correct EXSLT values on Bosak 0.12.3-beta.
+- [x] Each fixed function has at least one golden case (happy path + edge) under `tests/cases/date/`.
+- [x] `docs/COMPATIBILITY.md` matrix and test pointers updated; no silent behavior change anywhere.
+- [x] `dotnet test` green; `pwsh tools/check-docs.ps1 -ProjectPath .` ALL CHECKS PASSED.
+
+#### Resolution
+
+Implemented 2026-10-06. The seven `format-date` call sites in
+`src/dates-and-times.xsl` now cast their argument
+(`xs:date(substring(string(date:_as-datetime($date-time)), 1, 10))`), and
+seven new hand-written golden cases under `tests/cases/date/` (one per
+function, each with a happy path and an edge) pin the repaired behavior —
+harness 22/22. `date:add`'s `format-dateTime` call site needed no change.
+Training session 08's golden was re-pinned to the post-repair world, and its
+README now tells this defect as the session's core lesson. Recorded as an
+adaptation note in `tests/ATTRIBUTION.md`; deliberately **not** a
+divergence (the functions moved from always-empty to the correct EXSLT
+answers).
 
 #### Impact Analysis
 | Layer | Impact | Notes |

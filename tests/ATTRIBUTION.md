@@ -8,7 +8,8 @@ the rulebook.
 
 | Project | License | Upstream path pattern | Used for |
 |---------|---------|-----------------------|----------|
-| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | All 15 current cases |
+| [libxslt](https://gitlab.gnome.org/GNOME/libxslt) (GNOME) | MIT | `tests/exslt/<module>/<name>.{xml,xsl,out}` | 15 cases (all pre-REQ-008) |
+| hand-written (this project, Fytala) | Apache-2.0 | — | 7 REQ-008 date cases |
 
 libxslt's EXSLT test suite is the de-facto reference behavior for EXSLT
 (implemented by the libexslt library). The MIT license permits reuse with
@@ -36,6 +37,13 @@ imported yet (see `../ROADMAP.md`, Stage 1).
 | `common/object-type.1` | `tests/exslt/common/object-type.1` | version 1.0 → 3.0; library included; XSLT 1.0 RTF check and Saxon-only external check dropped (XSLT 3.0 cannot distinguish result tree fragments — see `docs/COMPATIBILITY.md`); golden adjusted to match |
 | `date/duration.1` | `tests/exslt/date/duration.1` | version 1.0 → 3.0; library included; expected output kept verbatim from libxslt — see "Known divergences" |
 | `date/add-duration.1` | `tests/exslt/date/add-duration.1` | version 1.0 → 3.0; library included |
+| `date/date.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix behavior of `date:date` (happy + invalid-input edge); semantics per EXSLT 1.0 spec |
+| `date/month-name.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:month-name` (happy + gYear/invalid edges) |
+| `date/month-abbreviation.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:month-abbreviation` incl. `*-3` width edge |
+| `date/week-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:week-in-year` (ISO week edge) |
+| `date/day-in-year.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-in-year` (leap-year edge) |
+| `date/day-name.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-name` (happy + invalid edge) |
+| `date/day-abbreviation.1` | hand-written (Apache-2.0) | REQ-008 repair case: post-fix `date:day-abbreviation` (happy + invalid edge) |
 
 "Library included" means an `xsl:include` of the corresponding
 `src/<module>.xsl` was added; no template, input, or expected content was
@@ -50,6 +58,15 @@ otherwise altered unless listed.
    lines remain verbatim libxslt output.
 2. **`common/object-type.1`**: libxslt reports `RTF` for result tree fragments;
    XSLT 3.0 has no such type, so that check was removed rather than faked.
+
+> **Not a divergence — REQ-008 (2026-10-06):** the seven hand-written
+> `date/*.1` cases above pin the behavior of the `format-date` family *after*
+> the REQ-008 repair. Before the repair those functions returned `''`/`NaN`
+> for every input (an `xs:dateTime` handed to `format-date`'s `xs:date?`
+> parameter raised `XPTY0004`, which the defensive `try`/`catch` swallowed).
+> The repair moved them from always-empty to the correct EXSLT answers — a bug
+> fix, so no divergence entry applies; it is recorded here as an adaptation
+> note only.
 
 ## Import rules for future fixtures
 

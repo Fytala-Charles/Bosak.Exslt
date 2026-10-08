@@ -3,22 +3,22 @@
   <event name="launched">
     <year>2026</year>
     <leap>false</leap>
-    <month/>
+    <month>October</month>
   </event>
   <event name="birthday">
     <year>2000</year>
     <leap>true</leap>
-    <month/>
+    <month>February</month>
   </event>
   <event name="archive">
     <year>1900</year>
     <leap>false</leap>
-    <month/>
+    <month>March</month>
   </event>
   <event name="century">
     <year>2026</year>
     <leap>false</leap>
-    <month/>
+    <month>January</month>
   </event>
   <event name="mystery">
     <year>NaN</year>

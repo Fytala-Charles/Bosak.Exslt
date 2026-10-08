@@ -7,6 +7,11 @@
 
 > Versions are produced from git tags by MinVer (git initialized 2026-10-06;
 > REQ-006 in `docs/FEATURE_REQUESTS.md`).
+>
+> Module change-history so far:
+> - `src/dates-and-times.xsl` 1.0 → 1.1 (2026-10-06): REQ-008 — seven `xs:date`
+>   casts at the `format-date` call sites; the family moved from always-empty
+>   to correct EXSLT answers. Bug fix, not a divergence.
 
 ---
 
@@ -19,7 +24,8 @@
       those namespaces (wrappers where native, genuine implementations elsewhere).
 - [x] Golden-file harness (`tests/Bosak.Exslt.Tests`) running on the published
       Bosak.Xslt packages.
-- [x] Starter golden corpus (15 cases) imported from the libxslt EXSLT suite
+- [x] Starter golden corpus (15 libxslt-derived cases; 22 total after 7
+      hand-written REQ-008 date cases) imported/written per
       (`tests/ATTRIBUTION.md`) — the full suite is green against the published
       Bosak.Xslt 0.12.3-beta packages.
 - [ ] Full import of the deterministic, license-compatible remainder of the
@@ -81,6 +87,7 @@ terminating-message behavior.
 | M1 — Library core | 7 namespace modules + master on the three-tier model | Done (2026-10-06) |
 | M2 — Golden harness | xUnit harness on published Bosak.Xslt packages | Done (2026-10-06) |
 | M3 — Starter corpus | 15 libxslt-derived cases, 15/15 green | Done (2026-10-06) |
+| M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
 | M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Pending (REQ-001, REQ-002) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending |
 | M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (REQ-006) |

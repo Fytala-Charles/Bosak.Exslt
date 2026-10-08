@@ -11,6 +11,11 @@
                    Invalid input yields NaN or '' per the EXSLT contract. Known
                    divergences from the libxslt reference are recorded in
                    docs/COMPATIBILITY.md.
+  CHANGE HISTORY : 2026-10-06 | 1.0 -> 1.1 | REQ-008: xs:date cast in format-date
+                   family (date:date, date:month-name, date:month-abbreviation,
+                   date:week-in-year, date:day-in-year, date:day-name,
+                   date:day-abbreviation) — repaired the silent XPTY0004 that
+                   made them return ''/NaN for every input.
   COPYRIGHT      : Fytala
   LICENSE        : LICENSE (Apache-2.0)
   =======================================================================================
@@ -151,7 +156,7 @@
                           else (try {
                                   if (normalize-space($date-time) castable as xs:date
                                       or normalize-space($date-time) castable as xs:dateTime) then
-                                    format-date(date:_as-datetime($date-time), '[Y0001]-[M01]-[D01]')
+                                    format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[Y0001]-[M01]-[D01]')
                                   else ''
                                 } catch * { '' })"/>
   </xsl:function>
@@ -203,21 +208,21 @@
   <xsl:function name="date:month-name" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
-                          else (try { format-date(date:_as-datetime($date-time), '[MNn]') } catch * { '' })"/>
+                          else (try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]') } catch * { '' })"/>
   </xsl:function>
 
   <!-- Returns the English month abbreviation ('' on invalid input). -->
   <xsl:function name="date:month-abbreviation" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
-                          else (try { format-date(date:_as-datetime($date-time), '[MNn,*-3]') } catch * { '' })"/>
+                          else (try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn,*-3]') } catch * { '' })"/>
   </xsl:function>
 
   <!-- Returns the ISO week number of the argument. -->
   <xsl:function name="date:week-in-year" as="xs:double">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then xs:double('NaN')
-                          else (try { xs:double(format-date(date:_as-datetime($date-time), '[W]')) }
+                          else (try { xs:double(format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[W]')) }
                                 catch * { xs:double('NaN') })"/>
   </xsl:function>
 
@@ -225,7 +230,7 @@
   <xsl:function name="date:day-in-year" as="xs:double">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then xs:double('NaN')
-                          else (try { xs:double(format-date(date:_as-datetime($date-time), '[d]')) }
+                          else (try { xs:double(format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[d]')) }
                                 catch * { xs:double('NaN') })"/>
   </xsl:function>
 
@@ -260,14 +265,14 @@
   <xsl:function name="date:day-name" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
-                          else (try { format-date(date:_as-datetime($date-time), '[FNn]') } catch * { '' })"/>
+                          else (try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[FNn]') } catch * { '' })"/>
   </xsl:function>
 
   <!-- Returns the English day abbreviation ('' on invalid input). -->
   <xsl:function name="date:day-abbreviation" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
-                          else (try { format-date(date:_as-datetime($date-time), '[FNn,*-3]') } catch * { '' })"/>
+                          else (try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[FNn,*-3]') } catch * { '' })"/>
   </xsl:function>
 
   <!-- Returns the hour of the day (0-23) of the argument. -->

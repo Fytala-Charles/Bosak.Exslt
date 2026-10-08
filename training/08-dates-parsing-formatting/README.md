@@ -31,8 +31,10 @@ Two hard requirements shape everything in this session:
 
 The third tool is **format-date picture strings**: a micro-language in which
 `'[Y0001]-[M01]-[D01]'` means a date and `'[MNn]'` means the month's name.
-You will learn the pictures in this session — and then watch one type-checking
-subtlety silently eat the result, which is its own lesson (section 6).
+You will learn the pictures in this session — and then meet a real bug the
+library once shipped: a type-checking mismatch at the `format-date` call
+site, quietly masked by the session's own `try`/`catch` until REQ-008
+repaired it (section 6).
 
 ## 2. Your task
 
@@ -68,7 +70,8 @@ Three exercises over one shared design:
 
 The template loops the events and prints `<year>`, `<leap>`, and `<month>`
 for each. Engine quirks (session 04, section 3) apply as usual; section 6
-examines one genuine XPath typing subtlety that is easy to trip over.
+walks through the typing defect the library shipped at its `format-date`
+call sites — and the one-line repair that fixed it.
 
 ## 4. Exercise 1: `date:year` and the shared parser
 
@@ -126,13 +129,13 @@ via your shared parser:
    `archive` (1900) is the trap the starter falls into.
 5. Still stuck? `src/dates-and-times.xsl` — look for `date:leap-year`.
 
-## 6. Exercise 3: `date:month-name` — and the subtlety that eats it
+## 6. Exercise 3: `date:month-name` — and the bug the catch swallowed
 
-The idiomatic XPath 3.1 spelling of this function is one line, and it is
-exactly what the library in `src/` writes:
+The idiomatic XPath 3.1 spelling of this function is one line, and — after
+the REQ-008 repair — it is exactly what the library in `src/` writes:
 
 ```xml
-format-date($as-datetime, '[MNn]')
+format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')
 ```
 
 Picture strings put a *component* in brackets: `Y` year, `M` month, `D` day,
@@ -143,38 +146,41 @@ session verified on this very engine that the pictures work exactly as
 specified: `format-date(xs:date('2026-10-06'), '[MNn]')` returns `October`.
 
 So your exercise is the library's line, wrapped in the session's standard
-contract: `try { format-date(date:_as-datetime($date-time), '[MNn]') }
+contract: `try { format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]') }
 catch * { '' }`, with the `not($date-time)` early return for the absent
 argument.
 
-Now the subtlety, because it changes the golden. `format-date`'s first
-parameter is typed **`xs:date?`** — a *date*, not a dateTime. Your
-`date:_as-datetime` returns **`xs:dateTime`**, always, for every parseable
-input. Handing a dateTime where a date is declared is a spec type error, and
-this engine enforces it: it raises `XPTY0004` (verified with a catch-sentinel
-during this session's development). The `catch *` does its job and converts
-the error to `''` — which means **on this engine the library's
-`date:month-name` returns `''` for every parseable input**. That is not an
-engine defect: the parent's-style probe with a proper `xs:date` argument
-(`format-date(xs:date('2026-10-06'), '[MNn]')` → `October`) works perfectly.
-The mismatch lives in the library's own call site, and any engine that
-enforces function signatures behaves the same way. The golden file pins this
-behavior deliberately — `<month>` is empty for all six events — because a
-training corpus documents what the code *does*, not what it was meant to do.
-Section 9 shows the one-line repair.
+Now the story, because it is the session's core lesson. `format-date`'s
+first parameter is typed **`xs:date?`** — a *date*, not a dateTime. Your
+helper `date:_as-datetime` returns **`xs:dateTime`**, always, for every
+parseable input. Handing a dateTime where a date is declared is a spec type
+error, and this engine enforces it: the call raises `XPTY0004` (verified
+with a catch-sentinel probe during this session's development). For a long
+time the library's call site did *not* convert — it wrote
+`format-date(date:_as-datetime($date-time), '[MNn]')` — and the surrounding
+`try { … } catch * { '' }` did exactly what it was told: it converted the
+type error into `''`. The result: `date:month-name` and six sibling
+functions that share the pattern returned `''` for *every* parseable input,
+and nothing crashed, so nothing complained. That is REQ-008: a latent
+defect hidden by its own error handler. The repair is the one-line cast at
+the call site you see above — take the dateTime's first ten characters and
+cast them to `xs:date`. Seven functions, seven casts, and one new golden
+case per function in `tests/cases/date/` now pin the correct answers. The
+golden you are about to match is the *post-fix* world: real month names.
 
 ### Hints (progressive — try each before opening the next)
 
-1. Write the library's line: `format-date(date:_as-datetime($date-time),
-   '[MNn]')`, inside the `try { … } catch * { '' }` skeleton, keeping the
-   `not($date-time)` early return.
-2. Do **not** fix the dateTime-versus-date mismatch while solving the
-   exercise — the golden pins the library's actual behavior, including the
-   empty `<month>` results. Fixing it is the "go further" item.
-3. Predict the whole `<month>` column before running: empty everywhere on
-   this engine — four rows from the type error, two from the parser's
-   `date:INVALID`, indistinguishable in the output and *equally correct per
-   the contract*.
+1. Write the library's repaired line: `format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')`, inside the `try { … } catch * { '' }` skeleton, keeping the `not($date-time)` early return.
+2. The conversion is not optional on this engine: with the raw `xs:dateTime`
+   argument the call raises `XPTY0004`, and the `catch *` silently turns it
+   into `''`. That is precisely the defect the library shipped under REQ-008 —
+   seven functions returned `''` for every valid date until the cast was
+   added. A catch block that "handles" an error by erasing the result is a
+   bug amplifier, not error handling.
+3. Predict the whole `<month>` column before running: `October`, `February`,
+   `March`, `January` for the four parseable events; empty only for `mystery`
+   and `overflow`, where the parser's `date:INVALID` is doing its lawful job.
+   Two empty rows are the contract working; six were the bug.
 4. The starter's off-by-one lookup list is the wrong mechanism entirely;
    pictures are the real tool. Compare how many characters each version
    spends on the problem.
@@ -209,23 +215,32 @@ like when the native types do most of the work: the *genuine implementation*
 is the lenient contract around the strict primitives.
 
 `date:month-name` should be the library's code word for word — same line,
-same `try`/`catch *`, same early return. Read its behavior on this engine
-alongside the golden: empty `<month>` elements everywhere, because the
-function hands `format-date` an `xs:dateTime` where the signature declares
-`xs:date?`, and this engine enforces that. The interesting question for a
-future maintainer is in `docs/COMPATIBILITY.md`: the matrix lists
-`date:month-name` as "implemented" with no test case pinning its output —
-the divergence this golden documents is exactly why untested "implemented"
-rows deserve suspicion. When you meet a wrapper or one-liner in the library,
-ask both questions: does it run, and does a golden prove what it returns?
+same `try`/`catch *`, same early return, including the repaired `xs:date`
+cast. The golden prints real month names for the four parseable events; only
+`mystery` and `overflow` stay empty.
+
+An honest-probe sidebar, because this session's own history proves the
+point: during development, the *uncast* library line was described in these
+pages as "`format-date` throws on this engine" — a claim that survived until
+a catch-sentinel probe showed the truth. `format-date` itself works
+perfectly with a proper `xs:date` argument; the `XPTY0004` came from the
+library's own call site, and the `catch *` then laundered it into `''`. The
+takeaways travel beyond this session: verify engine claims with a minimal
+probe before recording them as fact, and treat a `catch * { '' }` around an
+untested call site as a suspect, not a safety net — it turned one loud type
+error into seven silently wrong functions (REQ-008). When you meet a
+wrapper or one-liner in the library, ask both questions: does it run, and
+does a golden prove what it returns? The compatibility matrix now answers
+both for this family.
 
 ## 9. Go further
 
-- **Repair the subtlety:** make the names appear. `format-date` wants an
-  `xs:date`; your helper yields an `xs:dateTime`. Convert at the call site —
-  `format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')` —
-  and verify with a template line that October, February, March, and January
-  finally print. Why is `substring` safe here but wrong in general?
+- **Pre/post-fix archaeology:** the git history of `src/dates-and-times.xsl`
+  records REQ-008 — find the change that added the seven `xs:date` casts,
+  run this session's case against the unpatched library (e.g. check out the
+  parent version into a scratch copy), and watch every `<month>` empty out.
+  Then restore the repaired version. Two worlds, one diff apart: the bug was
+  invisible until a golden compared them.
 - **`date:month-abbreviation`:** the library's `[MNn,*-3]` picture means
   "name, contracted to at most 3 characters" (`*-3` width modifier). Predict
   the output for May before you try it — then check.

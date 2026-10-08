@@ -3,6 +3,6 @@
   "namespace": "http://exslt.org/dates-and-times",
   "tier": 2,
   "source": { "project": "hand-written", "license": "Apache-2.0" },
-  "adaptations": "Training session 08 exercise; semantics per the EXSLT 1.0 spec (exslt.org): the full ISO 8601 profile parses (dateTime, date, gYearMonth, gYear, gMonthDay, gMonth, gDay, time), invalid input yields NaN for numeric extractors and '' for string extractors. Companion vehicles of the session: date:leap-year and date:month-name (same parsing ladder; month-name uses the library's format-date '[MNn]' spelling, and the golden pins its actual behavior on this engine — format-date's xs:date parameter rejects the xs:dateTime argument, so the try/catch yields '').",
+  "adaptations": "Training session 08 exercise; semantics per the EXSLT 1.0 spec (exslt.org): the full ISO 8601 profile parses (dateTime, date, gYearMonth, gYear, gMonthDay, gMonth, gDay, time), invalid input yields NaN for numeric extractors and '' for string extractors. Companion vehicles of the session: date:leap-year and date:month-name (same parsing ladder; month-name uses the library's repaired format-date '[MNn]' spelling — REQ-008 added the xs:date cast at the call site — and the golden pins the post-repair behavior: October/February/March/January for parseable input, empty for invalid).",
   "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
 }

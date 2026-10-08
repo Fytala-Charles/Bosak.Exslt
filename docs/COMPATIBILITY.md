@@ -60,21 +60,30 @@ All functions take an ISO 8601 string (dateTime, date, gYearMonth, gYear, gMonth
 gMonth, gDay, or time), returning `NaN`/`''` on invalid input exactly as the EXSLT
 spec demands, and use `xs:dateTime` arithmetic plus `format-dateTime` underneath.
 
+> **REQ-008 repair (2026-10-06):** the seven `format-date` call sites
+> (`date:date`, `date:month-name`, `date:month-abbreviation`,
+> `date:week-in-year`, `date:day-in-year`, `date:day-name`,
+> `date:day-abbreviation`) handed `date:_as-datetime`'s `xs:dateTime` to a
+> parameter typed `xs:date?`; the surrounding `try`/`catch` masked the
+> resulting `XPTY0004`, so all seven returned `''` for every valid date. The
+> call sites now cast (`xs:date(substring(string(…), 1, 10))`) and return
+> correct EXSLT answers. This is a bug fix, not a divergence.
+
 | Function | Tier | Status | Notes | Tests |
 |----------|------|--------|-------|-------|
 | `date:date-time` | 2 | implemented | Current date/time as `YYYY-MM-DDThh:mm:ss`. Non-deterministic; not golden-tested. | — |
-| `date:date` | 2 | implemented | Date portion of argument (default: today). | — |
+| `date:date` | 2 | implemented | Date portion of argument (default: today). | `cases/date/date.1` |
 | `date:time` | 2 | implemented | Time portion of argument (default: now). | — |
 | `date:year` | 2 | implemented | | — |
 | `date:leap-year` | 2 | implemented | | — |
 | `date:month-in-year` | 2 | implemented | | — |
-| `date:month-name` / `date:month-abbreviation` | 2 | implemented | English names via `format-date` (`[MNn]`). | — |
-| `date:week-in-year` | 2 | implemented | ISO week number. | — |
-| `date:day-in-year` | 2 | implemented | | — |
+| `date:month-name` / `date:month-abbreviation` | 2 | implemented | English names via `format-date` (`[MNn]`). | `cases/date/month-name.1`, `cases/date/month-abbreviation.1` |
+| `date:week-in-year` | 2 | implemented | ISO week number. | `cases/date/week-in-year.1` |
+| `date:day-in-year` | 2 | implemented | | `cases/date/day-in-year.1` |
 | `date:day-in-month` | 2 | implemented | | — |
 | `date:day-of-week-in-month` | 2 | implemented | Ordinal week of month (1–5). | — |
 | `date:day-in-week` | 2 | implemented | 1 = Sunday, per EXSLT. | — |
-| `date:day-name` / `date:day-abbreviation` | 2 | implemented | English names via `format-date` (`[FNn]`). | — |
+| `date:day-name` / `date:day-abbreviation` | 2 | implemented | English names via `format-date` (`[FNn]`). | `cases/date/day-name.1`, `cases/date/day-abbreviation.1` |
 | `date:hour-in-day` / `date:minute-in-hour` / `date:second-in-minute` | 2 | implemented | | — |
 | `date:duration` | 2 | implemented | Seconds → `PnDTnHnMnS`. Decimal-exact (`xs:decimal`); libxslt's binary-float rounding edge (e.g. `3599.99999999999` → `PT1H`) is a documented divergence. | `cases/date/duration.1` |
 | `date:add-duration` | 2 | implemented | Component arithmetic with libxslt normalization: months carry into years, seconds carry into days, days do **not** carry into months. | `cases/date/add-duration.1` |

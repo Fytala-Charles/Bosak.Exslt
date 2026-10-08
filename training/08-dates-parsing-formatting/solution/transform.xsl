@@ -96,19 +96,19 @@
   </xsl:function>
 
   <!--
-      English month name; '' on invalid input. This mirrors the library
-      spelling exactly: format-date with the [MNn] picture. One subtlety,
-      examined in README section 6: format-date's first parameter is typed
-      xs:date?, while date:_as-datetime always returns an xs:dateTime — a
-      spec type error (XPTY0004), which this engine raises, so the try/catch
-      yields '' for every parseable input on this engine. That IS the
-      library's actual behavior here, and the golden pins it.
+      English month name; '' on invalid input. The repaired REQ-008 spelling:
+      format-date's first parameter is typed xs:date?, while date:_as-datetime
+      returns xs:dateTime — the library once shipped that mismatch and the
+      try/catch masked the resulting XPTY0004, silently returning '' for
+      every input (see README section 6). The one-line repair extracts the
+      date portion before formatting.
   -->
   <xsl:function name="date:month-name" as="xs:string">
     <xsl:param name="date-time" as="xs:string?"/>
     <xsl:sequence select="if (not($date-time)) then ''
-                          else (try { format-date(date:_as-datetime($date-time), '[MNn]') }
-                                catch * { '' })"/>
+                          else (try {
+                                  format-date(xs:date(substring(string(date:_as-datetime($date-time)), 1, 10)), '[MNn]')
+                                } catch * { '' })"/>
   </xsl:function>
 
 </xsl:stylesheet>

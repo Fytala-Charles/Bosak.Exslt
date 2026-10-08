@@ -1,0 +1,3 @@
+result   : 279
+result   : 366
+result   : NaN

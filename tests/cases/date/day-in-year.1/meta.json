@@ -1,0 +1,7 @@
+{
+  "function": "date:day-in-year",
+  "namespace": "http://exslt.org/dates-and-times",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "hand-written case (happy path + invalid-input edge) pinning the REQ-008 repair of date:day-in-year: the format-date first argument is cast to xs:date, changing behavior from always-empty to the correct EXSLT answer — a bug fix, not a divergence (see docs/FEATURE_REQUESTS.md REQ-008, docs/COMPATIBILITY.md)"
+}
