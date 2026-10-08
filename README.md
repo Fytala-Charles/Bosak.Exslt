@@ -5,6 +5,8 @@
   <p>A pure-XSLT 3.0 implementation of EXSLT for the Bosak XPath 3.1 / XSLT 3.0 / XQuery 3.1 engine — and for any other conformant XSLT 3.0 processor</p>
 </div>
 
+[![build](https://github.com/Fytala-Charles/Bosak.Exslt/actions/workflows/build.yml/badge.svg)](https://github.com/Fytala-Charles/Bosak.Exslt/actions/workflows/build.yml)
+
 --- 
 ## About FYTALA
 
@@ -103,6 +105,8 @@ dotnet test tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj
 ```
 
 The harness discovers every directory under `tests/cases/`, compiles `transform.xsl` with the published Bosak XSLT packages, runs it against `input.xml` (when present), normalizes whitespace, and compares with the golden `expected.xml` / `expected.txt`. See `tests/Bosak.Exslt.Tests/README.md` for the case-layout contract and `tests/ATTRIBUTION.md` for upstream provenance.
+
+CI (GitHub Actions, `ubuntu-latest`) runs the same gates on every push and pull request: `dotnet build` (warnings are errors), all three test projects above plus the XPath track, and `pwsh tools/check-docs.ps1 -ProjectPath . -Strict` — see [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ## Training: learn XSLT with EXSLT
 

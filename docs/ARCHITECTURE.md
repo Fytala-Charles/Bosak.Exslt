@@ -156,6 +156,15 @@ a token stream. Rendering follows the track README: atomic values as themselves,
 sequences item-by-item joined with ` | `, the empty sequence as `()`. The
 `Starter_differs_from_golden` test again fails the build if a starter stops being a stub.
 
+**CI gate.** `.github/workflows/build.yml` (GitHub Actions, `ubuntu-latest`,
+.NET SDK `10.0.x`) runs the full local gate on every push to `main` and every
+pull request: `dotnet build` of the golden harness project (warnings are errors
+via `TreatWarningsAsErrors`), then the three test projects — `Bosak.Exslt.Tests`,
+`TrainingTests`, `XPathTrainingTests` — then `pwsh tools/check-docs.ps1
+-ProjectPath . -Strict`. The build step precedes the test steps so the
+`<None Include>` copy of `tests/cases/**` and `src/*.xsl` into the output
+directory happens before any test run.
+
 ## 6. Data Flow
 
 ```

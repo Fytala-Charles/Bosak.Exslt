@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-08 (**REQ-001 implemented: full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-002 Xalan-J import remains Pending; REQ-006 git part done, CI workflow pending; REQ-007 and REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-001 implemented: full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-006 Implemented 2026-10-08 — CI workflow `.github/workflows/build.yml` (ubuntu-latest) runs build + all three test projects + `check-docs.ps1 -Strict` on push/PR; REQ-002 Xalan-J import remains Pending; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -90,7 +90,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Pending | v0.2.0 | Unassigned | 2026-10-06 |
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Pending | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
-| `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | In Progress (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow pending) | Pre-v0.1.0 | Owner | 2026-10-06 |
+| `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | Implemented (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow added 2026-10-08 — [`.github/workflows/build.yml`](../.github/workflows/build.yml), `ubuntu-latest`, all gates green) | Pre-v0.1.0 | Owner | 2026-10-06 |
 | `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | Implemented (XSLT curriculum sessions 00–11 + addendum complete 2026-10-06; XPath foundations track 01–05 also complete 2026-10-06 — all acceptance criteria met) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-008` | `Bosak.Exslt` (maintainers) | Fix the latent date-formatting type defect: `date:date`, `date:month-name`, `date:month-abbreviation`, `date:week-in-year`, `date:day-in-year`, `date:day-name`, `date:day-abbreviation` pass an `xs:dateTime` to `format-date` (first parameter `xs:date?`) → `XPTY0004` → silent `''`/`NaN` for every input on signature-enforcing engines | Found while authoring training session 08 (2026-10-06); `date:time` already applies the correct cast pattern (`xs:time(substring(string(...), 12))`) — the fix is that same one-line cast per function, each with a new golden case per the TDD rule | Implemented | Pre-v0.1.0 | Unassigned | 2026-10-06 — seven `xs:date` casts landed in `dates-and-times.xsl`, seven new golden cases (`tests/cases/date/`), harness 22/22 |
 
@@ -292,7 +292,7 @@ Static site generated from runnable samples in a `samples/` tree (each sample = 
 
 **Requesting Party:** `Fytala` (owner)  
 **Submitted:** `2026-10-06`  
-**Status:** `In Progress` — git bootstrap done 2026-10-06 on explicit owner request (initial commit on `main`, remote `git@github.com:Fytala-Charles/Bosak.Exslt.git`, repo public); CI workflow still pending.
+**Status:** `Implemented` — git bootstrap done 2026-10-06 on explicit owner request (initial commit on `main`, remote `git@github.com:Fytala-Charles/Bosak.Exslt.git`, repo public); CI workflow added 2026-10-08 ([`.github/workflows/build.yml`](../.github/workflows/build.yml): `ubuntu-latest`, actions pinned by major tag, .NET SDK `10.0.x`, build → three `dotnet test` projects → `check-docs.ps1 -Strict`, all gates green locally).
 
 #### Problem Statement
 
@@ -306,7 +306,7 @@ The repository existed on disk only. House rules forbid agents from running `git
 #### Acceptance Criteria
 
 - [x] Repository initialized by the owner; history starts at the reviewed skeleton.
-- [ ] CI workflow runs the test suite and the documentation checker on push/PR.
+- [x] CI workflow runs the test suite and the documentation checker on push/PR. *`.github/workflows/build.yml` added 2026-10-08: `ubuntu-latest`; `dotnet build` (TreatWarningsAsErrors) → `Bosak.Exslt.Tests` (73/73) → `TrainingTests` (22/22) → `XPathTrainingTests` (10/10) → `pwsh tools/check-docs.ps1 -ProjectPath . -Strict` (ALL CHECKS PASSED, 0 warnings). The docs checker needed six backslash-to-forward-slash path literals to run under Linux pwsh — behavior-preserving on Windows, verified by an identical local run before and after.*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
@@ -323,6 +323,7 @@ The repository existed on disk only. House rules forbid agents from running `git
 |------|-------|----------|-----------|
 | 2026-10-06 | Kimi (skeleton) | Deferred to owner | House git rules |
 | 2026-10-06 | Owner (via Kimi, explicit request) | Bootstrapped: `git init` on `main`, repo created public at `Fytala-Charles/Bosak.Exslt`, initial commit pushed. Identity: repo-local `Charles Korthout <charles.korthout@fytala.nl>` (matches Bosak core). Collaborator invite sent to the machine's SSH account (`poco-irrilevante`, matching the Bosak core setup). Kit-managed files pinned to LF via `.gitattributes` so `check-docs.ps1` SHA-256 checks survive Windows checkouts. CI workflow remains open. | House rule satisfied: owner explicitly asked for init/commit/push. |
+| 2026-10-08 | Kimi | CI workflow implemented: `.github/workflows/build.yml` on `ubuntu-latest` (actions pinned by major tag, .NET SDK `10.0.x`), gating build (warnings-as-errors), all three test projects, and `check-docs.ps1 -Strict`. Runner chosen on evidence: the script uses only cross-platform APIs after six path-literal backslashes became forward slashes (behavior-preserving; local run identical before/after), and `.gitattributes` `-text` pinning keeps kit SHA-256 checks valid on a Linux checkout. | Cheapest available runner; the compatibility fix is small, mechanical, and keeps the local gate byte-identical. |
 
 ---
 

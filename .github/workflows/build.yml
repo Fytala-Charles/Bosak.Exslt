@@ -1,0 +1,45 @@
+# Bosak.Exslt CI — build, golden corpus, training harnesses, docs hygiene.
+#
+# Gate order matters: the golden harness builds first so the <None Include>
+# copy of tests/cases/** and src/*.xsl into the output directory happens
+# before any test run (see docs/AGENT_HANDOVER.md §4.7).
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    # ubuntu-latest: tools/check-docs.ps1 is cross-platform (Join-Path /
+    # Resolve-Path / Get-FileHash, forward-slash literals) and the Fytala
+    # Docs Kit assets are .gitattributes-pinned (-text, LF) so SHA-256
+    # verification survives a Linux checkout.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          # Directory.Build.props targets net10.0 with LangVersion latest;
+          # no global.json pins a stricter SDK band.
+          dotnet-version: '10.0.x'
+
+      # Debug (the default) to match the local gate exactly; TreatWarningsAsErrors
+      # is on via Directory.Build.props, so this step fails on any warning.
+      - name: Build
+        run: dotnet build tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj
+
+      - name: Golden corpus tests
+        run: dotnet test tests/Bosak.Exslt.Tests/Bosak.Exslt.Tests.csproj
+
+      - name: Training curriculum tests
+        run: dotnet test training/TrainingTests/TrainingTests.csproj
+
+      - name: XPath foundations tests
+        run: dotnet test training/xpath/XPathTrainingTests/XPathTrainingTests.csproj
+
+      - name: Documentation hygiene
+        shell: pwsh
+        run: pwsh tools/check-docs.ps1 -ProjectPath . -Strict

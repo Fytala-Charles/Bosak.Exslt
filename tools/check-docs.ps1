@@ -294,8 +294,8 @@ else {
 # checked: the XSLT curriculum (training/NN-*/) and the XPath foundations track
 # (training/xpath/NN-*/, exercise files instead of transforms).
 $trackRoots = @(
-    @{ Path = Join-Path $root 'training';       Relative = 'training';       Exercise = 'transform.xsl' },
-    @{ Path = Join-Path $root 'training\xpath'; Relative = 'training/xpath'; Exercise = 'exercise.xpath' }
+    @{ Path = Join-Path $root 'training';        Relative = 'training';       Exercise = 'transform.xsl' },
+    @{ Path = Join-Path $root 'training/xpath';  Relative = 'training/xpath'; Exercise = 'exercise.xpath' }
 )
 
 foreach ($track in $trackRoots) {
@@ -307,7 +307,7 @@ foreach ($track in $trackRoots) {
     # NOTE: -Filter does not support [0-9] character classes; match the NN- prefix
     # in a Where clause instead.
     $sessionDirs = @(Get-ChildItem -Path $track.Path -Directory |
-        Where-Object { $_.Name -match '^\d{2}-' -and (Test-Path (Join-Path $_.FullName 'case\meta.json')) })
+        Where-Object { $_.Name -match '^\d{2}-' -and (Test-Path (Join-Path $_.FullName 'case/meta.json')) })
 
     if ($sessionDirs.Count -eq 0) {
         Write-Result Warn "no training sessions found under $($track.Relative)/"
@@ -316,7 +316,7 @@ foreach ($track in $trackRoots) {
     foreach ($session in $sessionDirs) {
         $relative = "$($track.Relative)/$($session.Name)"
 
-        foreach ($artifact in @('README.md', "starter\$($track.Exercise)", "solution\$($track.Exercise)")) {
+        foreach ($artifact in @('README.md', "starter/$($track.Exercise)", "solution/$($track.Exercise)")) {
             if (Test-Path (Join-Path $session.FullName $artifact)) {
                 Write-Result Pass "has $artifact : $relative"
             }
@@ -325,15 +325,15 @@ foreach ($track in $trackRoots) {
             }
         }
 
-        if ((Test-Path (Join-Path $session.FullName 'case\expected.xml')) -or
-            (Test-Path (Join-Path $session.FullName 'case\expected.txt'))) {
+        if ((Test-Path (Join-Path $session.FullName 'case/expected.xml')) -or
+            (Test-Path (Join-Path $session.FullName 'case/expected.txt'))) {
             Write-Result Pass "has case/expected.xml|expected.txt: $relative"
         }
         else {
             Write-Result Fail "missing case/expected.xml and case/expected.txt: $relative"
         }
 
-        $trainingMetaPath = Join-Path $session.FullName 'case\meta.json'
+        $trainingMetaPath = Join-Path $session.FullName 'case/meta.json'
         try {
             $trainingMeta = Get-Content -Path $trainingMetaPath -Raw | ConvertFrom-Json
             if ($trainingMeta.PSObject.Properties['source']) {
@@ -435,7 +435,7 @@ function Add-TrackBrandedDocs([string]$trackPath, [string]$trackRelative, [strin
 }
 
 Add-TrackBrandedDocs (Join-Path $root 'training') 'training' 'Bosak.Exslt Training'
-Add-TrackBrandedDocs (Join-Path $root 'training\xpath') 'training/xpath' 'Bosak.Exslt XPath Training'
+Add-TrackBrandedDocs (Join-Path $root 'training/xpath') 'training/xpath' 'Bosak.Exslt XPath Training'
 
 foreach ($doc in $brandedDocs) {
     $path = Join-Path $root $doc.Path

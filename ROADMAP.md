@@ -102,7 +102,7 @@ terminating-message behavior.
 | M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
 | M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases, corpus 73/73; REQ-002 Xalan-J supplements still Pending) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending (divergence pinning done 2026-10-06 in REQ-001 batch 3 + `month-name.1` re-golden; non-deterministic `current.xsl` skip-recorded; year-range item still awaits the Bosak engine representation decision) |
-| M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (REQ-006) |
+| M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (CI workflow live 2026-10-08 per REQ-006; first tag + artifact publish open) |
 | M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |
 
 ## 3. Known Limitations
@@ -127,8 +127,10 @@ Limitations hit while building the library, and how the modules work around them
 
 - `dyn:evaluate` is unavailable by design (tier 3) until the host-backed decision
   (Stage 3) lands.
-- Git initialized 2026-10-06 (REQ-006 git part done); CI workflow and first tag
-  still pending.
+- Git initialized 2026-10-06 (REQ-006 git part done); CI workflow added
+  2026-10-08 — `.github/workflows/build.yml` (ubuntu-latest) gates build,
+  all three test projects, and `check-docs.ps1 -Strict` on push/PR
+  (REQ-006 Implemented). First tag still pending (MinVer activates from tags).
 
 ## 4. Relation to REQ-121
 
@@ -139,7 +141,7 @@ lives here, in the open, with an executable compatibility contract.
 
 ---
 
-*Last updated: 2026-10-06*
+*Last updated: 2026-10-08*
 
 ---
 
