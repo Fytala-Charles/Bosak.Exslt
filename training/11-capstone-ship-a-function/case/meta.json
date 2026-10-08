@@ -1,0 +1,8 @@
+{
+  "function": "str:repeat",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Capstone rehearsal (training session 11): proposed new EXSLT strings function str:repeat($input, $count). Contract per the proposal: repeat $input $count times; '' for absent, non-integer, or negative $count and for empty $input. Golden written FIRST (workflow step 2), implementation after (workflow step 4) — the golden-corpus TDD rule in miniature. In a real contribution this case would live at tests/cases/strings/repeat.1/.",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/; exercised by training/TrainingTests/ only."
+}

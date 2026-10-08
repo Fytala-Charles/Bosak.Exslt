@@ -38,9 +38,9 @@
 - [ ] Training curriculum: eleven self-paced branded sessions under `training/`,
       one XSLT 3.0 technique per session taught test-first on an EXSLT function,
       with the independent RED/GREEN harness in `training/TrainingTests/` —
-      sessions 00–10 scaffolded 2026-10-06, plus a lesson-only addendum
-      comparing XSLT with functional programming languages (F#, Haskell).
-      *(REQ-007)*
+      sessions 00–11 complete 2026-10-06 (REQ-007 Implemented), plus a
+      lesson-only addendum comparing XSLT with functional programming
+      languages (F#, Haskell). *(REQ-007)*
 
 ### Stage 2 — Dates and times hardening
 
@@ -93,7 +93,7 @@ terminating-message behavior.
 | M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Pending (REQ-001, REQ-002) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending |
 | M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (REQ-006) |
-| M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–10 scaffolded | In Progress (REQ-007) |
+| M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |
 
 ## 3. Known Limitations
 

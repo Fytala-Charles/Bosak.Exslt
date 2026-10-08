@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<requests>
+  <repeat input="ab"    count="3"/>
+  <repeat input="x"     count="0"/>
+  <repeat input="hello" count="1"/>
+  <repeat input="-"     count="10"/>
+  <repeat input="a b"   count="2"/>
+  <repeat input=""      count="3"/>
+  <repeat input="q"     count="nonsense"/>
+  <repeat input="q"     count="-2"/>
+</requests>

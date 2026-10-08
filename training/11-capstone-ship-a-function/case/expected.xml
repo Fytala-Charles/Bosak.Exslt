@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<report>
+  <repeat input="ab" count="3">
+    <result>ababab</result>
+  </repeat>
+  <repeat input="x" count="0">
+    <result/>
+  </repeat>
+  <repeat input="hello" count="1">
+    <result>hello</result>
+  </repeat>
+  <repeat input="-" count="10">
+    <result>----------</result>
+  </repeat>
+  <repeat input="a b" count="2">
+    <result>a ba b</result>
+  </repeat>
+  <repeat input="" count="3">
+    <result/>
+  </repeat>
+  <repeat input="q" count="nonsense">
+    <result/>
+  </repeat>
+  <repeat input="q" count="-2">
+    <result/>
+  </repeat>
+</report>
