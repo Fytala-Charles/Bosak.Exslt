@@ -38,7 +38,9 @@
 - [ ] Training curriculum: eleven self-paced branded sessions under `training/`,
       one XSLT 3.0 technique per session taught test-first on an EXSLT function,
       with the independent RED/GREEN harness in `training/TrainingTests/` —
-      sessions 00–10 scaffolded 2026-10-06. *(REQ-007)*
+      sessions 00–10 scaffolded 2026-10-06, plus a lesson-only addendum
+      comparing XSLT with functional programming languages (F#, Haskell).
+      *(REQ-007)*
 
 ### Stage 2 — Dates and times hardening
 

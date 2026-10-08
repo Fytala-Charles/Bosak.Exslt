@@ -100,6 +100,15 @@ the library, with headers, attribution, and documentation updates.
 | 10 | [The limits of pure XSLT](10-limits-of-pure-xslt/README.md) | Function items, `fold-left`/`map`/`filter`, why `dyn:evaluate` cannot exist here | `dyn:evaluate` (tier 3), `func:*` | Available |
 | 11 | Capstone: ship a function | Full contribution workflow — golden case first, then implementation | learner's choice | Planned |
 
+## Addenda
+
+Unnumbered lesson-only units — no exercise, no golden file (session 00 sets
+the precedent for a non-exercise unit):
+
+| Addendum | What it gives you |
+|----------|-------------------|
+| [XSLT and functional programming languages](ADDENDUM-xslt-and-functional-languages.md) | The FP names (F#, Haskell) for everything you have been writing since session 01 — immutability, tail recursion, pattern matching, higher-order functions — and where XSLT honestly diverges. Read after session 10. |
+
 Difficulty rises session by session, and each session's technique is genuinely
 needed by the next one's function — this is a dependency graph, not just a
 reading order.
