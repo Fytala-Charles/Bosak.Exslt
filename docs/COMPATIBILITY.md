@@ -119,7 +119,7 @@ sixteen extraction functions against one input type; they are referenced as
 
 | Function | Tier | Status | Notes | Tests |
 |----------|------|--------|-------|-------|
-| `dyn:evaluate` | 3 | documented | Dynamic XPath evaluation requires engine support; **not implementable in pure XSLT 3.0**. The function slot raises a terminating `xsl:message`. Candidate for a Bosak native/commercial extension — see `../ROADMAP.md`. | — |
+| `dyn:evaluate` | 3 | documented | Dynamic XPath evaluation. **REQ-004 decision 2026-10-08 (ADR-001 amendment):** to be re-tiered as a tier-2 wrapper over standard `xsl:evaluate` — no native/commercial engine function is needed. Probe of Bosak 0.12.3-beta found `xsl:evaluate` present but the context item is never propagated (`XPDY0002` for any expression touching `.`), so the slot still raises a terminating `xsl:message` until the core fix lands (tracked against core REQ-121). | — |
 
 ## func — Functions (no module)
 

@@ -67,20 +67,24 @@ The `date` module is the largest surface and the most semantics-dense:
 
 ### Stage 3 — The `dyn:evaluate` question
 
-`dyn:evaluate` cannot be implemented in pure XSLT 3.0 (tier 3; see
-`docs/ADR-001-three-tier-compatibility-model.md`). Open decision:
+**Decision recorded 2026-10-08 (REQ-004, ADR-001 amendment):** `dyn:evaluate`
+becomes a thin wrapper over standard `xsl:evaluate` — no native/commercial
+engine function is needed; the context written below is kept as history.
 
-- [ ] Bosak core grows a native (possibly commercial-tier) dynamic evaluation
-      function, and Bosak.Exslt's `dynamic.xsl` becomes a thin wrapper over it
-      (tracked as REQ-004 in `docs/FEATURE_REQUESTS.md`); or
-- [ ] Bosak.Exslt documents `dyn:evaluate` as permanently unavailable and provides a
-      migration guide (typically: replace dynamic evaluation with `xsl:evaluate` —
-      the XSLT 3.0 feature that supersedes EXSLT dynamic — once Bosak supports
-      `xsl:evaluate`).
+Probe of Bosak 0.12.3-beta (2026-10-08) found `xsl:evaluate` already present in
+the engine: static-string evaluation, QName-map `with-params`, and `as` coercion
+work. Two conformance gaps block the wrapper (both reported against core
+REQ-121):
 
-This decision is tracked against REQ-121 (EXSLT support / legacy migration) in the
-Bosak core feature registry; `docs/COMPATIBILITY.md` records the interim
-terminating-message behavior.
+- [ ] Engine propagates the context item into `xsl:evaluate` (today any
+      expression touching `.` fails `XPDY0002` — even `name(/*)` at document
+      level). **The one hard blocker.**
+- [ ] `with-params-names` binds its variables (today `XTDE3160` — avoidable by
+      using QName-map `with-params` only).
+
+When the first gap lands, swap the `src/dynamic.xsl` slot for the wrapper
+(design in the ADR-001 amendment), add golden cases, and re-tier the matrix row
+from tier 3 to tier 2. Until then the slot keeps its terminating message.
 
 ### Stage 4 — Packaging and release
 
@@ -125,8 +129,9 @@ Limitations hit while building the library, and how the modules work around them
 
 ### Product
 
-- `dyn:evaluate` is unavailable by design (tier 3) until the host-backed decision
-  (Stage 3) lands.
+- `dyn:evaluate` keeps its terminating slot (tier 3) until the engine's
+  `xsl:evaluate` context-item gap is fixed; the Stage-3 decision (wrapper over
+  standard `xsl:evaluate`, no commercial function) was recorded 2026-10-08.
 - Git initialized 2026-10-06 (REQ-006 git part done); CI workflow added
   2026-10-08 — `.github/workflows/build.yml` (ubuntu-latest) gates build,
   all three test projects, and `check-docs.ps1 -Strict` on push/PR

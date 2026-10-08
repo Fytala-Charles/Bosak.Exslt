@@ -1,6 +1,6 @@
 # ADR-001: The Three-Tier Compatibility Model
 
-> **Status:** Accepted
+> **Status:** Accepted (amended 2026-10-08 — REQ-004 decision recorded, see below)
 > **Date:** 2026-10-06
 > **Deciders:** Fytala (Charles Korthout)
 
@@ -47,6 +47,56 @@ Every EXSLT function (and extension construct) belongs to exactly one tier:
 statuses. A host-backed (native/commercial engine) option for tier-3 functions is
 an open possibility, tracked as **REQ-004** — it would convert a tier-3 slot into a
 tier-1 wrapper, without changing the model.
+
+## Amendment 2026-10-08 — REQ-004 decision: `dyn:evaluate` via `xsl:evaluate`
+
+**Decision (a) accepted: the `dyn:evaluate` slot becomes a thin wrapper over
+`xsl:evaluate`** (XSLT 3.0's standard dynamic-evaluation instruction) once the
+host engine evaluates it conformantly. No Bosak native or commercial extension
+function is required at all — `xsl:evaluate` is the standards-native mechanism,
+so the "host-backed tier" question reduces to a single engine conformance fix
+rather than a new product surface. The three-tier model itself is unchanged;
+the amendment corrects the tier classification of one function.
+
+**Evidence (probed against Bosak 0.12.3-beta, 2026-10-08):** the engine already
+recognizes `xsl:evaluate` — static-string evaluation, `with-params` with
+`xs:QName` map keys, and `as` coercion all work. Two conformance gaps block the
+wrapper today:
+
+1. **Context item never propagated** — any expression touching `.` (even
+   `name(/*)` at document level inside `match="/"`) fails `XPDY0002: The context
+   item is absent`. XSLT 3.0 §10.2.2 requires the context item of the
+   `xsl:evaluate` instruction to be the context item of the evaluated
+   expression.
+2. **`with-params-names` binding broken** — `with-params="21"
+   with-params-names="'y'"` leaves `$y` unbound (`XTDE3160`).
+
+**Interim state:** the terminating slot in `src/dynamic.xsl` is unchanged
+(a context-free-only wrapper would be exactly the partial/fake implementation
+this ADR forbids). The planned wrapper is, in full:
+
+```xml
+<xsl:function name="dyn:evaluate" as="item()*">
+  <xsl:param name="expression" as="xs:string"/>
+  <xsl:evaluate xpath="$expression"/>            <!-- inherits the caller's focus -->
+</xsl:function>
+<xsl:function name="dyn:evaluate" as="item()*">
+  <xsl:param name="expression" as="xs:string"/>
+  <xsl:param name="context" as="node()?"/>
+  <xsl:for-each select="$context">               <!-- re-establishes the EXSLT context node -->
+    <xsl:evaluate xpath="$expression"/>
+  </xsl:for-each>
+</xsl:function>
+```
+
+On any conformant XSLT 3.0 processor this is a genuine tier-2 implementation.
+Landing here is gated on core fixing gap 1 (tracked against REQ-121); gap 2 is
+avoidable by using QName-map `with-params` only. When it lands: swap the slot,
+add golden cases (including a context-node case), and re-tier the matrix row
+from tier 3 to tier 2. Known residual divergence to document then: namespace
+bindings are the stylesheet's, not the call site's (`xsl:evaluate` without
+`namespace-context` — and `namespace-context` needs verifying on the engine
+before use).
 
 ## Consequences
 
@@ -100,4 +150,4 @@ documentedly.
 
 ---
 
-*Last updated: 2026-10-06*
+*Last updated: 2026-10-08*

@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-08 (**REQ-001 implemented: full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-006 Implemented 2026-10-08 — CI workflow `.github/workflows/build.yml` (ubuntu-latest) runs build + all three test projects + `check-docs.ps1 -Strict` on push/PR; REQ-002 Xalan-J import remains Pending; REQ-007 and REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-004 Accepted: `dyn:evaluate` to become a thin wrapper over standard `xsl:evaluate` (ADR-001 amendment) — no native/commercial engine function needed; landing blocked on the engine's `xsl:evaluate` context-item gap (XPDY0002), reported against core REQ-121; slot stays terminating meanwhile. Earlier today: REQ-001 implemented — full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-006 Implemented — CI workflow `.github/workflows/build.yml` (ubuntu-latest) runs build + all three test projects + `check-docs.ps1 -Strict` on push/PR; REQ-002 Xalan-J import remains Pending; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -88,7 +88,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | `REQ-001` | `Bosak.Exslt` | Import the remaining deterministic libxslt EXSLT corpus (math, strings, sets, common, date directories) into the golden-file layout | 15 seed cases exist; the remaining deterministic cases (~60 files across 5 directories) pin the rest of the implemented surface against the reference implementation | Implemented (all acceptance criteria met 2026-10-08: corpus 73/73; REQ-002 remains Pending) | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Pending | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Pending | v0.2.0 | Unassigned | 2026-10-06 |
-| `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Pending | TBD | Unassigned | 2026-10-06 |
+| `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Accepted (decision recorded 2026-10-08: wrapper over standard `xsl:evaluate` — no native/commercial function needed; landing blocked on the engine's `xsl:evaluate` context-item gap, tracked against core REQ-121; slot stays terminating meanwhile) | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
 | `REQ-006` | `Fytala` (owner) | Repository bootstrap: `git init`, first commit, CI workflow (build + `tools/check-docs.ps1` + `dotnet test`) | Files existed on disk only; the owner reviewed and initialized git on 2026-10-06 (house rule: agents run `git init`/commit/push only on explicit owner request) | Implemented (git done 2026-10-06 — repo live at `Fytala-Charles/Bosak.Exslt`; CI workflow added 2026-10-08 — [`.github/workflows/build.yml`](../.github/workflows/build.yml), `ubuntu-latest`, all gates green) | Pre-v0.1.0 | Owner | 2026-10-06 |
 | `REQ-007` | `Fytala` | Training curriculum under `training/`: eleven self-paced, Fytala-branded sessions, each teaching one XSLT 3.0 technique by test-first re-creation of an EXSLT function | The training/showcase role needs structured, self-explorable learning material; training is a sandbox that must never jeopardize the library artifact | Implemented (XSLT curriculum sessions 00–11 + addendum complete 2026-10-06; XPath foundations track 01–05 also complete 2026-10-06 — all acceptance criteria met) | Pre-v0.1.0 | Unassigned | 2026-10-06 |
@@ -220,7 +220,7 @@ Add `xsl:package` wrappers per namespace module (keeping the plain files primary
 
 **Requesting Party:** `Fytala`  
 **Submitted:** `2026-10-06`  
-**Status:** `Pending`
+**Status:** `Accepted` (decision recorded 2026-10-08 — implementation blocked on a Bosak engine gap; see the Decision Log)
 
 #### Problem Statement
 
@@ -228,19 +228,19 @@ Add `xsl:package` wrappers per namespace module (keeping the plain files primary
 
 #### Proposed Solution
 
-Decision recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md): either (a) the Bosak core grows `xsl:evaluate` support (XSLT 3.0's native replacement) and/or a native dynamic-evaluation function — free or as the seam-consistent commercial option — with `src/dynamic.xsl` becoming a thin wrapper; or (b) the slot stays terminating and we ship a migration guide. Tracked against core REQ-121.
+Decision recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md) (amendment 2026-10-08): **decision (a) — a thin wrapper over standard `xsl:evaluate`**, which turns out to need no Bosak native or commercial extension function at all. Probe of Bosak 0.12.3-beta (2026-10-08) found `xsl:evaluate` present and partially working (static strings, QName-map `with-params`, `as` coercion), but the context item is never propagated (`XPDY0002` for any expression touching `.`) and `with-params-names` binding is broken (`XTDE3160`). Until the core fixes context-item propagation (tracked against core REQ-121), the terminating slot stays — a context-free-only wrapper would be the partial/fake implementation ADR-001 forbids. The full wrapper design and landing checklist are in the ADR amendment.
 
 #### Acceptance Criteria
 
-- [ ] Decision (a) or (b) recorded in the ADR's status line and in `docs/COMPATIBILITY.md`.
-- [ ] If (a): golden case for `dyn:evaluate` via the host function.
+- [x] Decision (a) or (b) recorded in the ADR's status line and in `docs/COMPATIBILITY.md`. *Decision (a) recorded 2026-10-08 in ADR-001 (amendment) and in the `dyn:evaluate` matrix row; the native/commercial-function branch is closed as unnecessary.*
+- [ ] If (a): golden case for `dyn:evaluate` via the host function. *Blocked: the wrapper cannot land until the engine propagates the context item into `xsl:evaluate` (probe evidence in the ADR amendment). Planned cases: arithmetic/string expressions, node-set return, and the two-argument context-node form.*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
 |-------|--------|-------|
-| src/ modules | Possible rewrite of `dynamic.xsl` slot | From terminating message to wrapper |
-| golden corpus | New case | Only under decision (a) |
-| docs | Matrix update | Tier-3 status row changes |
+| src/ modules | Possible rewrite of `dynamic.xsl` slot | From terminating message to `xsl:evaluate` wrapper — gated on the engine gap |
+| golden corpus | New case | When the wrapper lands |
+| docs | Matrix update | Tier-3 row becomes tier 2 when the wrapper lands |
 
 #### Related Requests
 - Core REQ-121, [ADR-001](./ADR-001-three-tier-compatibility-model.md)
@@ -249,6 +249,7 @@ Decision recorded in [ADR-001](./ADR-001-three-tier-compatibility-model.md): eit
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
 | 2026-10-06 | Kimi (skeleton) | Slot terminates with clear message | No fake implementation per ADR-001 |
+| 2026-10-08 | Kimi | Decision (a) accepted: wrapper over standard `xsl:evaluate`; no native/commercial function needed | Probe found `xsl:evaluate` already in the engine — the host-backed question reduces to one conformance fix (context-item propagation, `XPDY0002`) + one avoidable gap (`with-params-names`, `XTDE3160`); both reported against core REQ-121. Slot stays terminating until the fix lands; full wrapper design recorded in the ADR-001 amendment |
 
 ---
 
