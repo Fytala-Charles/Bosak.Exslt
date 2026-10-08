@@ -1,0 +1,19 @@
+(
+  (:: Part 1 — one label per book ::)
+  '1:',
+  //book/concat(@id, ':', upper-case(substring(title, 1, 1)), ':', string-length(title)),
+  (:: Part 2 — totals across the shop ::)
+  '2:',
+  (sum(//book/xs:integer(stock)), max(//book/xs:integer(stock)), sum(//book/xs:integer(stock)) mod count(//book)),
+  (:: Part 3 — which comparisons hold? ::)
+  '3:',
+  (//book/title = 'Dune', //book/title = 'dune', //book/@id = ('b2', 'b5'), count(//book[xs:integer(stock) = 0])),
+  (:: Part 4 — a ! pipeline over books and titles ::)
+  '4:',
+  //book ! concat(@id, ':', upper-case(title)),
+  '4b:',
+  //book/title ! substring(., 1, 5),
+  (:: Part 5 — in/out classifier for every book ::)
+  '5:',
+  //book ! (if (xs:integer(stock) gt 0) then concat(@id, ':in') else concat(@id, ':out'))
+)

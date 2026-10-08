@@ -1,0 +1,19 @@
+(
+  (:: Part 1 — one label per book ::)
+  '1:',
+  (),
+  (:: Part 2 — totals across the shop ::)
+  '2:',
+  (),
+  (:: Part 3 — which comparisons hold? ::)
+  '3:',
+  (),
+  (:: Part 4 — a ! pipeline over books and titles ::)
+  '4:',
+  (),
+  '4b:',
+  (),
+  (:: Part 5 — in/out classifier for every book ::)
+  '5:',
+  ()
+)

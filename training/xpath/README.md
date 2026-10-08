@@ -61,7 +61,7 @@ matter — comparison is on the token stream — but item order always does.
 |---|---------|----------|--------|
 | 1 | [Values & paths](01-values-and-paths/README.md) | The tree model, sequences, `/`, `//`, `.`, child steps, attributes | Available |
 | 2 | [Predicates & sequences](02-predicates-and-sequences/README.md) | `[...]` filters, positional predicates, `count`/`exists`/`empty`, union and concatenation | Available |
-| 3 | Functions & operators | The `fn:*` library, arithmetic and comparisons, `!` simple map, `if`/`then`/`else` | Planned |
+| 3 | [Functions & operators](03-functions-and-operators/README.md) | The `fn:*` library, arithmetic and comparisons, `!` simple map, `if`/`then`/`else` | Available |
 | 4 | FLWOR expressions | `for`/`let`/`where`/`order by`/`return`, variable bindings | Planned |
 | 5 | Putting it together | Multi-step expressions over richer documents; bridge to XSLT session 02 | Planned |
 
