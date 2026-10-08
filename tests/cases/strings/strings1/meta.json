@@ -1,0 +1,11 @@
+{
+  "function": "str:align",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/strings/strings1.xsl + tests/exslt/strings/strings1.xml (golden tests/exslt-gold/strings/strings1.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='str' added (engine namespace-leak workaround)."
+}

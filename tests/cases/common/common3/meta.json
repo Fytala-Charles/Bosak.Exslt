@@ -1,0 +1,11 @@
+{
+  "function": "exsl:object-type",
+  "namespace": "http://exslt.org/common",
+  "tier": 2,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/common/common3.xsl + tests/exslt/common/common3.xml (golden tests/exslt-gold/common/common3.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8. exslt:object-type($tree) RTF line dropped: the XSLT 1.0 result-tree-fragment type has no XPath 3.1 equivalent and our engine reports 'node-set' (documented divergence 1, cf. libxslt common/object-type.1); golden adjusted to remove the RTF token."
+}

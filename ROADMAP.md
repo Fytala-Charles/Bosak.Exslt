@@ -35,8 +35,15 @@
       libxslt EXSLT corpus — **done 2026-10-08 (REQ-001 Implemented)**: 61
       libxslt-derived cases total (46 conversions from batches 1–3, all matched
       upstream verbatim; 5 deterministic cases skip-recorded in
-      `tests/ATTRIBUTION.md`); Xalan-J's EXSLT tests (Apache-2.0) remain as the
-      second legal source for coverage of cases libxslt does not exercise.
+      `tests/ATTRIBUTION.md`).
+      *(REQ-001)*
+- [x] Xalan-J EXSLT tests as the second legal corpus source — **done 2026-10-08
+      (REQ-002 Implemented)**: 30 cases from `apache/xalan-test` (Apache-2.0;
+      22 matched upstream verbatim, 8 with documented adaptations; 10 upstream
+      cases skip-recorded). Divergences between the two reference corpora are
+      pinned by dual cases and recorded in `tests/ATTRIBUTION.md` +
+      `docs/COMPATIBILITY.md` (divergences 5–6). Source: `tests/exslt/` +
+      `tests/exslt-gold/` in `apache/xalan-test`.
       *(REQ-002)*
 - [x] Hand-written edge-case goldens for functions without upstream coverage
       — **done 2026-10-08 (REQ-001 batch 4)**: six engine-verified cases
@@ -104,7 +111,7 @@ from tier 3 to tier 2. Until then the slot keeps its terminating message.
 | M2 — Golden harness | xUnit harness on published Bosak.Xslt packages | Done (2026-10-06) |
 | M3 — Starter corpus | 15 libxslt-derived cases, 15/15 green | Done (2026-10-06) |
 | M3a — REQ-008 date goldens | 7 hand-written cases for the repaired `format-date` family; corpus 22/22 green | Done (2026-10-06) |
-| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases, corpus 73/73; REQ-002 Xalan-J supplements still Pending) |
+| M4 — Full corpus | Remaining deterministic libxslt cases + Xalan-J supplements; edge-case goldens for uncovered functions | Done 2026-10-08 (REQ-001: 61 libxslt-derived cases + 6 hand-written gap cases, corpus 73/73; REQ-002: 30 Xalan-J cases from apache/xalan-test, corpus 103/103 — both Implemented) |
 | M5 — Date hardening | Divergence decisions pinned with goldens; non-deterministic case support | Pending (divergence pinning done 2026-10-06 in REQ-001 batch 3 + `month-name.1` re-golden; non-deterministic `current.xsl` skip-recorded; year-range item still awaits the Bosak engine representation decision) |
 | M6 — Release | First tag (0.1.0), CI green, artifact published | Pending (CI workflow live 2026-10-08 per REQ-006; first tag + artifact publish open) |
 | M7 — Training curriculum | 11 self-paced branded sessions with RED→GREEN harness; sessions 00–11 + addendum complete | Done (2026-10-06, REQ-007) |

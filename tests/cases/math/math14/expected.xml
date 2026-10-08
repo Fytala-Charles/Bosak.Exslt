@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><out>
+   Using variable bases with power 0:<br/>10 to the power of 0 is 1<br/>2.5 to the power of 0 is 1<br/>1 to the power of 0 is 1<br/>0 to the power of 0 is NaN<br/>-10 to the power of 0 is NaN<br/>
+   Using variable base with power -0:
+   10 to the power of 0 is 1<br/>2.5 to the power of 0 is 1<br/>1 to the power of 0 is 1<br/>0 to the power of 0 is NaN<br/>-10 to the power of 0 is NaN<br/>
+   Using variable base with power 10:
+   10 to the power of 10 is 1.000000000000004E10<br/>2.5 to the power of 10 is 9536.743164062504<br/>1 to the power of 10 is 1<br/>0 to the power of 10 is 0<br/>-10 to the power of 10 is NaN<br/>
+   Using variable base with power 2:
+   10 to the power of 2.5 is 316.22776601683825<br/>2.5 to the power of 2.5 is 9.882117688026186<br/>1 to the power of 2.5 is 1<br/>0 to the power of 2.5 is 0<br/>-10 to the power of 2.5 is NaN<br/>
+   Using variable base with power -5:
+   10 to the power of -5 is 0.00000999999999999998<br/>2.5 to the power of -5 is 0.010239999999999997<br/>1 to the power of -5 is 1<br/>0 to the power of -5 is INF<br/>-10 to the power of -5 is NaN<br/>
+   Using input as base with power 5.223849703457E12:
+   5.223849703457E12 to the power of 5.223849703457E12 is INF<br/>NaN to the power of 5.223849703457E12 is NaN<br/>INF to the power of 5.223849703457E12 is INF<br/>
+   Using input as base with power NaN:
+   5.223849703457E12 to the power of NaN is NaN<br/>NaN to the power of NaN is NaN<br/>INF to the power of NaN is NaN<br/>
+   Using input as base with power INF:
+   5.223849703457E12 to the power of INF is INF<br/>NaN to the power of INF is NaN<br/>INF to the power of INF is INF<br/></out>

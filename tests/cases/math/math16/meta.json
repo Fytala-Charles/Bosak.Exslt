@@ -1,0 +1,11 @@
+{
+  "function": "math:sin",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math16.xsl + tests/exslt/math/math16.xml (golden tests/exslt-gold/math/math16.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). One golden line adapted to the engine sin value: large-argument sin(5223849703457), 0.922283531483375 -> 0.9222835340827826 (StrictMath argument-reduction noise)."
+}

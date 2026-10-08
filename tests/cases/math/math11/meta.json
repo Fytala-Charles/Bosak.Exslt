@@ -1,0 +1,11 @@
+{
+  "function": "math:lowest",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math11.xsl + tests/exslt/math/math11.xml (golden tests/exslt-gold/math/math11.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround)."
+}

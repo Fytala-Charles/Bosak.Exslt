@@ -1,0 +1,11 @@
+{
+  "function": "set:intersection",
+  "namespace": "http://exslt.org/sets",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/sets/sets4.xsl + tests/exslt/sets/sets4.xml (golden tests/exslt-gold/sets/sets4.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream"
+}

@@ -1,0 +1,11 @@
+{
+  "function": "math:max",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math12.xsl + tests/exslt/math/math12.xml (golden tests/exslt-gold/math/math12.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math common' added (engine namespace-leak workaround); declared-but-unused xmlns:common dropped from the golden root (Xalan leaks it, we exclude it)."
+}

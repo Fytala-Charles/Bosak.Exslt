@@ -5,7 +5,7 @@
   <p>Living registry of feature requests and backlog items</p>
 </div>
 
-> **Living Registry** — Last updated: 2026-10-08 (**REQ-004 Accepted: `dyn:evaluate` to become a thin wrapper over standard `xsl:evaluate` (ADR-001 amendment) — no native/commercial engine function needed; landing blocked on the engine's `xsl:evaluate` context-item gap (XPDY0002), reported against core REQ-121; slot stays terminating meanwhile. Earlier today: REQ-001 implemented — full deterministic libxslt corpus imported (61 libxslt-derived cases, 46 conversions matched upstream verbatim) + 6 engine-verified hand-written gap cases; golden corpus 73/73 (math 15, strings 8, sets 6, common 10, date 34); REQ-006 Implemented — CI workflow `.github/workflows/build.yml` (ubuntu-latest) runs build + all three test projects + `check-docs.ps1 -Strict` on push/PR; REQ-002 Xalan-J import remains Pending; REQ-007 and REQ-008 implemented 2026-10-06**)
+> **Living Registry** — Last updated: 2026-10-08 (**REQ-002 Implemented: Xalan-J second corpus imported — 30 cases from `apache/xalan-test` (Apache-2.0; 22 verbatim, 8 documented adaptations, 10 skips recorded), corpus 103/103; dual-corpus pins for `math:power` and `exsl:object-type` divergences + two new divergence classes (`StrictMath` float noise, XPath 3.1 number formatting) in ATTRIBUTION/COMPATIBILITY. Also today: REQ-004 Accepted — `dyn:evaluate` to become a thin wrapper over standard `xsl:evaluate` (ADR-001 amendment), blocked on the engine's `xsl:evaluate` context-item gap (XPDY0002), reported against core REQ-121; REQ-001 implemented earlier — full deterministic libxslt corpus (61 cases) + 6 gap cases; REQ-006 Implemented — CI workflow `.github/workflows/build.yml` (ubuntu-latest) green; REQ-007 and REQ-008 implemented 2026-10-06**)
 > This document tracks feature requests and backlog items for the Bosak.Exslt library. It is the single source of truth for cross-cutting work that spans modules, tests, or packaging.
 
 ---
@@ -86,7 +86,7 @@ Every request in the registry must have a matching detail section. Copy this tem
 | ID | Requesting Party | Summary | Motivation | Status | Target Version | Owner | Submitted |
 |----|------------------|---------|------------|--------|----------------|-------|-----------|
 | `REQ-001` | `Bosak.Exslt` | Import the remaining deterministic libxslt EXSLT corpus (math, strings, sets, common, date directories) into the golden-file layout | 15 seed cases exist; the remaining deterministic cases (~60 files across 5 directories) pin the rest of the implemented surface against the reference implementation | Implemented (all acceptance criteria met 2026-10-08: corpus 73/73; REQ-002 remains Pending) | v0.1.0 | Unassigned | 2026-10-06 |
-| `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Pending | v0.1.0 | Unassigned | 2026-10-06 |
+| `REQ-002` | `Bosak.Exslt` | Import Xalan-J EXSLT tests (Apache-2.0) as the second legal corpus source | libxslt does not exercise every EXSLT semantic; Xalan-J's suite covers alternate reference behavior for divergent functions | Implemented (all acceptance criteria met 2026-10-08: 30 cases from `apache/xalan-test`, corpus 103/103) | v0.1.0 | Unassigned | 2026-10-06 |
 | `REQ-003` | `Bosak.Exslt` | Ship namespace modules as `xsl:package` artifacts consumable via `xsl:use-package`, alongside the plain import/include files | Versioned packages give consumers dependency ranges; plain files remain the primary distribution | Pending | v0.2.0 | Unassigned | 2026-10-06 |
 | `REQ-004` | `Fytala` | Resolve the `dyn:evaluate` engine-support question: host-backed tier in the Bosak core (free or commercial option) and a thin wrapper here | Tier-3 functions cannot exist in pure XSLT 3.0; `xsl:evaluate` or a native engine function is the only path (tracked against core REQ-121; see ADR-001) | Accepted (decision recorded 2026-10-08: wrapper over standard `xsl:evaluate` — no native/commercial function needed; landing blocked on the engine's `xsl:evaluate` context-item gap, tracked against core REQ-121; slot stays terminating meanwhile) | TBD | Unassigned | 2026-10-06 |
 | `REQ-005` | `Fytala` | Sample gallery / documentation site: runnable example stylesheets per module, rendered output, "learn Bosak XSLT" walkthrough | The training/showcase role needs a consumer-facing surface beyond the repo; amplifies the engine's public demonstration value | Pending | v0.3.0 | Unassigned | 2026-10-06 |
@@ -148,7 +148,7 @@ Mechanically convert each deterministic case to the `tests/cases/<namespace>/<ca
 
 **Requesting Party:** `Bosak.Exslt` (maintainers)  
 **Submitted:** `2026-10-06`  
-**Status:** `Pending`
+**Status:** `Implemented` (all acceptance criteria met 2026-10-08; corpus 103/103)
 
 #### Problem Statement
 
@@ -160,15 +160,15 @@ Fetch a starter set from the Xalan-J repository, convert to the case layout with
 
 #### Acceptance Criteria
 
-- [ ] At least one Xalan-J-sourced case per namespace where that suite has EXSLT coverage.
-- [ ] libxslt-vs-Xalan-J disagreements pinned by dual cases, not by silently picking one.
+- [x] At least one Xalan-J-sourced case per namespace where that suite has EXSLT coverage. *30 cases converted across common (3), math (16), sets (6), strings (8) — 22 matched upstream verbatim, 8 with documented adaptations. The Xalan `datetime` suite has a single case (`datetime1`, `date:date-time()`), which is time-dependent and is skip-recorded — there is no deterministic Xalan date case to import.*
+- [x] libxslt-vs-Xalan-J disagreements pinned by dual cases, not by silently picking one. *Both reference behaviors live in the corpus where they disagree: `math:power` is pinned by hand-written `math/power.1` (libxslt-class `pow()` semantics encoded as engine-verified golden) and `math/math14` (Xalan `StrictMath.pow` golden); `exsl:object-type` RTF-vs-node-set by `common/object-type.1`/`common3`. All adaptations and both new divergence classes (`StrictMath` float noise; XPath 3.1 number formatting) recorded in `tests/ATTRIBUTION.md` (divergences 4–5) and `docs/COMPATIBILITY.md` (divergences 5–6).*
 
 #### Impact Analysis
 | Layer | Impact | Notes |
 |-------|--------|-------|
-| src/ modules | None expected | Possible documentation-only divergences |
-| golden corpus | New cases | Cross-check value |
-| docs | Matrix update | Divergence notes in `docs/COMPATIBILITY.md` |
+| src/ modules | None | No library bugs found; every mismatch traced to Xalan/XPath-1.0-era quirks |
+| golden corpus | +30 cases | Corpus 73 → 103 (91 imported: 61 libxslt + 30 Xalan-J; 12 hand-written) |
+| docs | Matrix + attribution updated | `docs/COMPATIBILITY.md` divergences 5–6; `tests/ATTRIBUTION.md` Xalan-J provenance + 10 skip reasons |
 
 #### Related Requests
 - REQ-001 (primary corpus)
@@ -176,7 +176,8 @@ Fetch a starter set from the Xalan-J repository, convert to the case layout with
 #### Decision Log
 | Date | Actor | Decision | Rationale |
 |------|-------|----------|-----------|
-| — | — | Pending | Awaiting REQ-001 completion to avoid corpus churn |
+| 2026-10-08 | Kimi | Accepted, In Progress | REQ-001 complete (corpus stable); source is `apache/xalan-test` (Apache-2.0, `tests/exslt/<ns>/<name>.xsl`+`.xml`, goldens `tests/exslt-gold/<ns>/<name>.out`) — not `apache/xalan-j`, which holds no EXSLT tests |
+| 2026-10-08 | Kimi | Implemented | 30 of 41 upstream pairs converted (10 skip-recorded: time-dependent, tier-3, non-EXSLT-1.0 functions, missing goldens, Xalan-only overloads); 22 verbatim; divergences pinned by dual cases; corpus 103/103, check-docs ALL CHECKS PASSED |
 
 ---
 

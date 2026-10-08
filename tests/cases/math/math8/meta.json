@@ -1,0 +1,11 @@
+{
+  "function": "math:exp",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math8.xsl + tests/exslt/math/math8.xml (golden tests/exslt-gold/math/math8.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; exclude-result-prefixes='math' added (engine namespace-leak workaround). Upstream references an undefined bareword constant name and an undefined $zero variable; Xalan lazily evaluated both to NaN and its golden is truncated mid-document (the run aborted on $zero). math:constant(PI,...) -> math:constant('UNDEFINED',...) pins the intended NaN, the $input3 block is dropped, and the golden tail is truncated to match. Golden lines adapted for exp() StrictMath last-ulp noise (2 lines), XPath 3.1 large-double formatting (5223849703457 -> 5.223849703457E12), and overflow spelling (Infinity -> INF)."
+}

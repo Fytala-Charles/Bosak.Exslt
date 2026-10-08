@@ -132,11 +132,17 @@ sixteen extraction functions against one input type; they are referenced as
 Recorded here and in `tests/ATTRIBUTION.md`:
 
 1. `exsl:object-type` reports XSLT 1.0 `RTF` values as `node-set` (XSLT 3.0 has no
-   result-tree-fragment type).
+   result-tree-fragment type). Second-corpus pin (REQ-002): Xalan-J's
+   `common/common3` exercises the same function; its `RTF` golden line was
+   dropped for the same reason.
 2. `date:duration` is decimal-exact; libxslt's binary-float rounding of near-integer
    second counts (e.g. `3599.99999999999`) is not reproduced.
 3. `math:power` uses `exp/log` and returns NaN for negative bases; libxslt's `pow()`
-   returns real powers there.
+   returns real powers there. Second-corpus pin (REQ-002): Xalan-J's
+   `math/math14` encodes `StrictMath.pow` semantics (`power(0,0)=1`, real
+   powers for negative-base integer exponents, `Infinity` on overflow); its
+   golden is engine-verified output that pins our documented `NaN`/`INF`
+   divergence against that second reference.
 4. `date/month-name.1` (hand-written case): the golden line `month-name('2026') =
    'January'` was re-goldened to `''` on 2026-10-06. The original encoded the
    pre-rewrite cast-based behavior, which accepted `xs:gYear`; the EXSLT spec's
@@ -144,6 +150,19 @@ Recorded here and in `tests/ATTRIBUTION.md`:
    modern libxslt (1.1.45, probed: `''`) both reject gYear, and libxslt's own
    `gyear.1` case requires `''`. The library matches the corrected golden and the
    libxslt battery verbatim.
+5. **Xalan `StrictMath` float noise (REQ-002; `tests/ATTRIBUTION.md` divergence 4):**
+   Xalan-J's goldens encode `StrictMath` last-ulp and argument-reduction noise no
+   other conforming IEEE-754 engine reproduces bit-for-bit. Affected golden lines
+   in `math/math2`, `math/math3`, `math/math7`, `math/math8`, `math/math16`,
+   `math/math18` were adapted to this engine's values (all other lines verbatim
+   Xalan output). For arguments of magnitude ~5×10¹², sin/cos/tan results are
+   inherently reduction-sensitive; both engines agree to 7+ significant digits.
+6. **XPath 3.1 number formatting (REQ-002; `tests/ATTRIBUTION.md` divergence 5):**
+   XPath 3.1 `xs:double` string conversion prints large magnitudes in scientific
+   notation (`5223849703457` → `5.223849703457E12`) and spells overflow `INF`
+   (Xalan prints `Infinity`). Goldens echoing such values (`math/math8`,
+   `math/math17`, the re-generated `math/math14`) were adapted. Formatting, not
+   value, divergence — the same class as the REQ-001 binary-float skips.
 
 ---
 

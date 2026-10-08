@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><out>
+     This is for testing the Euler constant to the power of 5:
+     148.4131591025766
+     This is for testing the Euler constant to the power of 0:
+     1
+     This is for testing the Euler constant to the power of -3:
+     0.049787068367863944
+     This is for testing the Euler constant to the power of NaN:
+     NaN
+     This is testing Euler constant to the power of 5.223849703457E12:
+     INF
+     This is testing Euler constant to the power of NaN:
+     NaN</out>

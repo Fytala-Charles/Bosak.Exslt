@@ -1,0 +1,11 @@
+{
+  "function": "math:power",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math14.xsl + tests/exslt/math/math14.xml (golden tests/exslt-gold/math/math14.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). Golden re-generated from engine output: the Xalan golden encodes StrictMath.pow semantics that diverge from our documented exp/log-based implementation (documented divergence 3, cf. hand-written math/power.1): power(0,0) and negative-base integer exponents return NaN here (Xalan prints 1 and the real power), overflow prints INF (Xalan: Infinity), and echoed large doubles use XPath 3.1 scientific notation (5223849703457 -> 5.223849703457E12). Golden is engine-verified output of src/math.xsl."
+}

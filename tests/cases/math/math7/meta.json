@@ -1,0 +1,11 @@
+{
+  "function": "math:cos",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math7.xsl + tests/exslt/math/math7.xml (golden tests/exslt-gold/math/math7.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). Two golden lines adapted to engine cos values (Xalan StrictMath argument-reduction/last-ulp noise; one is the large-argument cos(5223849703457): -0.3865140198680434 -> -0.38651401366544613)."
+}

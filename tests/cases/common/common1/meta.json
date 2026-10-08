@@ -1,0 +1,11 @@
+{
+  "function": "exsl:node-set",
+  "namespace": "http://exslt.org/common",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/common/common1.xsl + tests/exslt/common/common1.xml (golden tests/exslt-gold/common/common1.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream"
+}

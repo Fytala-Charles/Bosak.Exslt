@@ -1,0 +1,11 @@
+{
+  "function": "str:padding",
+  "namespace": "http://exslt.org/strings",
+  "tier": 2,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/strings/strings3.xsl + tests/exslt/strings/strings3.xml (golden tests/exslt-gold/strings/strings3.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='str' added (engine namespace-leak workaround). xml:space='preserve' added to the input root: Xalan-J preserves source-document whitespace-only text nodes by default, XSLT 3.0 strips them unless preserved."
+}

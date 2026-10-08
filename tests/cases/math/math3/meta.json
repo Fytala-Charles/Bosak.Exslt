@@ -1,0 +1,11 @@
+{
+  "function": "math:asin",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math3.xsl + tests/exslt/math/math3.xml (golden tests/exslt-gold/math/math3.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). One golden line adapted to the engine asin value: Xalan StrictMath prints asin(0.253)=0.2557798871325695, the engine 0.25577988713256955 (last-ulp noise)."
+}

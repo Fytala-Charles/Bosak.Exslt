@@ -1,0 +1,11 @@
+{
+  "function": "math:sqrt",
+  "namespace": "http://exslt.org/math",
+  "tier": 1,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/math/math17.xsl + tests/exslt/math/math17.xml (golden tests/exslt-gold/math/math17.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream; exclude-result-prefixes='math' added (engine namespace-leak workaround). Two golden lines adapted for XPath 3.1 xs:double string formatting: echoed input values and the sqrt result print in scientific notation (Sqrt of 5223849703457 is 2285574.2611993598 -> Sqrt of 5.223849703457E12 is 2.28557426119936E6; -394729834.23472393 -> -3.947298342347239E8)."
+}

@@ -1,0 +1,11 @@
+{
+  "function": "set:leading",
+  "namespace": "http://exslt.org/sets",
+  "tier": 2,
+  "source": {
+    "project": "xalan-j",
+    "license": "Apache-2.0",
+    "path": "tests/exslt/sets/sets5.xsl + tests/exslt/sets/sets5.xml (golden tests/exslt-gold/sets/sets5.out)"
+  },
+  "adaptations": "version 1.0 -> 3.0; library included via xsl:include; UTF-16 sources normalized to UTF-8; otherwise unmodified from upstream"
+}
