@@ -1,0 +1,8 @@
+{
+  "function": "date:duration",
+  "namespace": "http://exslt.org/dates-and-times",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 09 exercise; semantics per the EXSLT 1.0 spec (exslt.org). Companion vehicles: date:add-duration (two durations with component normalization — months carry into years, seconds carry into days, days never carry into months; '' on invalid input) and date:sum (node set of durations; the string 'NaN' when any member is unparseable; P0D for the empty set). date:duration is decimal-exact: the split-hair row (3599.99999999999) pins OUR answer PT59M59.99999999999S, where libxslt's binary floats round to PT1H — a documented divergence (docs/COMPATIBILITY.md, tests/ATTRIBUTION.md, cases/date/duration.1), taught as this session's core lesson.",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

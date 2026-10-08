@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<workout>
+  <!-- Exercise 1: seconds to duration string (date:duration) -->
+  <convert name="zero"       seconds="0"/>
+  <convert name="meeting"    seconds="3661"/>
+  <convert name="day-plus"   seconds="90000"/>
+  <convert name="overdraft"  seconds="-90"/>
+  <convert name="split-hair" seconds="3599.99999999999"/>
+  <convert name="half"       seconds="0.5"/>
+  <!-- Exercise 2: duration + duration, component normalization (date:add-duration) -->
+  <pair name="warmup"     d1="PT1H"     d2="PT1H"/>
+  <pair name="carry"      d1="PT25H"    d2="PT90M"/>
+  <pair name="calendar"   d1="P1Y2M"    d2="P10M"/>
+  <pair name="long-haul"  d1="P40D"     d2="P40D"/>
+  <pair name="mixed-sign" d1="PT90M"    d2="-PT30M"/>
+  <pair name="spill"      d1="PT50S"    d2="PT40S"/>
+  <pair name="broken"     d1="nonsense" d2="PT1H"/>
+  <!-- Exercise 3: sum a node set of durations (date:sum) -->
+  <sum name="shift">
+    <d>P1D</d>
+    <d>PT12H</d>
+    <d>PT36H</d>
+  </sum>
+  <sum name="milestones">
+    <d>P1M</d>
+    <d>P15D</d>
+    <d>PT1H</d>
+  </sum>
+  <sum name="mixed-sign">
+    <d>-PT30M</d>
+    <d>PT1H</d>
+  </sum>
+  <sum name="poisoned">
+    <d>PT1H</d>
+    <d>not-a-duration</d>
+    <d>PT30M</d>
+  </sum>
+  <sum name="empty"/>
+</workout>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<report>
+  <convert name="zero">
+    <duration>P0D</duration>
+  </convert>
+  <convert name="meeting">
+    <duration>PT1H1M1S</duration>
+  </convert>
+  <convert name="day-plus">
+    <duration>P1DT1H</duration>
+  </convert>
+  <convert name="overdraft">
+    <duration>-PT1M30S</duration>
+  </convert>
+  <convert name="split-hair">
+    <duration>PT59M59.99999999999S</duration>
+  </convert>
+  <convert name="half">
+    <duration>PT0.5S</duration>
+  </convert>
+  <pair name="warmup">
+    <result>PT2H</result>
+  </pair>
+  <pair name="carry">
+    <result>P1DT2H30M</result>
+  </pair>
+  <pair name="calendar">
+    <result>P2Y</result>
+  </pair>
+  <pair name="long-haul">
+    <result>P80D</result>
+  </pair>
+  <pair name="mixed-sign">
+    <result>PT1H</result>
+  </pair>
+  <pair name="spill">
+    <result>PT1M30S</result>
+  </pair>
+  <pair name="broken">
+    <result/>
+  </pair>
+  <sum name="shift">
+    <total>P3D</total>
+  </sum>
+  <sum name="milestones">
+    <total>P1M15DT1H</total>
+  </sum>
+  <sum name="mixed-sign">
+    <total>PT30M</total>
+  </sum>
+  <sum name="poisoned">
+    <total>NaN</total>
+  </sum>
+  <sum name="empty">
+    <total>P0D</total>
+  </sum>
+</report>
