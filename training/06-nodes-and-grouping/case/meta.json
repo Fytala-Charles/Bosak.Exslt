@@ -1,0 +1,8 @@
+{
+  "function": "set:distinct",
+  "namespace": "http://exslt.org/sets",
+  "tier": 2,
+  "source": { "project": "hand-written", "license": "Apache-2.0" },
+  "adaptations": "Training session 06 exercise; semantics per the EXSLT 1.0 spec (exslt.org) and the libxslt reference implementation. Companion vehicles of the session: set:has-same-node and set:difference (identity-based, tier 1 wrappers over 'is' / 'except').",
+  "notes": "Training case under training/, not part of the golden corpus in tests/cases/"
+}

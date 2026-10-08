@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<inventory>
+  <shelf id="a">
+    <item sku="a1">apple</item>
+    <item sku="a2">pear</item>
+    <item sku="a3">plum</item>
+  </shelf>
+  <shelf id="b">
+    <item sku="b1">pear</item>
+    <item sku="b2">fig</item>
+    <item sku="b3">apple</item>
+  </shelf>
+</inventory>

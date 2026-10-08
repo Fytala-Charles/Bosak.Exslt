@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<result>
+  <cross-shelf>false</cross-shelf>
+  <overlap>true</overlap>
+  <distinct>
+    <item sku="a1">apple</item>
+    <item sku="a2">pear</item>
+    <item sku="a3">plum</item>
+    <item sku="b2">fig</item>
+  </distinct>
+  <a-minus-b>
+    <item sku="a1">apple</item>
+    <item sku="a2">pear</item>
+    <item sku="a3">plum</item>
+  </a-minus-b>
+  <all-minus-a>
+    <item sku="b1">pear</item>
+    <item sku="b2">fig</item>
+    <item sku="b3">apple</item>
+  </all-minus-a>
+</result>
