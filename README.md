@@ -54,6 +54,15 @@ Bosak.Exslt serves three purposes at once:
 2. **Training and showcase codebase.** Every module is written in standard, vendor-neutral XSLT 3.0 with full documentation. Tier-2 functions are *genuine* implementations (recursive string scanning, duration component arithmetic, character-level URI decoding) — real code worth reading to learn modern XSLT.
 3. **Golden-file test corpus ("TDD for XSLT").** Each function is pinned by an executable golden case: input document, transform, expected output, and provenance metadata. The expected outputs are seeded from the libxslt EXSLT test suite (MIT-licensed; see `tests/ATTRIBUTION.md`), so compatibility is measured against the de-facto reference implementation.
 
+## Sources of truth
+
+The [EXSLT definitions](https://exslt.github.io/exslt.html) define the extension
+contract; GNOME libxslt/libexslt is our primary reference for executable behavior
+and golden fixtures, with Apache Xalan-J tests as supplementary evidence.
+The [compatibility matrix ? Sources of truth](docs/COMPATIBILITY.md#sources-of-truth)
+explains their roles, disagreement handling, and the distinction between upstream
+evidence and project-authored regression expectations.
+
 ## The three-tier compatibility model
 
 EXSLT was designed for XSLT 1.0. Under XSLT 3.0 its functions fall into three tiers:

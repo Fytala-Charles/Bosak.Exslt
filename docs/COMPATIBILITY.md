@@ -6,6 +6,44 @@
   <a href="../README.md">three-tier compatibility model</a></p>
 </div>
 
+## Sources of truth
+
+The compatibility contract has three distinct sources. This section makes the
+existing EXSLT/libxslt policy explicit; it does not change function behavior.
+
+| Role | Source | How Bosak.Exslt uses it |
+|------|--------|------------------------|
+| EXSLT function definitions | [EXSLT specification site](https://exslt.github.io/), especially the [implementer pages](https://exslt.github.io/exslt.html) and individual module/function definitions | Defines names, signatures, argument handling, return values, and edge semantics for the XSLT 1.0 extensions. Historical references to `exslt.org` refer to these EXSLT definitions. |
+| Primary reference behavior | [GNOME libxslt/libexslt](https://gitlab.gnome.org/GNOME/libxslt), including `libexslt/` implementation sources and `tests/exslt/` | Provides the primary executable compatibility baseline and the main imported golden corpus. The dates implementation also draws on `libexslt/date.c`. |
+| Supplementary reference behavior | [Apache Xalan-J test corpus](https://github.com/apache/xalan-test), `tests/exslt/` and `tests/exslt-gold/` | Provides additional coverage and evidence of differences between processors; it does not silently override the primary baseline. |
+
+The EXSLT site is the specification reference, rather than a W3C Recommendation.
+The [W3C XSLT 3.0](https://www.w3.org/TR/xslt-30/) and
+[XPath and XQuery Functions and Operators 3.1](https://www.w3.org/TR/xpath-functions-31/)
+Recommendations govern the standard language and native functions used to
+implement the library. EXSLT namespace URIs remain `http://exslt.org/...`;
+using the GitHub-hosted documentation does not change those identifiers.
+
+**When sources disagree:** consult the EXSLT function definition first, compare
+libxslt behavior and the supplementary evidence, and record the chosen behavior
+here under Known divergences. For legacy compatibility, libxslt remains the
+primary behavior baseline, including quirks where explicitly retained. Limits
+or deliberate adaptations required by the XSLT 3.0 model must be explicit;
+neither a passing Bosak test nor a hand-written expected output proves upstream
+conformance. Do not silently replace a golden to match the implementation.
+Record fixture adaptations and deliberate divergences in
+[tests/ATTRIBUTION.md](../tests/ATTRIBUTION.md) and the case's `meta.json` as well.
+
+**Repository authority:** this matrix records the supported surface, tiers, and
+chosen deviations; [tests/ATTRIBUTION.md](../tests/ATTRIBUTION.md) records fixture
+provenance, adaptations, and skips; each case's `meta.json` identifies its source,
+and `expected.xml` / `expected.txt` pins the repository's regression expectation.
+Hand-written cases are project-authored coverage, not imported reference evidence.
+The provenance recorded today must not be interpreted as a uniformly pinned
+upstream release or commit: where a revision is not recorded, it is unspecified.
+For future imports or behavior probes, record the upstream revision or processor
+version alongside the path and any adaptation so the evidence is reproducible.
+
 Status values:
 
 - **implemented** — genuine pure-XSLT 3.0 implementation (tier 2)

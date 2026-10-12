@@ -4,6 +4,12 @@ Golden fixtures in `tests/cases/` are derived from upstream EXSLT test corpora.
 Every case records its own provenance in `meta.json`; this file is the summary and
 the rulebook.
 
+For the specification and reference-behavior hierarchy, see
+[Compatibility ? Sources of truth](../docs/COMPATIBILITY.md#sources-of-truth).
+This file governs fixture provenance; imported and hand-written cases have
+different evidential roles. Upstream revisions are unspecified unless recorded
+in the individual evidence; do not infer a common pinned release from this list.
+
 ## Sources
 
 | Project | License | Upstream path pattern | Used for |

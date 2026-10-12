@@ -5,6 +5,16 @@
 
 ---
 
+## Session update ? 2026-10-12
+
+Clarified the existing EXSLT source-of-truth policy in
+[COMPATIBILITY.md](./COMPATIBILITY.md#sources-of-truth): EXSLT definitions
+(`exslt.github.io`, including implementer pages), primary libxslt/libexslt
+behavior and fixtures, supplementary Xalan-J corpus, and W3C implementation
+standards. README and attribution now link to the policy. Documented conflict
+handling and the limits of unpinned provenance and project-authored goldens.
+No library behavior, fixture expectations, tiers, or REQ statuses changed.
+
 ## 1. Project Identity
 
 - **What:** A pure-XSLT 3.0 implementation of EXSLT for the [Bosak](https://github.com/Fytala) XPath 3.1 / XSLT 3.0 engine — Apache-2.0, copyright Fytala (Charles Korthout). Three roles at once: **legacy-migration aid** (XSLT 1.0 + EXSLT stylesheets keep working via import/include), **training/showcase codebase** (genuine, readable XSLT 3.0), and **golden-file test corpus** ("TDD for XSLT").
